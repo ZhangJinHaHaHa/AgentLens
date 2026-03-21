@@ -1,0 +1,46 @@
+node_modules/
+dist/
+.runtime/
+.worktrees/
+coverage/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.DS_Store
+
+# Local tool/runtime homes
+.home/
+.xdg/
+
+# Sandbox
+sandbox/node_modules/
+sandbox/node_modules
+sandbox/dist/
+sandbox/.runtime/
+
+# Contracts / local chain tooling
+contracts/node_modules/
+contracts/node_modules
+contracts/.home/
+contracts/.xdg/
+frontend/*.tsbuildinfo
+frontend/vite.config.d.ts
+frontend/vite.config.js
+
+# Infra local secrets
+infra/polygon-edge-local/.env
+infra/polygon-edge-external/.env
+
+# Markdown docs
+*.md
+
+# Codex tool memory
+.omx/
+.gstack/
