@@ -1,0 +1,11 @@
+artifacts/*
+!artifacts/AgentAuditRegistry.json
+!artifacts/AgentAuditRegistryV2.json
+!artifacts/AgentAuditRegistryV3.json
+!artifacts/AgentMarketplace.json
+!artifacts/AgentReviewRegistry.json
+cache/
+deployments/
+.home/
+.xdg/
+node_modules/

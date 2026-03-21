@@ -1,0 +1,3136 @@
+{
+  "contractName": "AgentAuditRegistryV3",
+  "sourceName": "src/AgentAuditRegistryV3.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "initialServiceFee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "initialMinimumBond",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "initialOperator",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "developer",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "agentName",
+          "type": "string"
+        }
+      ],
+      "name": "AgentRegistered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint64",
+          "name": "auditId",
+          "type": "uint64"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "appealId",
+          "type": "uint64"
+        }
+      ],
+      "name": "AppealFiled",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint64",
+          "name": "auditId",
+          "type": "uint64"
+        }
+      ],
+      "name": "AppealRequested",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint64",
+          "name": "appealId",
+          "type": "uint64"
+        },
+        {
+          "indexed": false,
+          "internalType": "enum AgentAuditRegistryV3.AppealOutcome",
+          "name": "outcome",
+          "type": "uint8"
+        }
+      ],
+      "name": "AppealResolved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint64",
+          "name": "auditId",
+          "type": "uint64"
+        },
+        {
+          "indexed": false,
+          "internalType": "enum AgentAuditRegistryV3.AuditStatus",
+          "name": "status",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint32",
+          "name": "auditScore",
+          "type": "uint32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "reportHash",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "reportCID",
+          "type": "string"
+        }
+      ],
+      "name": "AuditRecorded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "developer",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "agentName",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "manifestUrl",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "bondAmount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "timestamp",
+          "type": "uint64"
+        }
+      ],
+      "name": "AuditRequested",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint64",
+          "name": "auditId",
+          "type": "uint64"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "reasonCode",
+          "type": "bytes32"
+        }
+      ],
+      "name": "BondCompensated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint64",
+          "name": "auditId",
+          "type": "uint64"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "reasonCode",
+          "type": "bytes32"
+        }
+      ],
+      "name": "BondSlashed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOperator",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOperator",
+          "type": "address"
+        }
+      ],
+      "name": "OperatorUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "serviceFee",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "minimumBond",
+          "type": "uint256"
+        }
+      ],
+      "name": "PricingUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint32",
+          "name": "currentScore",
+          "type": "uint32"
+        },
+        {
+          "indexed": false,
+          "internalType": "int32",
+          "name": "delta",
+          "type": "int32"
+        }
+      ],
+      "name": "ReputationUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "to",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "Transfer",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "APPEAL_FAILURE_PENALTY",
+      "outputs": [
+        {
+          "internalType": "uint32",
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "APPEAL_SUCCESS_BONUS",
+      "outputs": [
+        {
+          "internalType": "uint32",
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "BASE_POINTS_PER_AUDIT",
+      "outputs": [
+        {
+          "internalType": "uint32",
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "DECAY_PERIOD",
+      "outputs": [
+        {
+          "internalType": "uint64",
+          "name": "",
+          "type": "uint64"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "DECAY_RATE_BPS",
+      "outputs": [
+        {
+          "internalType": "uint32",
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "MAX_REPUTATION_SCORE",
+      "outputs": [
+        {
+          "internalType": "uint32",
+          "name": "",
+          "type": "uint32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "accruedServiceFees",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint64",
+          "name": "auditId",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "reasonCode",
+          "type": "bytes32"
+        }
+      ],
+      "name": "compensateBond",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint64",
+          "name": "auditId",
+          "type": "uint64"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "evidenceHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "string",
+          "name": "appealCID",
+          "type": "string"
+        }
+      ],
+      "name": "fileAppeal",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAgentProfile",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "developer",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "agentName",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalBond",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "blacklisted",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint64",
+              "name": "createdAt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "lastAuditAt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint32",
+              "name": "auditCount",
+              "type": "uint32"
+            }
+          ],
+          "internalType": "struct AgentAuditRegistryV3.AgentProfile",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAppealCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint64",
+          "name": "appealId",
+          "type": "uint64"
+        }
+      ],
+      "name": "getAppealRecord",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint64",
+              "name": "appealId",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "auditId",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "filedAt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "resolvedAt",
+              "type": "uint64"
+            },
+            {
+              "internalType": "enum AgentAuditRegistryV3.AppealOutcome",
+              "name": "outcome",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "evidenceHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "string",
+              "name": "appealCID",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct AgentAuditRegistryV3.AppealRecord",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAuditCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAuditReportByIndex",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint64",
+              "name": "auditId",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "timestamp",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint32",
+              "name": "auditScore",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "memoryPeakMb",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "cpuAvgMilli",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "requestIpCount",
+              "type": "uint32"
+            },
+            {
+              "internalType": "enum AgentAuditRegistryV3.AuditStatus",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "manifestHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "reportHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "evidenceRoot",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "attestationHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "string",
+              "name": "evidenceCID",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "reportCID",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "manifestUrl",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "appealRequested",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "appealApproved",
+              "type": "bool"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint16",
+                  "name": "security",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "taskExecution",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "cognitive",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "environment",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "engineering",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "compliance",
+                  "type": "uint16"
+                }
+              ],
+              "internalType": "struct AgentAuditRegistryV3.DimensionalScores",
+              "name": "dimensionalScores",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct AgentAuditRegistryV3.AuditRecord",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAverageScores",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint16",
+              "name": "security",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "taskExecution",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "cognitive",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "environment",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "engineering",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "compliance",
+              "type": "uint16"
+            }
+          ],
+          "internalType": "struct AgentAuditRegistryV3.DimensionalScores",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "auditIndex",
+          "type": "uint256"
+        }
+      ],
+      "name": "getDimensionalScores",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint16",
+              "name": "security",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "taskExecution",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "cognitive",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "environment",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "engineering",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "compliance",
+              "type": "uint16"
+            }
+          ],
+          "internalType": "struct AgentAuditRegistryV3.DimensionalScores",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getLatestAuditReport",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint64",
+              "name": "auditId",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "timestamp",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint32",
+              "name": "auditScore",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "memoryPeakMb",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "cpuAvgMilli",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "requestIpCount",
+              "type": "uint32"
+            },
+            {
+              "internalType": "enum AgentAuditRegistryV3.AuditStatus",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "manifestHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "reportHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "evidenceRoot",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "attestationHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "string",
+              "name": "evidenceCID",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "reportCID",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "manifestUrl",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "appealRequested",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "appealApproved",
+              "type": "bool"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint16",
+                  "name": "security",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "taskExecution",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "cognitive",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "environment",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "engineering",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "compliance",
+                  "type": "uint16"
+                }
+              ],
+              "internalType": "struct AgentAuditRegistryV3.DimensionalScores",
+              "name": "dimensionalScores",
+              "type": "tuple"
+            }
+          ],
+          "internalType": "struct AgentAuditRegistryV3.AuditRecord",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getReputation",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint32",
+              "name": "successfulAppeals",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "failedAppeals",
+              "type": "uint32"
+            },
+            {
+              "internalType": "int32",
+              "name": "reputationDelta",
+              "type": "int32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "currentReputationScore",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "lastReputationUpdateAt",
+              "type": "uint64"
+            }
+          ],
+          "internalType": "struct AgentAuditRegistryV3.ReputationRecord",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "developer",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "agentName",
+          "type": "string"
+        }
+      ],
+      "name": "getTokenId",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint64",
+          "name": "auditId",
+          "type": "uint64"
+        }
+      ],
+      "name": "markAppealRequested",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "minimumBond",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "name",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "operator",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "ownerOf",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint32",
+          "name": "auditScore",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "memoryPeakMb",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "cpuAvgMilli",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "requestIpCount",
+          "type": "uint32"
+        },
+        {
+          "internalType": "enum AgentAuditRegistryV3.AuditStatus",
+          "name": "status",
+          "type": "uint8"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "manifestHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "reportHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "evidenceRoot",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "attestationHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "string",
+          "name": "evidenceCID",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "reportCID",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "manifestUrl",
+          "type": "string"
+        }
+      ],
+      "name": "recordAuditResult",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint32",
+          "name": "auditScore",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "memoryPeakMb",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "cpuAvgMilli",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "requestIpCount",
+          "type": "uint32"
+        },
+        {
+          "internalType": "enum AgentAuditRegistryV3.AuditStatus",
+          "name": "status",
+          "type": "uint8"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "manifestHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "reportHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "evidenceRoot",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "attestationHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "string",
+          "name": "evidenceCID",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "reportCID",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "manifestUrl",
+          "type": "string"
+        },
+        {
+          "components": [
+            {
+              "internalType": "uint16",
+              "name": "security",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "taskExecution",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "cognitive",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "environment",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "engineering",
+              "type": "uint16"
+            },
+            {
+              "internalType": "uint16",
+              "name": "compliance",
+              "type": "uint16"
+            }
+          ],
+          "internalType": "struct AgentAuditRegistryV3.DimensionalScores",
+          "name": "scores",
+          "type": "tuple"
+        }
+      ],
+      "name": "recordAuditResultV2",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint64",
+          "name": "appealId",
+          "type": "uint64"
+        },
+        {
+          "internalType": "enum AgentAuditRegistryV3.AppealOutcome",
+          "name": "outcome",
+          "type": "uint8"
+        }
+      ],
+      "name": "resolveAppeal",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "serviceFee",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOperator",
+          "type": "address"
+        }
+      ],
+      "name": "setOperator",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newServiceFee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "newMinimumBond",
+          "type": "uint256"
+        }
+      ],
+      "name": "setPricing",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint64",
+          "name": "auditId",
+          "type": "uint64"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "reasonCode",
+          "type": "bytes32"
+        }
+      ],
+      "name": "slashBond",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "agentName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "manifestUrl",
+          "type": "string"
+        }
+      ],
+      "name": "stake",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "symbol",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608034620000ac57601f62003ae538819003918201601f19168301916001600160401b03831184841017620000b157808492606094604052833981010312620000ac57805160208201516040909201516001600160a01b0380821691828103620000ac576001600555600080546001600160a01b0319908116331790915592620000a65750335b16906001541617600155600255600355604051613a1d9081620000c88239f35b62000086565b600080fd5b634e487b7160e01b600052604160045260246000fdfe608080604052600436101561001357600080fd5b60003560e01c90816306fdde031461231b5750806316790254146122ff57806319b36b1d146118935780631a0649e3146115505780631d57330d146114cb5780631e9d4904146114ad5780631f5d5a371461132c5780632e5819a6146113045780632f22afdb146111b55780632f26adcd14611188578063347c19cd14611139578063451135481461111c5780635662bce814610f6d578063570ca73514610f445780636352211e14610f0557806370a0823114610e9157806389370d8b14610da85780638abdf5aa14610d8a5780638da5cb5b14610d6157806395d89b4114610d1c57806396e8f481146106985780639d4f040714610c97578063aa7517e114610c79578063b3ab15fb14610bc8578063ca05588a14610b6d578063ccb4ebe014610701578063d52fcd281461069d578063eb30f6fb14610698578063ef0c26071461067c578063f098a7ae14610519578063f5b61195146104ca578063f84c39c914610436578063f8ba2fdc146102e9578063fd2c42cc146102cb5763fda5d1ff146101a057600080fd5b346102c6576101a03660031901126102c6576004356101bd61264c565b906101c661265f565b6101ce612672565b926101d7612685565b9360a4359260058410156102c6576001600160401b0395610144358781116102c65761020790369060040161249f565b91610164358981116102c65761022190369060040161249f565b959094610184359a8b116102c65761026b6102436102b69c369060040161249f565b9a909961026560018060a01b03806001541633149081156102b8575b50612876565b8c613064565b604051996102788b612393565b60008b52600060208c0152600060408c0152600060608c0152600060808c0152600060a08c01526101243593610104359360e4359360c43593613485565b005b90506000541633143861025f565b600080fd5b346102c65760003660031901126102c6576020600454604051908152f35b346102c6576102f7366126bb565b90929161031860018060a01b03806001541633149081156104285750612876565b600083815260096020526040902054610340906001600160a01b031615156128b2565b6128b2565b61034a8184612fa9565b600181019160ff8354166005811015610412576003036103d9577fd7e851d789b6e3784feb9febce0117765574999009e64543881911a79eb596629360096001600160401b0393604095886000526006602052600387600020016103af8b825461271b565b9055805460ff1916600417905501805461ff001916610100179055835196875260208701521693a3005b60405162461bcd60e51b8152602060048201526011602482015270105551125517d393d517d4d31054d21151607a1b6044820152606490fd5b634e487b7160e01b600052602160045260246000fd5b90506000541633148661025f565b346102c65760403660031901126102c6576004356001600160401b0361045a6124cc565b60015461047b90336001600160a01b03918216149081156104bc5750612876565b60096104878285612fa9565b01805460ff1916600117905516907f5ef8bd082609dcf89dfc86ebb395fcd189183ad5e5c37d83b7123ff8da8b6e8d600080a3005b90506000541633148561025f565b346102c65760203660031901126102c657600435600081815260096020526040902054610501906001600160a01b031615156128b2565b600052600b6020526020604060002054604051908152f35b346102c6576020806003193601126102c657600435600060e060405161053e81612377565b8281526060858201528260408201528260608201528260808201528260a08201528260c0820152015261058961033b82600052600960205260018060a01b0360406000205416151590565b600052600681526040600020604051906105a282612377565b80546001600160a01b039081168352916040906105c160018401612a46565b8582019081526002840154938383019485526004600382015491606085019283520154916080840160ff8416151581526001600160401b0392839160a0870191838760081c16835261064f60c0890195858960481c16875263ffffffff998a60e082019a60881c168a528b519e8f9e8f928284525116910152518c6101009b8c9101526101208d019061247a565b995160608c01525160808b015251151560a08a0152511660c0880152511660e08601525116908301520390f35b346102c65760003660031901126102c657602060405160328152f35b6126ff565b346102c65760403660031901126102c6576106b66126e9565b602435906001600160401b0382116102c6576106e36106dc6106e993369060040161249f565b3691612735565b90612f3d565b60005260086020526020604060002054604051908152f35b346102c65760603660031901126102c65760043561071d6124cc565b6044356003808210156102c65760015461074b90336001600160a01b03918216149081156104285750612876565b60008481526009602052604090205461076e906001600160a01b031615156128b2565b8115610b365761077e838561381e565b916001830160ff8154168381101561041257610af1578161079e91612937565b82546001600160c01b03164260c081901b6001600160c01b0319169190911784556001600160401b03939084169186600052600c6020526040600020916107e4836138d7565b60018203610992578254600163ffffffff9182610802818316612f28565b169063ffffffff19161780865560401c870b01637fffffff198112637fffffff82131761097c5761084e90859081549060401b63ffffffff60401b169063ffffffff60401b1916179055565b606481855460601c16019181831161097c5761089a88926108a594612710809282161160001461097557505b865463ffffffff60601b191660609190911b63ffffffff60601b16178655565b5460401c1688612fa9565b600181019081549160ff8316976005891015610412576000805160206139c88339815191529961091061094e988d967f90239a2ae000675dd3b0dbe1678bc62ab9dd686eeffb26924130d8ebb21df352966020968d63ffffffff9f14610953575b5050505b8861290c565b61091d60405180976126ae565b1693a3546040519384938260401c900b9160601c168390929160209063ffffffff604084019516835260030b910152565b0390a2005b600460099360ff19161790550161010061ff00198254161790558e8080610906565b905061087a565b634e487b7160e01b600052601160045260246000fd5b5081949294549563ffffffff9667ffffffff000000006109b6898360201c16612f28565b60201b169067ffffffff000000001916178084556000199060401c860b01637fffffff8113637fffffff1982121761097c57610a0d90849081549060401b63ffffffff60401b169063ffffffff60401b1916179055565b87835460c8898260601c1611600014610aa0575050825460601c871660c7190196871161097c577f90239a2ae000675dd3b0dbe1678bc62ab9dd686eeffb26924130d8ebb21df352602061094e958a9361091063ffffffff9a610a9b6000805160206139c88339815191529d8a9081549063ffffffff60601b9060601b169063ffffffff60601b1916179055565b61090a565b6000805160206139c8833981519152985061094e957f90239a2ae000675dd3b0dbe1678bc62ab9dd686eeffb26924130d8ebb21df352929361091063ffffffff9a6020948c60601b1916895561090a565b60405162461bcd60e51b815260206004820152601760248201527f41505045414c5f414c52454144595f5245534f4c5645440000000000000000006044820152606490fd5b60405162461bcd60e51b815260206004820152600f60248201526e494e56414c49445f4f5554434f4d4560881b6044820152606490fd5b346102c6577f335f5afc83fe8c5a011a96dc39bcce9fb9d46fb5986502f7040e76e28b0361236040610b9e36612698565b610bb360018060a01b03600054163314612eef565b816002558060035582519182526020820152a1005b346102c65760203660031901126102c657610be16126e9565b6000546001600160a01b03918291610bfc9083163314612eef565b16908115610c4157600154826001600160601b0360a01b821617600155167ffbe5b6cbafb274f445d7fed869dc77a838d8243a22c460de156560e8857cad03600080a3005b60405162461bcd60e51b815260206004820152601060248201526f24a72b20a624a22fa7a822a920aa27a960811b6044820152606490fd5b346102c65760003660031901126102c6576020600354604051908152f35b346102c657610d18610d0c610d06610cae36612698565b90610cb7612981565b50600081815260096020526040902054610cdb906001600160a01b031615156128b2565b806000526007602052610cf46040600020548310612c36565b6000526007602052604060002061277b565b50612b3b565b60405191829182612535565b0390f35b346102c65760003660031901126102c657610d18604051610d3c81612400565b60048152634141493360e01b602082015260405191829160208352602083019061247a565b346102c65760003660031901126102c6576000546040516001600160a01b039091168152602090f35b346102c65760003660031901126102c6576020600254604051908152f35b346102c6576020806003193601126102c65760a09060043560006080604051610dd0816123e5565b82815282858201528260408201528260608201520152610e0861033b82600052600960205260018060a01b0360406000205416151590565b600052600c81526080604060002060405190610e23826123e5565b549063ffffffff9081831694858252808201908385821c1682528360408401928660401c60030b84526060850194828860601c1686526001600160401b03988991019760801c1687526040519889525116908701525160030b60408601525116606084015251166080820152f35b346102c65760203660031901126102c6576001600160a01b03610eb26126e9565b168015610ed157600052600a6020526020604060002054604051908152f35b60405162461bcd60e51b815260206004820152600c60248201526b5a45524f5f4144445245535360a01b6044820152606490fd5b346102c65760203660031901126102c6576004356000526009602052602060018060a01b0360406000205416610f3c8115156128b2565b604051908152f35b346102c65760003660031901126102c6576001546040516001600160a01b039091168152602090f35b346102c657610f7b366126bb565b60015491939291610fa090336001600160a01b03918216149081156104285750612876565b600083815260096020526040902054610fc3906001600160a01b031615156128b2565b82600052600660205260406000209060038201928354918287116110e35760046040947f60a77a9907fdd72fa9c1aed2ee36350704289df2e7956a74c741287c6fcefb799661101c8a611016878c612fa9565b97612728565b905501926003600160ff19928184885416178755019182541617905585600052600c60205260ff846000209354166000146110bf57825463ffffffff60601b191683555b856000805160206139c88339815191526110ad6001600160401b03956110888742168261290c565b548751606082901c63ffffffff16815290881c60030b60208201529081906040820190565b0390a2835196875260208701521693a3005b8254600181901c637fffffff60601b1663ffffffff60601b19909116178355611060565b60405162461bcd60e51b8152602060048201526011602482015270125394d551919250d251539517d093d391607a1b6044820152606490fd5b346102c65760003660031901126102c65760206040516127108152f35b346102c65760203660031901126102c657600435600081815260096020526040902054611170906001600160a01b031615156128b2565b60005260076020526020604060002054604051908152f35b346102c65760203660031901126102c65760c06111a6600435612c98565b6111b360405180926124ef565bf35b346102c65760403660031901126102c6576112346004356111d46124cc565b90606060c06040516111e5816123ca565b60008152600060208201526000604082015260008382015260006080820152600060a0820152015261122f61033b82600052600960205260018060a01b0360406000205416151590565b61381e565b60405190611241826123ca565b8054906001600160401b0380831684526020840190808460401c1682526040850190808560801c168252606086019460c01c855260ff600185015416906080870190600383101561041257602096818995816112b46003610d189b6112ec99895260a060028201549b019a8b5201612a46565b9860c08d01998a52816040519d8e9d8e52511660208d0152511660408b015251166060890152511660808701525160a08601906126ae565b5160c08401525160e08084015261010083019061247a565b346102c65760c06111a6600a61132561131c36612698565b90610cb761294f565b5001612aeb565b346102c6576102603660031901126102c65761134661264c565b61134e61265f565b90611357612672565b91611360612685565b91600560a43510156102c6576001600160401b03610144358181116102c65761138d90369060040161249f565b610164929192358281116102c6576113a990369060040161249f565b939092610184359081116102c6576113c590369060040161249f565b96909560c0366101a31901126102c65760015461140791906113fb90336001600160a01b039182161490811561149f5750612876565b60a43590600435613064565b6040519761141489612393565b61ffff996101a4358b811681036102c6578a526101c4358b811681036102c65760208b01526101e4358b811681036102c65760408b0152610204358b811681036102c65760608b0152610224358b811681036102c65760808b0152610244359a8b168b036102c6576102b69a60a08b01526101243592610104359260e4359260c43592600435613485565b90506000541633148d61025f565b346102c65760003660031901126102c657602060405162278d008152f35b346102c65760203660031901126102c6576004356114e7612981565b5060008181526009602052604090205461150b906001600160a01b031615156128b2565b80600052600760205260406000205490611526821515612a08565b6000526007602052604060002090600019810190811161097c57610d06610d0c91610d189361277b565b346102c65760803660031901126102c6576115696124cc565b6064356001600160401b0381116102c65761158890369060040161249f565b90916115a860018060a01b03806001541633149081156104bc5750612876565b6004356000908152600960205260409020546115ce906001600160a01b031615156128b2565b60096115dc82600435612fa9565b01600160ff19825416179055600435600052602092600b84526040600020546001810180911161097c576001600160401b031692600435600052600b85526040600020916040519061162d826123ca565b858252868201916001600160401b0386168352604081016001600160401b0342168152606082016000815261167560808401946000865260a085019760443589523691612735565b9660c084019788528054600160401b8110156118675761169a916001820181556128f0565b95909561187d579251855493516fffffffffffffffffffffffffffffffff199094166001600160401b039182161760409490941b67ffffffffffffffff60401b1693909317855561171492916116f490839051168661290c565b5184546001600160c01b0316911660c01b6001600160c01b031916178355565b519160038310156104125761172e60039360018401612937565b5160028201550190518051906001600160401b0382116118675761175c8261175685546127c5565b856127ff565b8590601f83116001146117d557827fe95840e66082a0861ce8bd81aeca7b1ec09caf20c05b9aae8892d7f784fc9beb95936001600160401b0395936117b8936000926117ca575b50508160011b916000199060031b1c19161790565b90555b604051938452169260043592a3005b0151905089806117a3565b90601f1983169184600052876000209260005b898282106118515750509260019285927fe95840e66082a0861ce8bd81aeca7b1ec09caf20c05b9aae8892d7f784fc9beb98966001600160401b03989610611838575b505050811b0190556117bb565b015160001960f88460031b161c1916905588808061182b565b60018596829396860151815501950193016117e8565b634e487b7160e01b600052604160045260246000fd5b634e487b7160e01b600052600060045260246000fd5b60403660031901126102c6576004356001600160401b0381116102c6576118be90369060040161249f565b6024356001600160401b0381116102c6576118dd90369060040161249f565b90919081156122c757801561228d57600254916118fc6003548461271b565b34106122535761191861190f8434612728565b9360045461271b565b60045561192f611929368388612735565b33612f3d565b6000526008602052604060002054938415611f63575b846000526006602052600360406000200161196185825461271b565b90558460005260076020526040600020549260018401841161097c57856000526007602052604060002060405161199781612393565b6000815260006020820152600060408201526000606082015260006080820152600060a08201526001600160401b036001604051976119d5896123ae565b011686526001600160401b0342166020870152600060408701526000606087015260006080870152600060a0870152600060c0870152600060e0870152600061010087015260006101208701526000610140870152604051611a368161241b565b60008152610160870152604051611a4c8161241b565b60008152610180870152611a61368486612735565b6101a087015260006101c087015260006101e08701526102008601528054600160401b81101561186757611a9a9160018201815561277b565b97909761187d578451602086015160408088015160608901516080808b015160a0808d015160e01b6001600160e01b0319166001600160401b039098169690951b67ffffffffffffffff60401b169590951763ffffffff60801b9390911b929092169190911763ffffffff60a01b9190921b161763ffffffff60c01b60c09290921b919091161717885560c0850151600581101561041257611b3f9060018a016127ad565b60e085015160028901556101008501516003890155610120850151600489015561014085015160058901556101608501518051906001600160401b03821161186757611b9b82611b9260068d01546127c5565b60068d016127ff565b602090601f8311600114611ef557611bcb929160009183611e7c5750508160011b916000199060031b1c19161790565b60068901555b6101808501518051906001600160401b03821161186757611c0282611bf960078d01546127c5565b60078d016127ff565b602090601f8311600114611e8757611c32929160009183611e7c5750508160011b916000199060031b1c19161790565b60078901555b6101a0850151948551986001600160401b038a1161186757898997611c6f60209c611c6660088601546127c5565b600886016127ff565b8b90601f8311600114611dd157600a611d9694611cd1857fbd6d3df44aaa1231a5f51af5e02c3a67047dc0ebe0a72cb455ffd7eb80172a219c9b9996611da39b999661020096600092611dc65750508160011b916000199060031b1c19161790565b60088201555b60098101611cf86101c08601511515829060ff801983541691151516179055565b6101e0850151151561ff0082549160081b169061ff0019161790550191015161ffff8151169082549163ffff00008f83015160101b1665ffff00000000604084015160201b169067ffff000000000000606085015160301b169261ffff60401b608086015160401b169460a061ffff60501b91015160501b16956001600160601b031916171717171717905560405195608087526080870191612855565b918483038a860152612855565b9360408201526001600160401b03421660608201528033940390a3604051908152f35b0151905038806117a3565b60088493929a999897969594016000528c6000209060005b601f1984168110611e625750611da397969593600184610200947fbd6d3df44aaa1231a5f51af5e02c3a67047dc0ebe0a72cb455ffd7eb80172a219d9e600a95611d969a98601f19811610611e49575b505050811b016008820155611cd7565b015160001960f88460031b161c19169055388080611e39565b818c015183559a8e019a8d9a506001909201918e01611de9565b015190508b806117a3565b90601f1983169160078c0160005260206000209260005b818110611edd5750908460019594939210611ec4575b505050811b016007890155611c38565b015160001960f88460031b161c191690558a8080611eb4565b92936020600181928786015181550195019301611e9e565b90601f1983169160068c0160005260206000209260005b818110611f4b5750908460019594939210611f32575b505050811b016006890155611bd1565b015160001960f88460031b161c191690558a8080611f22565b92936020600181928786015181550195019301611f0c565b93506005546001810180821161097c576005558060005260096020526040600020336001600160601b0360a01b82541617905533600052600a6020526040600020805460018101811161097c576001019055611fc3611929368489612735565b600052600860205280604060002055604051611fde81612377565b338152611fec368489612735565b6020820190815282604083015260006060830152600060808301526001600160401b03421660a0830152600060c0830152600060e083015282600052600660205260406000209060018060a01b038351166001600160601b0360a01b835416178255518051906001600160401b0382116118675761207a8261207160018601546127c5565b600186016127ff565b602090601f83116001146121d55761215f94936120b98463ffffffff9560e0956004956000926121ca5750508160011b916000199060031b1c19161790565b60018201555b604085015160028201556060850151600382015501926120f160808201511515859060ff801983541691151516179055565b60a0810151845460c083015170ffffffffffffffffffffffffffffffff001990911660089290921b68ffffffffffffffff00169190911760489190911b67ffffffffffffffff60481b161784550151825463ffffffff60881b1916911660881b63ffffffff60881b16179055565b604051813360007fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef8180a460208152817f0d063c6022bff16d09991a9f91882ffa112f5fb2529136f65eb4c77bbd047e433392806121c160208201888d612855565b0390a393611945565b015190508f806117a3565b906001840160005260206000209160005b601f198516811061223b57509360018460e09460049461215f999863ffffffff98601f19811610612222575b505050811b0160018201556120bf565b015160001960f88460031b161c191690558e8080612212565b919260206001819286850151815501940192016121e6565b60405162461bcd60e51b8152602060048201526012602482015271494e53554646494349454e545f56414c554560701b6044820152606490fd5b60405162461bcd60e51b8152602060048201526012602482015271115354151657d3505392519154d517d5549360721b6044820152606490fd5b60405162461bcd60e51b815260206004820152601060248201526f454d5054595f4147454e545f4e414d4560801b6044820152606490fd5b346102c65760003660031901126102c657602060405160c88152f35b346102c65760003660031901126102c65780612339610d1892612400565b601781527f4167656e74204175646974204964656e74697479205633000000000000000000602082015260405191829160208352602083019061247a565b61010081019081106001600160401b0382111761186757604052565b60c081019081106001600160401b0382111761186757604052565b61022081019081106001600160401b0382111761186757604052565b60e081019081106001600160401b0382111761186757604052565b60a081019081106001600160401b0382111761186757604052565b604081019081106001600160401b0382111761186757604052565b602081019081106001600160401b0382111761186757604052565b90601f801991011681019081106001600160401b0382111761186757604052565b60005b83811061246a5750506000910152565b818101518382015260200161245a565b9060209161249381518092818552858086019101612457565b601f01601f1916010190565b9181601f840112156102c6578235916001600160401b0383116102c657602083818601950101116102c657565b602435906001600160401b03821682036102c657565b9060058210156104125752565b60a0908161ffff91828151168552826020820151166020860152826040820151166040860152826060820151166060860152826080820151166080860152015116910152565b61264990602081526001600160401b038084511660208301526020840151166040820152604083015163ffffffff80911660608301528060608501511660808301528060808501511660a083015260a08401511660c08201526125a060c084015160e08301906124e2565b61022060e08401516101009081840152840151610120908184015284015161014090818401528401516101609081840152840151936126236125f1610180966102c0888701526102e086019061247a565b9582015161260e601f19976101a09289888303018489015261247a565b908301516101c097868303018887015261247a565b948101516101e090151581850152810151906102009115158285015201519101906124ef565b90565b6024359063ffffffff821682036102c657565b6044359063ffffffff821682036102c657565b6064359063ffffffff821682036102c657565b6084359063ffffffff821682036102c657565b60409060031901126102c6576004359060243590565b9060038210156104125752565b60809060031901126102c657600435906024356001600160401b03811681036102c657906044359060643590565b600435906001600160a01b03821682036102c657565b346102c65760003660031901126102c657602060405160648152f35b9190820180921161097c57565b9190820391821161097c57565b9291926001600160401b038211611867576040519161275e601f8201601f191660200184612436565b8294818452818301116102c6578281602093846000960137010152565b805482101561279757600052600b602060002091020190600090565b634e487b7160e01b600052603260045260246000fd5b9060058110156104125760ff80198354169116179055565b90600182811c921680156127f5575b60208310146127df57565b634e487b7160e01b600052602260045260246000fd5b91607f16916127d4565b90601f811161280d57505050565b6000916000526020600020906020601f850160051c8301941061284b575b601f0160051c01915b82811061284057505050565b818155600101612834565b909250829061282b565b908060209392818452848401376000828201840152601f01601f1916010190565b1561287d57565b60405162461bcd60e51b815260206004820152600d60248201526c27a7262cafa7a822a920aa27a960991b6044820152606490fd5b156128b957565b60405162461bcd60e51b815260206004820152600f60248201526e1513d2d15397d393d517d193d55391608a1b6044820152606490fd5b80548210156127975760005260206000209060021b0190600090565b805467ffffffffffffffff60801b191660809290921b67ffffffffffffffff60801b16919091179055565b9060038110156104125760ff80198354169116179055565b6040519061295c82612393565b8160a06000918281528260208201528260408201528260608201528260808201520152565b6040519061298e826123ae565b8160008082528060208301528060408301528060608301528060808301528060a08301528060c08301528060e08301528061010083015280610120830152806101408301526060610160830152606061018083015260606101a0830152806101c08301526101e0820152610200612a0361294f565b910152565b15612a0f57565b60405162461bcd60e51b815260206004820152600f60248201526e1393d7d05551125517d49150d3d491608a1b6044820152606490fd5b90604051918260008254612a59816127c5565b90818452602094600191600181169081600014612ac95750600114612a8a575b505050612a8892500383612436565b565b600090815285812095935091905b818310612ab1575050612a889350820101388080612a79565b85548884018501529485019487945091830191612a98565b92505050612a8894925060ff191682840152151560051b820101388080612a79565b90604051612af881612393565b60a081935461ffff908181168452818160101c166020850152818160201c166040850152818160301c166060850152818160401c16608085015260501c16910152565b90604051612b48816123ae565b809280546001600160401b0380821684528160401c16602084015263ffffffff808260801c166040850152808260a01c1660608501528160c01c16608084015260e01c60a083015260ff60018201541690600582101561041257600a612a03916102009360c0860152600281015460e0860152600381015461010086015260048101546101208601526005810154610140860152612be860068201612a46565b610160860152612bfa60078201612a46565b610180860152612c0c60088201612a46565b6101a086015260ff600982015481811615156101c088015260081c1615156101e086015201612aeb565b15612c3d57565b60405162461bcd60e51b8152602060048201526013602482015272494e4445585f4f55545f4f465f424f554e445360681b6044820152606490fd5b8115612c82570490565b634e487b7160e01b600052601260045260246000fd5b612ca061294f565b50600081815260096020526040902054612cc4906001600160a01b031615156128b2565b60009080825260076020526040822054612cdf811515612a08565b829083849285869187948897895b8a838210612dbb57505050508615612d84578697509286959286809693819661ffff9687809681612d2081978296612c78565b169e612d2b91612c78565b169b612d3691612c78565b1696612d4191612c78565b1695612d4c91612c78565b1694612d5791612c78565b169360405195612d6687612393565b8652602086015260408501526060840152608083015260a082015290565b5050505050505060405190612d9882612393565b80825280602083015280604083015280606083015280608083015260a082015290565b600a6113258360408487612dd5965260076020522061277b565b61ffff808251168015801590612ee0575b8015612ed1575b8015612ec2575b8015612eb3575b8015612ea4575b612e12575b505050600101612ced565b612e25919298979b99969c9a939c61271b565b9481602089015116612e369161271b565b9781604089015116612e479161271b565b9981606089015116612e589161271b565b9581608089015116612e699161271b565b9660a0015116612e789161271b565b966000198114612e9057600180910199903880612e07565b634e487b7160e01b8b52601160045260248bfd5b508160a0840151161515612e02565b50816080840151161515612dfb565b50816060840151161515612df4565b50816040840151161515612ded565b50816020840151161515612de6565b15612ef657565b60405162461bcd60e51b815260206004820152600a60248201526927a7262cafa7aba722a960b11b6044820152606490fd5b90600163ffffffff8093160191821161097c57565b90612f8a6035604051809360208201956001600160601b03199060601b168652601d60f91b6034830152612f7a8151809260208686019101612457565b8101036015810184520182612436565b51902090565b6001600160401b03908116600019019190821161097c57565b906001600160401b03908181161561302c57612fc490612f90565b16816000526007602052604060002054811015612ff557612ff1916000526007602052604060002061277b565b5090565b60405162461bcd60e51b815260206004820152600f60248201526e105551125517d393d517d193d55391608a1b6044820152606490fd5b60405162461bcd60e51b815260206004820152601060248201526f1253959053125117d05551125517d25160821b6044820152606490fd5b60008181526009602052604090205492939290919061308d906001600160a01b031615156128b2565b600584101561041257831561344f57600093828552602060078152604091828720546130ba811515612a08565b85885260078352838820600019820191821161343b57906130da9161277b565b5091600191600184019260ff8454166005811015613427576133f057908991886001600160401b039861315a848b4216986131388a8c9067ffffffffffffffff60401b82549160401b169067ffffffffffffffff60401b1916179055565b8a5463ffffffff60801b1916608085901b63ffffffff60801b16178b556127ad565b81855260068652888520600401805470ffffffffffffffff0000000000000000001916604889901b67ffffffffffffffff60481b16178155996131cb63ffffffff9b6131ab8d825460881c16612f28565b815463ffffffff60881b191660889190911b63ffffffff60881b16179055565b88541692600760038a01549901908b8b51936131e785896124e2565b16998a898501528b84015260806060840152868254613205816127c5565b9384608087015260a0916001811690816000146133a25750600114613342575b5050505050807f80f307f5798ed339302133e4f353681cc7f5cc7333f5c829480b6812cf527f33916001960390a314613263575b5050505050509050565b600c908689525282872091613277836138d7565b60320284811690810361332e5784606481855460601c169204160184811161332e5761331892916132ea6000805160206139c88339815191529798996132f0936127109150818982161160001461332757505b845463ffffffff60601b191660609190911b63ffffffff60601b16178455565b8261290c565b548251606082901c9490941663ffffffff16845290911c60030b602083015281906040820190565b0390a280388080808080613259565b90506132ca565b634e487b7160e01b88526011600452602488fd5b9091809493995052888084205b83851061338b5750505050810160a0019450807f80f307f5798ed339302133e4f353681cc7f5cc7333f5c829480b6812cf527f338e3880613225565b80548587018401528f96509301928990890161334f565b91505060019950859491507f80f307f5798ed339302133e4f353681cc7f5cc7333f5c829480b6812cf527f3395935060a0925060ff191682840152151560051b8201019650918e3880613225565b855162461bcd60e51b815260048101849052601060248201526f1393d7d4115391125391d7d05551125560821b6044820152606490fd5b634e487b7160e01b8b52602160045260248bfd5b634e487b7160e01b89526011600452602489fd5b60405162461bcd60e51b815260206004820152600e60248201526d494e56414c49445f53544154555360901b6044820152606490fd5b9692989360079d9a96929c989b9591600098895260209e8f52604089209a8b546000199c8d820191821161380a57906134bd9161277b565b50805463ffffffff60a01b191660a09390931b63ffffffff60a01b16929092178255909d8e9190825463ffffffff60c01b191660c09190911b63ffffffff60c01b1617825581546001600160e01b031660e09190911b6001600160e01b03191617905560028d015560038c015560048b015560058a015560068901906001600160401b03988982116137f6576135578261175685546127c5565b8590601f83116001146137945761358592918791836136985750508160011b916000199060031b1c19161790565b90555b6007880191878211613780576135a28261175685546127c5565b8390601f831160011461371f576135d092918591836136985750508160011b916000199060031b1c19161790565b90555b6008860194841161370b576135f2846135ec87546127c5565b876127ff565b8092601f85116001146136a35750600a959493613625939092836136985750508160011b916000199060031b1c19161790565b90555b019161ffff81511683549265ffff0000000063ffff00008285015160101b16916040850151901b169067ffff000000000000606085015160301b169261ffff60401b608086015160401b169460a061ffff60501b91015160501b16956001600160601b0319161717171717179055565b0135905038806117a3565b8582528782209391601f198616905b898282106136f557505091859391600a98979660019694106136dd575b50505050811b019055613628565b60f88560031b161c19910135169055388080806136cf565b60018597829396880135815501960193016136b2565b634e487b7160e01b81526041600452602490fd5b8385528a852091601f198416865b8d82821061376a575050908460019594939210613752575b505050811b0190556135d3565b8860f88560031b161c19910135169055388080613745565b600184968293958701358155019501920161372d565b634e487b7160e01b84526041600452602484fd5b8387528c872091601f198416888f5b8282106137df5750509084600195949392106137c7575b505050811b019055613588565b8a60f88560031b161c199101351690553880806137ba565b60018496829395870135815501950192018f6137a3565b634e487b7160e01b86526041600452602486fd5b634e487b7160e01b8c52601160045260248cfd5b906001600160401b03908181161561389e5761383990612f90565b1681600052600b60205260406000205481101561386657612ff191600052600b60205260406000206128f0565b60405162461bcd60e51b815260206004820152601060248201526f10541411505317d393d517d193d5539160821b6044820152606490fd5b60405162461bcd60e51b81526020600482015260116024820152701253959053125117d0541411505317d251607a1b6044820152606490fd5b8054906001600160401b0391828160801c16159081156139b5575b506139a95781421690805492808460801c16830381811161097c571680156139a35763ffffffff809460601c1690606482028281046064148315171561097c5760648284020291818304149015171561097c57640608f3d000900481811061396e575050805463ffffffff60601b19168155612a88925061290c565b8416900392831161097c57805463ffffffff60601b191660609390931b63ffffffff60601b16929092178255612a889161290c565b50505050565b612a889142169061290c565b63ffffffff915060601c1615386138f256fef2af20e52964303611e2a2930d6e08b03cf289fc9c25b00c435cd7bf4fd72773a2646970667358221220351d2a3addd457db2532f47731b627a11d10820517769eb296bfe543093bc12264736f6c63430008180033",
+  "deployedBytecode": "0x608080604052600436101561001357600080fd5b60003560e01c90816306fdde031461231b5750806316790254146122ff57806319b36b1d146118935780631a0649e3146115505780631d57330d146114cb5780631e9d4904146114ad5780631f5d5a371461132c5780632e5819a6146113045780632f22afdb146111b55780632f26adcd14611188578063347c19cd14611139578063451135481461111c5780635662bce814610f6d578063570ca73514610f445780636352211e14610f0557806370a0823114610e9157806389370d8b14610da85780638abdf5aa14610d8a5780638da5cb5b14610d6157806395d89b4114610d1c57806396e8f481146106985780639d4f040714610c97578063aa7517e114610c79578063b3ab15fb14610bc8578063ca05588a14610b6d578063ccb4ebe014610701578063d52fcd281461069d578063eb30f6fb14610698578063ef0c26071461067c578063f098a7ae14610519578063f5b61195146104ca578063f84c39c914610436578063f8ba2fdc146102e9578063fd2c42cc146102cb5763fda5d1ff146101a057600080fd5b346102c6576101a03660031901126102c6576004356101bd61264c565b906101c661265f565b6101ce612672565b926101d7612685565b9360a4359260058410156102c6576001600160401b0395610144358781116102c65761020790369060040161249f565b91610164358981116102c65761022190369060040161249f565b959094610184359a8b116102c65761026b6102436102b69c369060040161249f565b9a909961026560018060a01b03806001541633149081156102b8575b50612876565b8c613064565b604051996102788b612393565b60008b52600060208c0152600060408c0152600060608c0152600060808c0152600060a08c01526101243593610104359360e4359360c43593613485565b005b90506000541633143861025f565b600080fd5b346102c65760003660031901126102c6576020600454604051908152f35b346102c6576102f7366126bb565b90929161031860018060a01b03806001541633149081156104285750612876565b600083815260096020526040902054610340906001600160a01b031615156128b2565b6128b2565b61034a8184612fa9565b600181019160ff8354166005811015610412576003036103d9577fd7e851d789b6e3784feb9febce0117765574999009e64543881911a79eb596629360096001600160401b0393604095886000526006602052600387600020016103af8b825461271b565b9055805460ff1916600417905501805461ff001916610100179055835196875260208701521693a3005b60405162461bcd60e51b8152602060048201526011602482015270105551125517d393d517d4d31054d21151607a1b6044820152606490fd5b634e487b7160e01b600052602160045260246000fd5b90506000541633148661025f565b346102c65760403660031901126102c6576004356001600160401b0361045a6124cc565b60015461047b90336001600160a01b03918216149081156104bc5750612876565b60096104878285612fa9565b01805460ff1916600117905516907f5ef8bd082609dcf89dfc86ebb395fcd189183ad5e5c37d83b7123ff8da8b6e8d600080a3005b90506000541633148561025f565b346102c65760203660031901126102c657600435600081815260096020526040902054610501906001600160a01b031615156128b2565b600052600b6020526020604060002054604051908152f35b346102c6576020806003193601126102c657600435600060e060405161053e81612377565b8281526060858201528260408201528260608201528260808201528260a08201528260c0820152015261058961033b82600052600960205260018060a01b0360406000205416151590565b600052600681526040600020604051906105a282612377565b80546001600160a01b039081168352916040906105c160018401612a46565b8582019081526002840154938383019485526004600382015491606085019283520154916080840160ff8416151581526001600160401b0392839160a0870191838760081c16835261064f60c0890195858960481c16875263ffffffff998a60e082019a60881c168a528b519e8f9e8f928284525116910152518c6101009b8c9101526101208d019061247a565b995160608c01525160808b015251151560a08a0152511660c0880152511660e08601525116908301520390f35b346102c65760003660031901126102c657602060405160328152f35b6126ff565b346102c65760403660031901126102c6576106b66126e9565b602435906001600160401b0382116102c6576106e36106dc6106e993369060040161249f565b3691612735565b90612f3d565b60005260086020526020604060002054604051908152f35b346102c65760603660031901126102c65760043561071d6124cc565b6044356003808210156102c65760015461074b90336001600160a01b03918216149081156104285750612876565b60008481526009602052604090205461076e906001600160a01b031615156128b2565b8115610b365761077e838561381e565b916001830160ff8154168381101561041257610af1578161079e91612937565b82546001600160c01b03164260c081901b6001600160c01b0319169190911784556001600160401b03939084169186600052600c6020526040600020916107e4836138d7565b60018203610992578254600163ffffffff9182610802818316612f28565b169063ffffffff19161780865560401c870b01637fffffff198112637fffffff82131761097c5761084e90859081549060401b63ffffffff60401b169063ffffffff60401b1916179055565b606481855460601c16019181831161097c5761089a88926108a594612710809282161160001461097557505b865463ffffffff60601b191660609190911b63ffffffff60601b16178655565b5460401c1688612fa9565b600181019081549160ff8316976005891015610412576000805160206139c88339815191529961091061094e988d967f90239a2ae000675dd3b0dbe1678bc62ab9dd686eeffb26924130d8ebb21df352966020968d63ffffffff9f14610953575b5050505b8861290c565b61091d60405180976126ae565b1693a3546040519384938260401c900b9160601c168390929160209063ffffffff604084019516835260030b910152565b0390a2005b600460099360ff19161790550161010061ff00198254161790558e8080610906565b905061087a565b634e487b7160e01b600052601160045260246000fd5b5081949294549563ffffffff9667ffffffff000000006109b6898360201c16612f28565b60201b169067ffffffff000000001916178084556000199060401c860b01637fffffff8113637fffffff1982121761097c57610a0d90849081549060401b63ffffffff60401b169063ffffffff60401b1916179055565b87835460c8898260601c1611600014610aa0575050825460601c871660c7190196871161097c577f90239a2ae000675dd3b0dbe1678bc62ab9dd686eeffb26924130d8ebb21df352602061094e958a9361091063ffffffff9a610a9b6000805160206139c88339815191529d8a9081549063ffffffff60601b9060601b169063ffffffff60601b1916179055565b61090a565b6000805160206139c8833981519152985061094e957f90239a2ae000675dd3b0dbe1678bc62ab9dd686eeffb26924130d8ebb21df352929361091063ffffffff9a6020948c60601b1916895561090a565b60405162461bcd60e51b815260206004820152601760248201527f41505045414c5f414c52454144595f5245534f4c5645440000000000000000006044820152606490fd5b60405162461bcd60e51b815260206004820152600f60248201526e494e56414c49445f4f5554434f4d4560881b6044820152606490fd5b346102c6577f335f5afc83fe8c5a011a96dc39bcce9fb9d46fb5986502f7040e76e28b0361236040610b9e36612698565b610bb360018060a01b03600054163314612eef565b816002558060035582519182526020820152a1005b346102c65760203660031901126102c657610be16126e9565b6000546001600160a01b03918291610bfc9083163314612eef565b16908115610c4157600154826001600160601b0360a01b821617600155167ffbe5b6cbafb274f445d7fed869dc77a838d8243a22c460de156560e8857cad03600080a3005b60405162461bcd60e51b815260206004820152601060248201526f24a72b20a624a22fa7a822a920aa27a960811b6044820152606490fd5b346102c65760003660031901126102c6576020600354604051908152f35b346102c657610d18610d0c610d06610cae36612698565b90610cb7612981565b50600081815260096020526040902054610cdb906001600160a01b031615156128b2565b806000526007602052610cf46040600020548310612c36565b6000526007602052604060002061277b565b50612b3b565b60405191829182612535565b0390f35b346102c65760003660031901126102c657610d18604051610d3c81612400565b60048152634141493360e01b602082015260405191829160208352602083019061247a565b346102c65760003660031901126102c6576000546040516001600160a01b039091168152602090f35b346102c65760003660031901126102c6576020600254604051908152f35b346102c6576020806003193601126102c65760a09060043560006080604051610dd0816123e5565b82815282858201528260408201528260608201520152610e0861033b82600052600960205260018060a01b0360406000205416151590565b600052600c81526080604060002060405190610e23826123e5565b549063ffffffff9081831694858252808201908385821c1682528360408401928660401c60030b84526060850194828860601c1686526001600160401b03988991019760801c1687526040519889525116908701525160030b60408601525116606084015251166080820152f35b346102c65760203660031901126102c6576001600160a01b03610eb26126e9565b168015610ed157600052600a6020526020604060002054604051908152f35b60405162461bcd60e51b815260206004820152600c60248201526b5a45524f5f4144445245535360a01b6044820152606490fd5b346102c65760203660031901126102c6576004356000526009602052602060018060a01b0360406000205416610f3c8115156128b2565b604051908152f35b346102c65760003660031901126102c6576001546040516001600160a01b039091168152602090f35b346102c657610f7b366126bb565b60015491939291610fa090336001600160a01b03918216149081156104285750612876565b600083815260096020526040902054610fc3906001600160a01b031615156128b2565b82600052600660205260406000209060038201928354918287116110e35760046040947f60a77a9907fdd72fa9c1aed2ee36350704289df2e7956a74c741287c6fcefb799661101c8a611016878c612fa9565b97612728565b905501926003600160ff19928184885416178755019182541617905585600052600c60205260ff846000209354166000146110bf57825463ffffffff60601b191683555b856000805160206139c88339815191526110ad6001600160401b03956110888742168261290c565b548751606082901c63ffffffff16815290881c60030b60208201529081906040820190565b0390a2835196875260208701521693a3005b8254600181901c637fffffff60601b1663ffffffff60601b19909116178355611060565b60405162461bcd60e51b8152602060048201526011602482015270125394d551919250d251539517d093d391607a1b6044820152606490fd5b346102c65760003660031901126102c65760206040516127108152f35b346102c65760203660031901126102c657600435600081815260096020526040902054611170906001600160a01b031615156128b2565b60005260076020526020604060002054604051908152f35b346102c65760203660031901126102c65760c06111a6600435612c98565b6111b360405180926124ef565bf35b346102c65760403660031901126102c6576112346004356111d46124cc565b90606060c06040516111e5816123ca565b60008152600060208201526000604082015260008382015260006080820152600060a0820152015261122f61033b82600052600960205260018060a01b0360406000205416151590565b61381e565b60405190611241826123ca565b8054906001600160401b0380831684526020840190808460401c1682526040850190808560801c168252606086019460c01c855260ff600185015416906080870190600383101561041257602096818995816112b46003610d189b6112ec99895260a060028201549b019a8b5201612a46565b9860c08d01998a52816040519d8e9d8e52511660208d0152511660408b015251166060890152511660808701525160a08601906126ae565b5160c08401525160e08084015261010083019061247a565b346102c65760c06111a6600a61132561131c36612698565b90610cb761294f565b5001612aeb565b346102c6576102603660031901126102c65761134661264c565b61134e61265f565b90611357612672565b91611360612685565b91600560a43510156102c6576001600160401b03610144358181116102c65761138d90369060040161249f565b610164929192358281116102c6576113a990369060040161249f565b939092610184359081116102c6576113c590369060040161249f565b96909560c0366101a31901126102c65760015461140791906113fb90336001600160a01b039182161490811561149f5750612876565b60a43590600435613064565b6040519761141489612393565b61ffff996101a4358b811681036102c6578a526101c4358b811681036102c65760208b01526101e4358b811681036102c65760408b0152610204358b811681036102c65760608b0152610224358b811681036102c65760808b0152610244359a8b168b036102c6576102b69a60a08b01526101243592610104359260e4359260c43592600435613485565b90506000541633148d61025f565b346102c65760003660031901126102c657602060405162278d008152f35b346102c65760203660031901126102c6576004356114e7612981565b5060008181526009602052604090205461150b906001600160a01b031615156128b2565b80600052600760205260406000205490611526821515612a08565b6000526007602052604060002090600019810190811161097c57610d06610d0c91610d189361277b565b346102c65760803660031901126102c6576115696124cc565b6064356001600160401b0381116102c65761158890369060040161249f565b90916115a860018060a01b03806001541633149081156104bc5750612876565b6004356000908152600960205260409020546115ce906001600160a01b031615156128b2565b60096115dc82600435612fa9565b01600160ff19825416179055600435600052602092600b84526040600020546001810180911161097c576001600160401b031692600435600052600b85526040600020916040519061162d826123ca565b858252868201916001600160401b0386168352604081016001600160401b0342168152606082016000815261167560808401946000865260a085019760443589523691612735565b9660c084019788528054600160401b8110156118675761169a916001820181556128f0565b95909561187d579251855493516fffffffffffffffffffffffffffffffff199094166001600160401b039182161760409490941b67ffffffffffffffff60401b1693909317855561171492916116f490839051168661290c565b5184546001600160c01b0316911660c01b6001600160c01b031916178355565b519160038310156104125761172e60039360018401612937565b5160028201550190518051906001600160401b0382116118675761175c8261175685546127c5565b856127ff565b8590601f83116001146117d557827fe95840e66082a0861ce8bd81aeca7b1ec09caf20c05b9aae8892d7f784fc9beb95936001600160401b0395936117b8936000926117ca575b50508160011b916000199060031b1c19161790565b90555b604051938452169260043592a3005b0151905089806117a3565b90601f1983169184600052876000209260005b898282106118515750509260019285927fe95840e66082a0861ce8bd81aeca7b1ec09caf20c05b9aae8892d7f784fc9beb98966001600160401b03989610611838575b505050811b0190556117bb565b015160001960f88460031b161c1916905588808061182b565b60018596829396860151815501950193016117e8565b634e487b7160e01b600052604160045260246000fd5b634e487b7160e01b600052600060045260246000fd5b60403660031901126102c6576004356001600160401b0381116102c6576118be90369060040161249f565b6024356001600160401b0381116102c6576118dd90369060040161249f565b90919081156122c757801561228d57600254916118fc6003548461271b565b34106122535761191861190f8434612728565b9360045461271b565b60045561192f611929368388612735565b33612f3d565b6000526008602052604060002054938415611f63575b846000526006602052600360406000200161196185825461271b565b90558460005260076020526040600020549260018401841161097c57856000526007602052604060002060405161199781612393565b6000815260006020820152600060408201526000606082015260006080820152600060a08201526001600160401b036001604051976119d5896123ae565b011686526001600160401b0342166020870152600060408701526000606087015260006080870152600060a0870152600060c0870152600060e0870152600061010087015260006101208701526000610140870152604051611a368161241b565b60008152610160870152604051611a4c8161241b565b60008152610180870152611a61368486612735565b6101a087015260006101c087015260006101e08701526102008601528054600160401b81101561186757611a9a9160018201815561277b565b97909761187d578451602086015160408088015160608901516080808b015160a0808d015160e01b6001600160e01b0319166001600160401b039098169690951b67ffffffffffffffff60401b169590951763ffffffff60801b9390911b929092169190911763ffffffff60a01b9190921b161763ffffffff60c01b60c09290921b919091161717885560c0850151600581101561041257611b3f9060018a016127ad565b60e085015160028901556101008501516003890155610120850151600489015561014085015160058901556101608501518051906001600160401b03821161186757611b9b82611b9260068d01546127c5565b60068d016127ff565b602090601f8311600114611ef557611bcb929160009183611e7c5750508160011b916000199060031b1c19161790565b60068901555b6101808501518051906001600160401b03821161186757611c0282611bf960078d01546127c5565b60078d016127ff565b602090601f8311600114611e8757611c32929160009183611e7c5750508160011b916000199060031b1c19161790565b60078901555b6101a0850151948551986001600160401b038a1161186757898997611c6f60209c611c6660088601546127c5565b600886016127ff565b8b90601f8311600114611dd157600a611d9694611cd1857fbd6d3df44aaa1231a5f51af5e02c3a67047dc0ebe0a72cb455ffd7eb80172a219c9b9996611da39b999661020096600092611dc65750508160011b916000199060031b1c19161790565b60088201555b60098101611cf86101c08601511515829060ff801983541691151516179055565b6101e0850151151561ff0082549160081b169061ff0019161790550191015161ffff8151169082549163ffff00008f83015160101b1665ffff00000000604084015160201b169067ffff000000000000606085015160301b169261ffff60401b608086015160401b169460a061ffff60501b91015160501b16956001600160601b031916171717171717905560405195608087526080870191612855565b918483038a860152612855565b9360408201526001600160401b03421660608201528033940390a3604051908152f35b0151905038806117a3565b60088493929a999897969594016000528c6000209060005b601f1984168110611e625750611da397969593600184610200947fbd6d3df44aaa1231a5f51af5e02c3a67047dc0ebe0a72cb455ffd7eb80172a219d9e600a95611d969a98601f19811610611e49575b505050811b016008820155611cd7565b015160001960f88460031b161c19169055388080611e39565b818c015183559a8e019a8d9a506001909201918e01611de9565b015190508b806117a3565b90601f1983169160078c0160005260206000209260005b818110611edd5750908460019594939210611ec4575b505050811b016007890155611c38565b015160001960f88460031b161c191690558a8080611eb4565b92936020600181928786015181550195019301611e9e565b90601f1983169160068c0160005260206000209260005b818110611f4b5750908460019594939210611f32575b505050811b016006890155611bd1565b015160001960f88460031b161c191690558a8080611f22565b92936020600181928786015181550195019301611f0c565b93506005546001810180821161097c576005558060005260096020526040600020336001600160601b0360a01b82541617905533600052600a6020526040600020805460018101811161097c576001019055611fc3611929368489612735565b600052600860205280604060002055604051611fde81612377565b338152611fec368489612735565b6020820190815282604083015260006060830152600060808301526001600160401b03421660a0830152600060c0830152600060e083015282600052600660205260406000209060018060a01b038351166001600160601b0360a01b835416178255518051906001600160401b0382116118675761207a8261207160018601546127c5565b600186016127ff565b602090601f83116001146121d55761215f94936120b98463ffffffff9560e0956004956000926121ca5750508160011b916000199060031b1c19161790565b60018201555b604085015160028201556060850151600382015501926120f160808201511515859060ff801983541691151516179055565b60a0810151845460c083015170ffffffffffffffffffffffffffffffff001990911660089290921b68ffffffffffffffff00169190911760489190911b67ffffffffffffffff60481b161784550151825463ffffffff60881b1916911660881b63ffffffff60881b16179055565b604051813360007fddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef8180a460208152817f0d063c6022bff16d09991a9f91882ffa112f5fb2529136f65eb4c77bbd047e433392806121c160208201888d612855565b0390a393611945565b015190508f806117a3565b906001840160005260206000209160005b601f198516811061223b57509360018460e09460049461215f999863ffffffff98601f19811610612222575b505050811b0160018201556120bf565b015160001960f88460031b161c191690558e8080612212565b919260206001819286850151815501940192016121e6565b60405162461bcd60e51b8152602060048201526012602482015271494e53554646494349454e545f56414c554560701b6044820152606490fd5b60405162461bcd60e51b8152602060048201526012602482015271115354151657d3505392519154d517d5549360721b6044820152606490fd5b60405162461bcd60e51b815260206004820152601060248201526f454d5054595f4147454e545f4e414d4560801b6044820152606490fd5b346102c65760003660031901126102c657602060405160c88152f35b346102c65760003660031901126102c65780612339610d1892612400565b601781527f4167656e74204175646974204964656e74697479205633000000000000000000602082015260405191829160208352602083019061247a565b61010081019081106001600160401b0382111761186757604052565b60c081019081106001600160401b0382111761186757604052565b61022081019081106001600160401b0382111761186757604052565b60e081019081106001600160401b0382111761186757604052565b60a081019081106001600160401b0382111761186757604052565b604081019081106001600160401b0382111761186757604052565b602081019081106001600160401b0382111761186757604052565b90601f801991011681019081106001600160401b0382111761186757604052565b60005b83811061246a5750506000910152565b818101518382015260200161245a565b9060209161249381518092818552858086019101612457565b601f01601f1916010190565b9181601f840112156102c6578235916001600160401b0383116102c657602083818601950101116102c657565b602435906001600160401b03821682036102c657565b9060058210156104125752565b60a0908161ffff91828151168552826020820151166020860152826040820151166040860152826060820151166060860152826080820151166080860152015116910152565b61264990602081526001600160401b038084511660208301526020840151166040820152604083015163ffffffff80911660608301528060608501511660808301528060808501511660a083015260a08401511660c08201526125a060c084015160e08301906124e2565b61022060e08401516101009081840152840151610120908184015284015161014090818401528401516101609081840152840151936126236125f1610180966102c0888701526102e086019061247a565b9582015161260e601f19976101a09289888303018489015261247a565b908301516101c097868303018887015261247a565b948101516101e090151581850152810151906102009115158285015201519101906124ef565b90565b6024359063ffffffff821682036102c657565b6044359063ffffffff821682036102c657565b6064359063ffffffff821682036102c657565b6084359063ffffffff821682036102c657565b60409060031901126102c6576004359060243590565b9060038210156104125752565b60809060031901126102c657600435906024356001600160401b03811681036102c657906044359060643590565b600435906001600160a01b03821682036102c657565b346102c65760003660031901126102c657602060405160648152f35b9190820180921161097c57565b9190820391821161097c57565b9291926001600160401b038211611867576040519161275e601f8201601f191660200184612436565b8294818452818301116102c6578281602093846000960137010152565b805482101561279757600052600b602060002091020190600090565b634e487b7160e01b600052603260045260246000fd5b9060058110156104125760ff80198354169116179055565b90600182811c921680156127f5575b60208310146127df57565b634e487b7160e01b600052602260045260246000fd5b91607f16916127d4565b90601f811161280d57505050565b6000916000526020600020906020601f850160051c8301941061284b575b601f0160051c01915b82811061284057505050565b818155600101612834565b909250829061282b565b908060209392818452848401376000828201840152601f01601f1916010190565b1561287d57565b60405162461bcd60e51b815260206004820152600d60248201526c27a7262cafa7a822a920aa27a960991b6044820152606490fd5b156128b957565b60405162461bcd60e51b815260206004820152600f60248201526e1513d2d15397d393d517d193d55391608a1b6044820152606490fd5b80548210156127975760005260206000209060021b0190600090565b805467ffffffffffffffff60801b191660809290921b67ffffffffffffffff60801b16919091179055565b9060038110156104125760ff80198354169116179055565b6040519061295c82612393565b8160a06000918281528260208201528260408201528260608201528260808201520152565b6040519061298e826123ae565b8160008082528060208301528060408301528060608301528060808301528060a08301528060c08301528060e08301528061010083015280610120830152806101408301526060610160830152606061018083015260606101a0830152806101c08301526101e0820152610200612a0361294f565b910152565b15612a0f57565b60405162461bcd60e51b815260206004820152600f60248201526e1393d7d05551125517d49150d3d491608a1b6044820152606490fd5b90604051918260008254612a59816127c5565b90818452602094600191600181169081600014612ac95750600114612a8a575b505050612a8892500383612436565b565b600090815285812095935091905b818310612ab1575050612a889350820101388080612a79565b85548884018501529485019487945091830191612a98565b92505050612a8894925060ff191682840152151560051b820101388080612a79565b90604051612af881612393565b60a081935461ffff908181168452818160101c166020850152818160201c166040850152818160301c166060850152818160401c16608085015260501c16910152565b90604051612b48816123ae565b809280546001600160401b0380821684528160401c16602084015263ffffffff808260801c166040850152808260a01c1660608501528160c01c16608084015260e01c60a083015260ff60018201541690600582101561041257600a612a03916102009360c0860152600281015460e0860152600381015461010086015260048101546101208601526005810154610140860152612be860068201612a46565b610160860152612bfa60078201612a46565b610180860152612c0c60088201612a46565b6101a086015260ff600982015481811615156101c088015260081c1615156101e086015201612aeb565b15612c3d57565b60405162461bcd60e51b8152602060048201526013602482015272494e4445585f4f55545f4f465f424f554e445360681b6044820152606490fd5b8115612c82570490565b634e487b7160e01b600052601260045260246000fd5b612ca061294f565b50600081815260096020526040902054612cc4906001600160a01b031615156128b2565b60009080825260076020526040822054612cdf811515612a08565b829083849285869187948897895b8a838210612dbb57505050508615612d84578697509286959286809693819661ffff9687809681612d2081978296612c78565b169e612d2b91612c78565b169b612d3691612c78565b1696612d4191612c78565b1695612d4c91612c78565b1694612d5791612c78565b169360405195612d6687612393565b8652602086015260408501526060840152608083015260a082015290565b5050505050505060405190612d9882612393565b80825280602083015280604083015280606083015280608083015260a082015290565b600a6113258360408487612dd5965260076020522061277b565b61ffff808251168015801590612ee0575b8015612ed1575b8015612ec2575b8015612eb3575b8015612ea4575b612e12575b505050600101612ced565b612e25919298979b99969c9a939c61271b565b9481602089015116612e369161271b565b9781604089015116612e479161271b565b9981606089015116612e589161271b565b9581608089015116612e699161271b565b9660a0015116612e789161271b565b966000198114612e9057600180910199903880612e07565b634e487b7160e01b8b52601160045260248bfd5b508160a0840151161515612e02565b50816080840151161515612dfb565b50816060840151161515612df4565b50816040840151161515612ded565b50816020840151161515612de6565b15612ef657565b60405162461bcd60e51b815260206004820152600a60248201526927a7262cafa7aba722a960b11b6044820152606490fd5b90600163ffffffff8093160191821161097c57565b90612f8a6035604051809360208201956001600160601b03199060601b168652601d60f91b6034830152612f7a8151809260208686019101612457565b8101036015810184520182612436565b51902090565b6001600160401b03908116600019019190821161097c57565b906001600160401b03908181161561302c57612fc490612f90565b16816000526007602052604060002054811015612ff557612ff1916000526007602052604060002061277b565b5090565b60405162461bcd60e51b815260206004820152600f60248201526e105551125517d393d517d193d55391608a1b6044820152606490fd5b60405162461bcd60e51b815260206004820152601060248201526f1253959053125117d05551125517d25160821b6044820152606490fd5b60008181526009602052604090205492939290919061308d906001600160a01b031615156128b2565b600584101561041257831561344f57600093828552602060078152604091828720546130ba811515612a08565b85885260078352838820600019820191821161343b57906130da9161277b565b5091600191600184019260ff8454166005811015613427576133f057908991886001600160401b039861315a848b4216986131388a8c9067ffffffffffffffff60401b82549160401b169067ffffffffffffffff60401b1916179055565b8a5463ffffffff60801b1916608085901b63ffffffff60801b16178b556127ad565b81855260068652888520600401805470ffffffffffffffff0000000000000000001916604889901b67ffffffffffffffff60481b16178155996131cb63ffffffff9b6131ab8d825460881c16612f28565b815463ffffffff60881b191660889190911b63ffffffff60881b16179055565b88541692600760038a01549901908b8b51936131e785896124e2565b16998a898501528b84015260806060840152868254613205816127c5565b9384608087015260a0916001811690816000146133a25750600114613342575b5050505050807f80f307f5798ed339302133e4f353681cc7f5cc7333f5c829480b6812cf527f33916001960390a314613263575b5050505050509050565b600c908689525282872091613277836138d7565b60320284811690810361332e5784606481855460601c169204160184811161332e5761331892916132ea6000805160206139c88339815191529798996132f0936127109150818982161160001461332757505b845463ffffffff60601b191660609190911b63ffffffff60601b16178455565b8261290c565b548251606082901c9490941663ffffffff16845290911c60030b602083015281906040820190565b0390a280388080808080613259565b90506132ca565b634e487b7160e01b88526011600452602488fd5b9091809493995052888084205b83851061338b5750505050810160a0019450807f80f307f5798ed339302133e4f353681cc7f5cc7333f5c829480b6812cf527f338e3880613225565b80548587018401528f96509301928990890161334f565b91505060019950859491507f80f307f5798ed339302133e4f353681cc7f5cc7333f5c829480b6812cf527f3395935060a0925060ff191682840152151560051b8201019650918e3880613225565b855162461bcd60e51b815260048101849052601060248201526f1393d7d4115391125391d7d05551125560821b6044820152606490fd5b634e487b7160e01b8b52602160045260248bfd5b634e487b7160e01b89526011600452602489fd5b60405162461bcd60e51b815260206004820152600e60248201526d494e56414c49445f53544154555360901b6044820152606490fd5b9692989360079d9a96929c989b9591600098895260209e8f52604089209a8b546000199c8d820191821161380a57906134bd9161277b565b50805463ffffffff60a01b191660a09390931b63ffffffff60a01b16929092178255909d8e9190825463ffffffff60c01b191660c09190911b63ffffffff60c01b1617825581546001600160e01b031660e09190911b6001600160e01b03191617905560028d015560038c015560048b015560058a015560068901906001600160401b03988982116137f6576135578261175685546127c5565b8590601f83116001146137945761358592918791836136985750508160011b916000199060031b1c19161790565b90555b6007880191878211613780576135a28261175685546127c5565b8390601f831160011461371f576135d092918591836136985750508160011b916000199060031b1c19161790565b90555b6008860194841161370b576135f2846135ec87546127c5565b876127ff565b8092601f85116001146136a35750600a959493613625939092836136985750508160011b916000199060031b1c19161790565b90555b019161ffff81511683549265ffff0000000063ffff00008285015160101b16916040850151901b169067ffff000000000000606085015160301b169261ffff60401b608086015160401b169460a061ffff60501b91015160501b16956001600160601b0319161717171717179055565b0135905038806117a3565b8582528782209391601f198616905b898282106136f557505091859391600a98979660019694106136dd575b50505050811b019055613628565b60f88560031b161c19910135169055388080806136cf565b60018597829396880135815501960193016136b2565b634e487b7160e01b81526041600452602490fd5b8385528a852091601f198416865b8d82821061376a575050908460019594939210613752575b505050811b0190556135d3565b8860f88560031b161c19910135169055388080613745565b600184968293958701358155019501920161372d565b634e487b7160e01b84526041600452602484fd5b8387528c872091601f198416888f5b8282106137df5750509084600195949392106137c7575b505050811b019055613588565b8a60f88560031b161c199101351690553880806137ba565b60018496829395870135815501950192018f6137a3565b634e487b7160e01b86526041600452602486fd5b634e487b7160e01b8c52601160045260248cfd5b906001600160401b03908181161561389e5761383990612f90565b1681600052600b60205260406000205481101561386657612ff191600052600b60205260406000206128f0565b60405162461bcd60e51b815260206004820152601060248201526f10541411505317d393d517d193d5539160821b6044820152606490fd5b60405162461bcd60e51b81526020600482015260116024820152701253959053125117d0541411505317d251607a1b6044820152606490fd5b8054906001600160401b0391828160801c16159081156139b5575b506139a95781421690805492808460801c16830381811161097c571680156139a35763ffffffff809460601c1690606482028281046064148315171561097c5760648284020291818304149015171561097c57640608f3d000900481811061396e575050805463ffffffff60601b19168155612a88925061290c565b8416900392831161097c57805463ffffffff60601b191660609390931b63ffffffff60601b16929092178255612a889161290c565b50505050565b612a889142169061290c565b63ffffffff915060601c1615386138f256fef2af20e52964303611e2a2930d6e08b03cf289fc9c25b00c435cd7bf4fd72773a2646970667358221220351d2a3addd457db2532f47731b627a11d10820517769eb296bfe543093bc12264736f6c63430008180033",
+  "compiler": {
+    "version": "0.8.24"
+  },
+  "metadata": {
+    "compiler": {
+      "version": "0.8.24+commit.e11b9ed9"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "initialServiceFee",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "initialMinimumBond",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "initialOperator",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "developer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "agentName",
+              "type": "string"
+            }
+          ],
+          "name": "AgentRegistered",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint64",
+              "name": "auditId",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "appealId",
+              "type": "uint64"
+            }
+          ],
+          "name": "AppealFiled",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint64",
+              "name": "auditId",
+              "type": "uint64"
+            }
+          ],
+          "name": "AppealRequested",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint64",
+              "name": "appealId",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "enum AgentAuditRegistryV3.AppealOutcome",
+              "name": "outcome",
+              "type": "uint8"
+            }
+          ],
+          "name": "AppealResolved",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint64",
+              "name": "auditId",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "enum AgentAuditRegistryV3.AuditStatus",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "auditScore",
+              "type": "uint32"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes32",
+              "name": "reportHash",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "reportCID",
+              "type": "string"
+            }
+          ],
+          "name": "AuditRecorded",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "developer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "agentName",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "manifestUrl",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "bondAmount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "timestamp",
+              "type": "uint64"
+            }
+          ],
+          "name": "AuditRequested",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint64",
+              "name": "auditId",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes32",
+              "name": "reasonCode",
+              "type": "bytes32"
+            }
+          ],
+          "name": "BondCompensated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint64",
+              "name": "auditId",
+              "type": "uint64"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes32",
+              "name": "reasonCode",
+              "type": "bytes32"
+            }
+          ],
+          "name": "BondSlashed",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOperator",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOperator",
+              "type": "address"
+            }
+          ],
+          "name": "OperatorUpdated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "serviceFee",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "minimumBond",
+              "type": "uint256"
+            }
+          ],
+          "name": "PricingUpdated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "currentScore",
+              "type": "uint32"
+            },
+            {
+              "indexed": false,
+              "internalType": "int32",
+              "name": "delta",
+              "type": "int32"
+            }
+          ],
+          "name": "ReputationUpdated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "Transfer",
+          "type": "event"
+        },
+        {
+          "inputs": [],
+          "name": "APPEAL_FAILURE_PENALTY",
+          "outputs": [
+            {
+              "internalType": "uint32",
+              "name": "",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "APPEAL_SUCCESS_BONUS",
+          "outputs": [
+            {
+              "internalType": "uint32",
+              "name": "",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "BASE_POINTS_PER_AUDIT",
+          "outputs": [
+            {
+              "internalType": "uint32",
+              "name": "",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "DECAY_PERIOD",
+          "outputs": [
+            {
+              "internalType": "uint64",
+              "name": "",
+              "type": "uint64"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "DECAY_RATE_BPS",
+          "outputs": [
+            {
+              "internalType": "uint32",
+              "name": "",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "MAX_REPUTATION_SCORE",
+          "outputs": [
+            {
+              "internalType": "uint32",
+              "name": "",
+              "type": "uint32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "accruedServiceFees",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "account",
+              "type": "address"
+            }
+          ],
+          "name": "balanceOf",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint64",
+              "name": "auditId",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "reasonCode",
+              "type": "bytes32"
+            }
+          ],
+          "name": "compensateBond",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint64",
+              "name": "auditId",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "evidenceHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "string",
+              "name": "appealCID",
+              "type": "string"
+            }
+          ],
+          "name": "fileAppeal",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getAgentProfile",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "address",
+                  "name": "developer",
+                  "type": "address"
+                },
+                {
+                  "internalType": "string",
+                  "name": "agentName",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "totalBond",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "blacklisted",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "createdAt",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "lastAuditAt",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "auditCount",
+                  "type": "uint32"
+                }
+              ],
+              "internalType": "struct AgentAuditRegistryV3.AgentProfile",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getAppealCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint64",
+              "name": "appealId",
+              "type": "uint64"
+            }
+          ],
+          "name": "getAppealRecord",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint64",
+                  "name": "appealId",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "auditId",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "filedAt",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "resolvedAt",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "enum AgentAuditRegistryV3.AppealOutcome",
+                  "name": "outcome",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "evidenceHash",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "string",
+                  "name": "appealCID",
+                  "type": "string"
+                }
+              ],
+              "internalType": "struct AgentAuditRegistryV3.AppealRecord",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getAuditCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            }
+          ],
+          "name": "getAuditReportByIndex",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint64",
+                  "name": "auditId",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "timestamp",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "auditScore",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "memoryPeakMb",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "cpuAvgMilli",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "requestIpCount",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "enum AgentAuditRegistryV3.AuditStatus",
+                  "name": "status",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "manifestHash",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "reportHash",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "evidenceRoot",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "attestationHash",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "string",
+                  "name": "evidenceCID",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "reportCID",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "manifestUrl",
+                  "type": "string"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "appealRequested",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "appealApproved",
+                  "type": "bool"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "uint16",
+                      "name": "security",
+                      "type": "uint16"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "taskExecution",
+                      "type": "uint16"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "cognitive",
+                      "type": "uint16"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "environment",
+                      "type": "uint16"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "engineering",
+                      "type": "uint16"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "compliance",
+                      "type": "uint16"
+                    }
+                  ],
+                  "internalType": "struct AgentAuditRegistryV3.DimensionalScores",
+                  "name": "dimensionalScores",
+                  "type": "tuple"
+                }
+              ],
+              "internalType": "struct AgentAuditRegistryV3.AuditRecord",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getAverageScores",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint16",
+                  "name": "security",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "taskExecution",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "cognitive",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "environment",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "engineering",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "compliance",
+                  "type": "uint16"
+                }
+              ],
+              "internalType": "struct AgentAuditRegistryV3.DimensionalScores",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "auditIndex",
+              "type": "uint256"
+            }
+          ],
+          "name": "getDimensionalScores",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint16",
+                  "name": "security",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "taskExecution",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "cognitive",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "environment",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "engineering",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "compliance",
+                  "type": "uint16"
+                }
+              ],
+              "internalType": "struct AgentAuditRegistryV3.DimensionalScores",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getLatestAuditReport",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint64",
+                  "name": "auditId",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "timestamp",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "auditScore",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "memoryPeakMb",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "cpuAvgMilli",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "requestIpCount",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "enum AgentAuditRegistryV3.AuditStatus",
+                  "name": "status",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "manifestHash",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "reportHash",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "evidenceRoot",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "attestationHash",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "string",
+                  "name": "evidenceCID",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "reportCID",
+                  "type": "string"
+                },
+                {
+                  "internalType": "string",
+                  "name": "manifestUrl",
+                  "type": "string"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "appealRequested",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "appealApproved",
+                  "type": "bool"
+                },
+                {
+                  "components": [
+                    {
+                      "internalType": "uint16",
+                      "name": "security",
+                      "type": "uint16"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "taskExecution",
+                      "type": "uint16"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "cognitive",
+                      "type": "uint16"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "environment",
+                      "type": "uint16"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "engineering",
+                      "type": "uint16"
+                    },
+                    {
+                      "internalType": "uint16",
+                      "name": "compliance",
+                      "type": "uint16"
+                    }
+                  ],
+                  "internalType": "struct AgentAuditRegistryV3.DimensionalScores",
+                  "name": "dimensionalScores",
+                  "type": "tuple"
+                }
+              ],
+              "internalType": "struct AgentAuditRegistryV3.AuditRecord",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getReputation",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint32",
+                  "name": "successfulAppeals",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "failedAppeals",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "int32",
+                  "name": "reputationDelta",
+                  "type": "int32"
+                },
+                {
+                  "internalType": "uint32",
+                  "name": "currentReputationScore",
+                  "type": "uint32"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "lastReputationUpdateAt",
+                  "type": "uint64"
+                }
+              ],
+              "internalType": "struct AgentAuditRegistryV3.ReputationRecord",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "developer",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "agentName",
+              "type": "string"
+            }
+          ],
+          "name": "getTokenId",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint64",
+              "name": "auditId",
+              "type": "uint64"
+            }
+          ],
+          "name": "markAppealRequested",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "minimumBond",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "name",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "operator",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "ownerOf",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint32",
+              "name": "auditScore",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "memoryPeakMb",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "cpuAvgMilli",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "requestIpCount",
+              "type": "uint32"
+            },
+            {
+              "internalType": "enum AgentAuditRegistryV3.AuditStatus",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "manifestHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "reportHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "evidenceRoot",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "attestationHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "string",
+              "name": "evidenceCID",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "reportCID",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "manifestUrl",
+              "type": "string"
+            }
+          ],
+          "name": "recordAuditResult",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint32",
+              "name": "auditScore",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "memoryPeakMb",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "cpuAvgMilli",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "requestIpCount",
+              "type": "uint32"
+            },
+            {
+              "internalType": "enum AgentAuditRegistryV3.AuditStatus",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "manifestHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "reportHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "evidenceRoot",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "attestationHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "string",
+              "name": "evidenceCID",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "reportCID",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "manifestUrl",
+              "type": "string"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint16",
+                  "name": "security",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "taskExecution",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "cognitive",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "environment",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "engineering",
+                  "type": "uint16"
+                },
+                {
+                  "internalType": "uint16",
+                  "name": "compliance",
+                  "type": "uint16"
+                }
+              ],
+              "internalType": "struct AgentAuditRegistryV3.DimensionalScores",
+              "name": "scores",
+              "type": "tuple"
+            }
+          ],
+          "name": "recordAuditResultV2",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint64",
+              "name": "appealId",
+              "type": "uint64"
+            },
+            {
+              "internalType": "enum AgentAuditRegistryV3.AppealOutcome",
+              "name": "outcome",
+              "type": "uint8"
+            }
+          ],
+          "name": "resolveAppeal",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "serviceFee",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "newOperator",
+              "type": "address"
+            }
+          ],
+          "name": "setOperator",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "newServiceFee",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "newMinimumBond",
+              "type": "uint256"
+            }
+          ],
+          "name": "setPricing",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint64",
+              "name": "auditId",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "reasonCode",
+              "type": "bytes32"
+            }
+          ],
+          "name": "slashBond",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "string",
+              "name": "agentName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "manifestUrl",
+              "type": "string"
+            }
+          ],
+          "name": "stake",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "symbol",
+          "outputs": [
+            {
+              "internalType": "string",
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "compilationTarget": {
+        "src/AgentAuditRegistryV3.sol": "AgentAuditRegistryV3"
+      },
+      "evmVersion": "paris",
+      "libraries": {},
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "remappings": [],
+      "viaIR": true
+    },
+    "sources": {
+      "src/AgentAuditRegistryV3.sol": {
+        "keccak256": "0x33aadd8a433c467aaabe84e17982133311ca9233e43f54d95a4b4de5111e0a59",
+        "license": "MIT",
+        "urls": [
+          "bzz-raw://c2a7be5ed0e10aa29d9e0b086465354bd7ca1562de1de13abe478dd15d1f0b8f",
+          "dweb:/ipfs/QmW71KrwRjTdWZvjq8UXJoYVABZyfFxLeTmZCFnZvCpVQi"
+        ]
+      }
+    },
+    "version": 1
+  }
+}
