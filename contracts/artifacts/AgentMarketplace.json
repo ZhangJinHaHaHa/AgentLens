@@ -1,0 +1,510 @@
+{
+  "contractName": "AgentMarketplace",
+  "sourceName": "src/AgentMarketplace.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "initialOperator",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "buyer",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isRental",
+          "type": "bool"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "expiresAt",
+          "type": "uint64"
+        }
+      ],
+      "name": "AccessGranted",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "pricePerDay",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "buyPrice",
+          "type": "uint256"
+        }
+      ],
+      "name": "PriceSet",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "buyAgent",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAccessCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getPricing",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "pricePerDay",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "buyPrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "configured",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct AgentMarketplace.PricingInfo",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "hasAccess",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "operator",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "durationDays",
+          "type": "uint256"
+        }
+      ],
+      "name": "rentAgent",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pricePerDay",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "buyPrice",
+          "type": "uint256"
+        }
+      ],
+      "name": "setPrice",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x60803461008d57601f6108e938819003918201601f19168301916001600160401b038311848410176100925780849260209460405283398101031261008d57516001600160a01b038082169182810361008d57600080546001600160a01b03199081163317909155926100885750335b1690600154161760015560405161084090816100a98239f35b61006f565b600080fd5b634e487b7160e01b600052604160045260246000fdfe6080604081815260048036101561001557600080fd5b600092833560e01c908163570ca735146105ba5750806358f35551146105935780638da5cb5b1461056b5780639a9e6bb514610398578063aa585d561461029c578063c12f1a4214610222578063ced14198146101df5763fa3ded901461007b57600080fd5b602091826003193601126101db57813591828552600284528185206100c88380516100a5816105df565b8354815260ff60026001860154958a84019687520154161515918291015261062d565b8051156101aa576100dc905134101561066b565b6100e633846107c2565b80865281855260ff83872054166101745785528352808420805460ff191660011790558184526003835280842081517fc409ce2e63458aae57caa4b8a9915277522b0312fd479cc96c7ccb004acdce0d9291610164919061014682610611565b858252338783015287848301523460608301528760808301526106d1565b848151948186528501523393a380f35b5083606492519162461bcd60e51b835282015260116024820152701053149150511657d4155490d21054d151607a1b6044820152fd5b5083606492519162461bcd60e51b8352820152600c60248201526b4e4f545f464f525f53414c4560a01b6044820152fd5b8380fd5b503461021e578160031936011261021e57602435926001600160a01b038416840361021b5750602092610212913561077e565b90519015158152f35b80fd5b8280fd5b503461021e57602036600319011261021e57828291606094838051610246816105df565b8281528260208201520152358152600260205220908051610266816105df565b8254928382528260ff60026001840154936020860194855201541692019115158252825193845251602084015251151590820152f35b50903461021e57606036600319011261021e57600154823592602435916044359190336001600160a01b039182161490811561038b575b5015610358575090829161034a7f22db173e2a8b7fa2d933790c01e64878b79e267d813bb3227a15b1c7ac404ffe945161030c816105df565b8381526002602082018481528683019060018252898b5282602052878b209351845551600184015551151591019060ff801983541691151516179055565b82519182526020820152a280f35b606490602085519162461bcd60e51b8352820152600d60248201526c27a7262cafa7a822a920aa27a960991b6044820152fd5b90508654163314386102d3565b5091908060031936011261056757823560243591818452602092600284528185206103e860ff60028551936103cc856105df565b805485526001810154898601520154161515808584015261062d565b811561053157518181029080820483149015171561051e5761040c9034101561066b565b620151808082029182040361050b57907fc409ce2e63458aae57caa4b8a9915277522b0312fd479cc96c7ccb004acdce0d916104e167ffffffffffffffff91828061045783426106ae565b169161046333896107c2565b92838b5260058a52868b2090815442858216116000146104f1575050908261048c9254166106ae565b16908852600587528388208167ffffffffffffffff198254161790555b85885260038752838820928451916104c083610611565b878352338984015216928385830152346060830152600160808301526106d1565b815194600186528501523393a380f35b67ffffffffffffffff1916811790915592506104a9915050565b634e487b7160e01b855260118652602485fd5b634e487b7160e01b865260118752602486fd5b825162461bcd60e51b8152808801869052601060248201526f24a72b20a624a22fa22aa920aa24a7a760811b6044820152606490fd5b5080fd5b505034610567578160031936011261056757905490516001600160a01b039091168152602090f35b503461021e57602036600319011261021e5760209282913581526003845220549051908152f35b8490346105675781600319360112610567576001546001600160a01b03168152602090f35b6060810190811067ffffffffffffffff8211176105fb57604052565b634e487b7160e01b600052604160045260246000fd5b60a0810190811067ffffffffffffffff8211176105fb57604052565b1561063457565b60405162461bcd60e51b815260206004820152600f60248201526e14149250d25391d7d393d517d4d155608a1b6044820152606490fd5b1561067257565b60405162461bcd60e51b8152602060048201526014602482015273125394d551919250d251539517d410565351539560621b6044820152606490fd5b919082018092116106bb57565b634e487b7160e01b600052601160045260246000fd5b908154680100000000000000008110156105fb57600181018084558110156107685760806003916107669460005260206000209060021b0192805184556001840160018060a01b0360208301511681549067ffffffffffffffff60a01b604085015160a01b169163ffffffff60e01b1617179055606081015160028501550151151591019060ff801983541691151516179055565b565b634e487b7160e01b600052603260045260246000fd5b90610788916107c2565b600052600460205260ff604060002054166107bd57600560205267ffffffffffffffff6040600020541642106107bd57600090565b600190565b9060405190602082019283526bffffffffffffffffffffffff199060601b166040820152603481526060810181811067ffffffffffffffff8211176105fb576040525190209056fea26469706673582212204fbe02652749e0e3e0eea3905ebd05679239e162a5b0b1faaaf4171b02757f0364736f6c63430008180033",
+  "deployedBytecode": "0x6080604081815260048036101561001557600080fd5b600092833560e01c908163570ca735146105ba5750806358f35551146105935780638da5cb5b1461056b5780639a9e6bb514610398578063aa585d561461029c578063c12f1a4214610222578063ced14198146101df5763fa3ded901461007b57600080fd5b602091826003193601126101db57813591828552600284528185206100c88380516100a5816105df565b8354815260ff60026001860154958a84019687520154161515918291015261062d565b8051156101aa576100dc905134101561066b565b6100e633846107c2565b80865281855260ff83872054166101745785528352808420805460ff191660011790558184526003835280842081517fc409ce2e63458aae57caa4b8a9915277522b0312fd479cc96c7ccb004acdce0d9291610164919061014682610611565b858252338783015287848301523460608301528760808301526106d1565b848151948186528501523393a380f35b5083606492519162461bcd60e51b835282015260116024820152701053149150511657d4155490d21054d151607a1b6044820152fd5b5083606492519162461bcd60e51b8352820152600c60248201526b4e4f545f464f525f53414c4560a01b6044820152fd5b8380fd5b503461021e578160031936011261021e57602435926001600160a01b038416840361021b5750602092610212913561077e565b90519015158152f35b80fd5b8280fd5b503461021e57602036600319011261021e57828291606094838051610246816105df565b8281528260208201520152358152600260205220908051610266816105df565b8254928382528260ff60026001840154936020860194855201541692019115158252825193845251602084015251151590820152f35b50903461021e57606036600319011261021e57600154823592602435916044359190336001600160a01b039182161490811561038b575b5015610358575090829161034a7f22db173e2a8b7fa2d933790c01e64878b79e267d813bb3227a15b1c7ac404ffe945161030c816105df565b8381526002602082018481528683019060018252898b5282602052878b209351845551600184015551151591019060ff801983541691151516179055565b82519182526020820152a280f35b606490602085519162461bcd60e51b8352820152600d60248201526c27a7262cafa7a822a920aa27a960991b6044820152fd5b90508654163314386102d3565b5091908060031936011261056757823560243591818452602092600284528185206103e860ff60028551936103cc856105df565b805485526001810154898601520154161515808584015261062d565b811561053157518181029080820483149015171561051e5761040c9034101561066b565b620151808082029182040361050b57907fc409ce2e63458aae57caa4b8a9915277522b0312fd479cc96c7ccb004acdce0d916104e167ffffffffffffffff91828061045783426106ae565b169161046333896107c2565b92838b5260058a52868b2090815442858216116000146104f1575050908261048c9254166106ae565b16908852600587528388208167ffffffffffffffff198254161790555b85885260038752838820928451916104c083610611565b878352338984015216928385830152346060830152600160808301526106d1565b815194600186528501523393a380f35b67ffffffffffffffff1916811790915592506104a9915050565b634e487b7160e01b855260118652602485fd5b634e487b7160e01b865260118752602486fd5b825162461bcd60e51b8152808801869052601060248201526f24a72b20a624a22fa22aa920aa24a7a760811b6044820152606490fd5b5080fd5b505034610567578160031936011261056757905490516001600160a01b039091168152602090f35b503461021e57602036600319011261021e5760209282913581526003845220549051908152f35b8490346105675781600319360112610567576001546001600160a01b03168152602090f35b6060810190811067ffffffffffffffff8211176105fb57604052565b634e487b7160e01b600052604160045260246000fd5b60a0810190811067ffffffffffffffff8211176105fb57604052565b1561063457565b60405162461bcd60e51b815260206004820152600f60248201526e14149250d25391d7d393d517d4d155608a1b6044820152606490fd5b1561067257565b60405162461bcd60e51b8152602060048201526014602482015273125394d551919250d251539517d410565351539560621b6044820152606490fd5b919082018092116106bb57565b634e487b7160e01b600052601160045260246000fd5b908154680100000000000000008110156105fb57600181018084558110156107685760806003916107669460005260206000209060021b0192805184556001840160018060a01b0360208301511681549067ffffffffffffffff60a01b604085015160a01b169163ffffffff60e01b1617179055606081015160028501550151151591019060ff801983541691151516179055565b565b634e487b7160e01b600052603260045260246000fd5b90610788916107c2565b600052600460205260ff604060002054166107bd57600560205267ffffffffffffffff6040600020541642106107bd57600090565b600190565b9060405190602082019283526bffffffffffffffffffffffff199060601b166040820152603481526060810181811067ffffffffffffffff8211176105fb576040525190209056fea26469706673582212204fbe02652749e0e3e0eea3905ebd05679239e162a5b0b1faaaf4171b02757f0364736f6c63430008180033",
+  "compiler": {
+    "version": "0.8.24"
+  },
+  "metadata": {
+    "compiler": {
+      "version": "0.8.24+commit.e11b9ed9"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "initialOperator",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "buyer",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "isRental",
+              "type": "bool"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "expiresAt",
+              "type": "uint64"
+            }
+          ],
+          "name": "AccessGranted",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "pricePerDay",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "buyPrice",
+              "type": "uint256"
+            }
+          ],
+          "name": "PriceSet",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "buyAgent",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getAccessCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getPricing",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "pricePerDay",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "buyPrice",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "configured",
+                  "type": "bool"
+                }
+              ],
+              "internalType": "struct AgentMarketplace.PricingInfo",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "hasAccess",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "operator",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "durationDays",
+              "type": "uint256"
+            }
+          ],
+          "name": "rentAgent",
+          "outputs": [],
+          "stateMutability": "payable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "pricePerDay",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "buyPrice",
+              "type": "uint256"
+            }
+          ],
+          "name": "setPrice",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "compilationTarget": {
+        "src/AgentMarketplace.sol": "AgentMarketplace"
+      },
+      "evmVersion": "paris",
+      "libraries": {},
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "remappings": [],
+      "viaIR": true
+    },
+    "sources": {
+      "src/AgentMarketplace.sol": {
+        "keccak256": "0x380b1d6dded19a67a3ff969058f360cea7c14d0ce6fe64e8358586052b82ac20",
+        "license": "MIT",
+        "urls": [
+          "bzz-raw://d0ad076d72861fcd931c4b2ce3539229430001c8a7f4c89161291c4fb9221df5",
+          "dweb:/ipfs/QmToqNJWbTDBgc7ZjakjGewtKANKFfDg758f3JSFV3Rgh3"
+        ]
+      }
+    },
+    "version": 1
+  }
+}
