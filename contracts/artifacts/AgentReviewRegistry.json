@@ -1,0 +1,603 @@
+{
+  "contractName": "AgentReviewRegistry",
+  "sourceName": "src/AgentReviewRegistry.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "marketplaceAddress",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint64",
+          "name": "reviewId",
+          "type": "uint64"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "reviewer",
+          "type": "address"
+        }
+      ],
+      "name": "ReviewSubmitted",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "RATING_BAD",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "RATING_GOOD",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "RATING_NEUTRAL",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getRatingDistribution",
+      "outputs": [
+        {
+          "internalType": "uint16[6]",
+          "name": "goodRatios",
+          "type": "uint16[6]"
+        },
+        {
+          "internalType": "uint16[6]",
+          "name": "neutralRatios",
+          "type": "uint16[6]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "getReview",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint64",
+              "name": "reviewId",
+              "type": "uint64"
+            },
+            {
+              "internalType": "address",
+              "name": "reviewer",
+              "type": "address"
+            },
+            {
+              "internalType": "uint64",
+              "name": "timestamp",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint8",
+              "name": "securityRating",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "taskExecutionRating",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "cognitiveRating",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "environmentRating",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "engineeringRating",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "complianceRating",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "commentHash",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct AgentReviewRegistry.Review",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getReviewCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "reviewer",
+          "type": "address"
+        }
+      ],
+      "name": "hasReviewed",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "marketplace",
+      "outputs": [
+        {
+          "internalType": "contract IAgentMarketplace",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint8[6]",
+          "name": "ratings",
+          "type": "uint8[6]"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "commentHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "submitReview",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x60803461008b57601f610c4e38819003918201601f19168301916001600160401b038311848410176100905780849260209460405283398101031261008b57516001600160a01b0381169081900361008b5760018054600080546001600160a01b031916331790556001600160e01b031916909117600160a01b179055604051610ba790816100a78239f35b600080fd5b634e487b7160e01b600052604160045260246000fdfe6080604081815260048036101561001557600080fd5b600092833560e01c9081631cbe3d4114610777575080635d75135a146107505780637c7198cc146106dc5780638da5cb5b146106b4578063a07a478914610676578063abc8c7af1461064d578063d045422514610631578063de1282c514610612578063dfa505ed146104c15763eded67dd1461009157600080fd5b346104bd576101003660031901126104bd578035903660e4116104b957600154928051916319da283360e31b835283818401526024903382850152602093604490858160448160018060a01b038c165afa9081156104af578991610475575b50156104485783518581018781523360601b6bffffffffffffffffffffffff191660208201529061012e81603484015b03601f19810183528261080d565b519020928389526003865260ff9182868b20541661041357895b600681106103c157505067ffffffffffffffff808960a01c169860018a018281116103af5767ffffffffffffffff60a01b1990911660a09190911b67ffffffffffffffff60a01b1617600155878a5260028752858a2092823580821692908390036103ab576044358281168091036103a7576064358381168091036103a3576084359184831680930361039f5760a4359385851680950361039b5760c43595861680960361039b578b518f6101fc826107be565b81528d8101903382528d8101998342168b5260608201998a526080820194855260a0820195865260c0820196875260e08201978852610100820198895261012082019b60e4358d52805490600160401b82101561038457906102639160018201815561082f565b9d909d61036b5750509c69ff0000000000000000007f3d9a95745b95ec2cc2b32b152005816f581eddc9318a0d512496def0107443c39f9e84839f9e9d9b9997958e60029e9c9a989660019268ff00000000000000009551168254918167ffffffffffffffff198416178455600160401b8560e01b039051891b169163ffffffff60e01b1617178155019a5116928a549951901b16925160481b169260ff60501b905160501b169360ff60581b905160581b169460ff60601b905160601b169560ff60681b905160681b16966dffffffffffffffffffffffffffff191617171717171717905551910155865260038252808620600160ff19825416179055519384523393a380f35b9350955050508f9250829150634e487b7160e01b825252fd5b5050925050508f60418b634e487b7160e01b835252fd5b8f80fd5b8e80fd5b8d80fd5b8c80fd5b8b80fd5b634e487b7160e01b8c5260118652838cfd5b8060051b8301358481168091036103ab576002106103e157600101610148565b865162461bcd60e51b8152808601899052600e818501526d494e56414c49445f524154494e4760901b81840152606490fd5b855162461bcd60e51b81528085018890526010818401526f1053149150511657d49155925155d15160821b6044820152606490fd5b5060096064928585519362461bcd60e51b8552840152820152684e4f5f41434345535360b81b6044820152fd5b90508581813d83116104a8575b61048c818361080d565b810103126104a4575180151581036104a457386100f0565b8880fd5b503d610482565b85513d8b823e3d90fd5b8380fd5b8280fd5b50823461060f578260031936011261060f578135916024358451926104e5846107be565b808452602094818686015281878601528160608601528160808601528160a08601528160c08601528160e0860152610100938285870152826101208097015281835260028752878320548410156105d6575061055387936101409884610559948998965260028a522061082f565b50610861565b9180519567ffffffffffffffff9081855116885260018060a01b03818601511690880152818401511690860152606082015160ff80911660608701528060808401511660808701528060a08401511660a08701528060c08401511660c08701528060e08401511660e0870152818301511690850152015190820152f35b875162461bcd60e51b81529081018790526013602482015272494e4445585f4f55545f4f465f424f554e445360681b6044820152606490fd5b80fd5b50503461062d578160031936011261062d5751908152602090f35b5080fd5b50503461062d578160031936011261062d576020905160028152f35b50503461062d578160031936011261062d5760015490516001600160a01b039091168152602090f35b50913461060f57602036600319011261060f57506106b26106a861069d6101809435610945565b919093518094610792565b60c0830190610792565bf35b50503461062d578160031936011261062d57905490516001600160a01b039091168152602090f35b50346104bd57816003193601126104bd576024356001600160a01b03811681036104b95782519135602083810191825260609290921b6bffffffffffffffffffffffff19166040840152909360ff9284929061073b8160548101610120565b51902081526003855220541690519015158152f35b50346104bd5760203660031901126104bd5760209282913581526002845220549051908152f35b84903461062d578160031936011261062d5780600160209252f35b6000915b600683106107a357505050565b60019061ffff83511681526020809101920192019190610796565b610140810190811067ffffffffffffffff8211176107db57604052565b634e487b7160e01b600052604160045260246000fd5b60c0810190811067ffffffffffffffff8211176107db57604052565b90601f8019910116810190811067ffffffffffffffff8211176107db57604052565b805482101561084b576000526003602060002091020190600090565b634e487b7160e01b600052603260045260246000fd5b9060405161086e816107be565b61012060028294805467ffffffffffffffff90818116865260018060a01b039060401c1660208601526001820154908116604086015260ff90818160401c166060870152818160481c166080870152818160501c1660a0870152818160581c1660c0870152818160601c1660e087015260681c166101008501520154910152565b90600681101561084b5760051b0190565b600019811461090f5760010190565b634e487b7160e01b600052601160045260246000fd5b811561092f570490565b634e487b7160e01b600052601260045260246000fd5b906040908151610954816107f1565b60c0803683378194845191610968836107f1565b803684378295600092808452600290602095600260205283862054978815610b64575050825195610998876107f1565b843688378351946109a8866107f1565b80368737865b898110610a5857505050505050815b600681106109cc575050505050565b6109d681856108ef565b516127109081810290808204831490151715610a44579086916109fd61ffff938492610925565b16610a08848c6108ef565b52610a1383856108ef565b51818102918183041490151715610a445790610a328760019493610925565b16610a3d828a6108ef565b52016109bd565b634e487b7160e01b85526011600452602485fd5b838852848352610a6d61055382888b2061082f565b865183810181811067ffffffffffffffff821117610b5057885260ff9182610100606092828482015116855260808381830151168a87015260a0948d85878501511690880152848a84015116908701528360e0830151169086015201511690820152895b60068110610ae4575050506001016109ae565b808884610af3600194866108ef565b511603610b20578c610b1882610b12610b0c82856108ef565b51610900565b926108ef565b525b01610ad1565b8184610b2c83866108ef565b511603610b1a57610b40610b0c828d6108ef565b610b4a828d6108ef565b52610b1a565b634e487b7160e01b8b52604160045260248bfd5b9a5098505050505050505056fea2646970667358221220b05dd048e1d06785f573ada2b0f2016bbe0ca4d41538ac516adb0f2074573bd764736f6c63430008180033",
+  "deployedBytecode": "0x6080604081815260048036101561001557600080fd5b600092833560e01c9081631cbe3d4114610777575080635d75135a146107505780637c7198cc146106dc5780638da5cb5b146106b4578063a07a478914610676578063abc8c7af1461064d578063d045422514610631578063de1282c514610612578063dfa505ed146104c15763eded67dd1461009157600080fd5b346104bd576101003660031901126104bd578035903660e4116104b957600154928051916319da283360e31b835283818401526024903382850152602093604490858160448160018060a01b038c165afa9081156104af578991610475575b50156104485783518581018781523360601b6bffffffffffffffffffffffff191660208201529061012e81603484015b03601f19810183528261080d565b519020928389526003865260ff9182868b20541661041357895b600681106103c157505067ffffffffffffffff808960a01c169860018a018281116103af5767ffffffffffffffff60a01b1990911660a09190911b67ffffffffffffffff60a01b1617600155878a5260028752858a2092823580821692908390036103ab576044358281168091036103a7576064358381168091036103a3576084359184831680930361039f5760a4359385851680950361039b5760c43595861680960361039b578b518f6101fc826107be565b81528d8101903382528d8101998342168b5260608201998a526080820194855260a0820195865260c0820196875260e08201978852610100820198895261012082019b60e4358d52805490600160401b82101561038457906102639160018201815561082f565b9d909d61036b5750509c69ff0000000000000000007f3d9a95745b95ec2cc2b32b152005816f581eddc9318a0d512496def0107443c39f9e84839f9e9d9b9997958e60029e9c9a989660019268ff00000000000000009551168254918167ffffffffffffffff198416178455600160401b8560e01b039051891b169163ffffffff60e01b1617178155019a5116928a549951901b16925160481b169260ff60501b905160501b169360ff60581b905160581b169460ff60601b905160601b169560ff60681b905160681b16966dffffffffffffffffffffffffffff191617171717171717905551910155865260038252808620600160ff19825416179055519384523393a380f35b9350955050508f9250829150634e487b7160e01b825252fd5b5050925050508f60418b634e487b7160e01b835252fd5b8f80fd5b8e80fd5b8d80fd5b8c80fd5b8b80fd5b634e487b7160e01b8c5260118652838cfd5b8060051b8301358481168091036103ab576002106103e157600101610148565b865162461bcd60e51b8152808601899052600e818501526d494e56414c49445f524154494e4760901b81840152606490fd5b855162461bcd60e51b81528085018890526010818401526f1053149150511657d49155925155d15160821b6044820152606490fd5b5060096064928585519362461bcd60e51b8552840152820152684e4f5f41434345535360b81b6044820152fd5b90508581813d83116104a8575b61048c818361080d565b810103126104a4575180151581036104a457386100f0565b8880fd5b503d610482565b85513d8b823e3d90fd5b8380fd5b8280fd5b50823461060f578260031936011261060f578135916024358451926104e5846107be565b808452602094818686015281878601528160608601528160808601528160a08601528160c08601528160e0860152610100938285870152826101208097015281835260028752878320548410156105d6575061055387936101409884610559948998965260028a522061082f565b50610861565b9180519567ffffffffffffffff9081855116885260018060a01b03818601511690880152818401511690860152606082015160ff80911660608701528060808401511660808701528060a08401511660a08701528060c08401511660c08701528060e08401511660e0870152818301511690850152015190820152f35b875162461bcd60e51b81529081018790526013602482015272494e4445585f4f55545f4f465f424f554e445360681b6044820152606490fd5b80fd5b50503461062d578160031936011261062d5751908152602090f35b5080fd5b50503461062d578160031936011261062d576020905160028152f35b50503461062d578160031936011261062d5760015490516001600160a01b039091168152602090f35b50913461060f57602036600319011261060f57506106b26106a861069d6101809435610945565b919093518094610792565b60c0830190610792565bf35b50503461062d578160031936011261062d57905490516001600160a01b039091168152602090f35b50346104bd57816003193601126104bd576024356001600160a01b03811681036104b95782519135602083810191825260609290921b6bffffffffffffffffffffffff19166040840152909360ff9284929061073b8160548101610120565b51902081526003855220541690519015158152f35b50346104bd5760203660031901126104bd5760209282913581526002845220549051908152f35b84903461062d578160031936011261062d5780600160209252f35b6000915b600683106107a357505050565b60019061ffff83511681526020809101920192019190610796565b610140810190811067ffffffffffffffff8211176107db57604052565b634e487b7160e01b600052604160045260246000fd5b60c0810190811067ffffffffffffffff8211176107db57604052565b90601f8019910116810190811067ffffffffffffffff8211176107db57604052565b805482101561084b576000526003602060002091020190600090565b634e487b7160e01b600052603260045260246000fd5b9060405161086e816107be565b61012060028294805467ffffffffffffffff90818116865260018060a01b039060401c1660208601526001820154908116604086015260ff90818160401c166060870152818160481c166080870152818160501c1660a0870152818160581c1660c0870152818160601c1660e087015260681c166101008501520154910152565b90600681101561084b5760051b0190565b600019811461090f5760010190565b634e487b7160e01b600052601160045260246000fd5b811561092f570490565b634e487b7160e01b600052601260045260246000fd5b906040908151610954816107f1565b60c0803683378194845191610968836107f1565b803684378295600092808452600290602095600260205283862054978815610b64575050825195610998876107f1565b843688378351946109a8866107f1565b80368737865b898110610a5857505050505050815b600681106109cc575050505050565b6109d681856108ef565b516127109081810290808204831490151715610a44579086916109fd61ffff938492610925565b16610a08848c6108ef565b52610a1383856108ef565b51818102918183041490151715610a445790610a328760019493610925565b16610a3d828a6108ef565b52016109bd565b634e487b7160e01b85526011600452602485fd5b838852848352610a6d61055382888b2061082f565b865183810181811067ffffffffffffffff821117610b5057885260ff9182610100606092828482015116855260808381830151168a87015260a0948d85878501511690880152848a84015116908701528360e0830151169086015201511690820152895b60068110610ae4575050506001016109ae565b808884610af3600194866108ef565b511603610b20578c610b1882610b12610b0c82856108ef565b51610900565b926108ef565b525b01610ad1565b8184610b2c83866108ef565b511603610b1a57610b40610b0c828d6108ef565b610b4a828d6108ef565b52610b1a565b634e487b7160e01b8b52604160045260248bfd5b9a5098505050505050505056fea2646970667358221220b05dd048e1d06785f573ada2b0f2016bbe0ca4d41538ac516adb0f2074573bd764736f6c63430008180033",
+  "compiler": {
+    "version": "0.8.24"
+  },
+  "metadata": {
+    "compiler": {
+      "version": "0.8.24+commit.e11b9ed9"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "marketplaceAddress",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "reviewId",
+              "type": "uint64"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "reviewer",
+              "type": "address"
+            }
+          ],
+          "name": "ReviewSubmitted",
+          "type": "event"
+        },
+        {
+          "inputs": [],
+          "name": "RATING_BAD",
+          "outputs": [
+            {
+              "internalType": "uint8",
+              "name": "",
+              "type": "uint8"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "RATING_GOOD",
+          "outputs": [
+            {
+              "internalType": "uint8",
+              "name": "",
+              "type": "uint8"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "RATING_NEUTRAL",
+          "outputs": [
+            {
+              "internalType": "uint8",
+              "name": "",
+              "type": "uint8"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getRatingDistribution",
+          "outputs": [
+            {
+              "internalType": "uint16[6]",
+              "name": "goodRatios",
+              "type": "uint16[6]"
+            },
+            {
+              "internalType": "uint16[6]",
+              "name": "neutralRatios",
+              "type": "uint16[6]"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "index",
+              "type": "uint256"
+            }
+          ],
+          "name": "getReview",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint64",
+                  "name": "reviewId",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "address",
+                  "name": "reviewer",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint64",
+                  "name": "timestamp",
+                  "type": "uint64"
+                },
+                {
+                  "internalType": "uint8",
+                  "name": "securityRating",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint8",
+                  "name": "taskExecutionRating",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint8",
+                  "name": "cognitiveRating",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint8",
+                  "name": "environmentRating",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint8",
+                  "name": "engineeringRating",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint8",
+                  "name": "complianceRating",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "commentHash",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct AgentReviewRegistry.Review",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getReviewCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "reviewer",
+              "type": "address"
+            }
+          ],
+          "name": "hasReviewed",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "marketplace",
+          "outputs": [
+            {
+              "internalType": "contract IAgentMarketplace",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint8[6]",
+              "name": "ratings",
+              "type": "uint8[6]"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "commentHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "submitReview",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "getRatingDistribution(uint256)": {
+            "returns": {
+              "goodRatios": "  Percentage of \"good\" ratings per dimension",
+              "neutralRatios": "Percentage of \"neutral\" ratings per dimension"
+            }
+          }
+        },
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "getRatingDistribution(uint256)": {
+            "notice": "Returns rating distribution for each dimension as basis points (0-10000)."
+          }
+        },
+        "version": 1
+      }
+    },
+    "settings": {
+      "compilationTarget": {
+        "src/AgentReviewRegistry.sol": "AgentReviewRegistry"
+      },
+      "evmVersion": "paris",
+      "libraries": {},
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "remappings": [],
+      "viaIR": true
+    },
+    "sources": {
+      "src/AgentReviewRegistry.sol": {
+        "keccak256": "0x08d6bdf9ff5a937a98d70f30c50981832122611cf93d99bcd3b60876b4ee2ffd",
+        "license": "MIT",
+        "urls": [
+          "bzz-raw://81370c8abac995b58d712bd56dc8fa6535ee153b2ebe41606860233471134168",
+          "dweb:/ipfs/QmawvpGh2SHq7jmE5be5gMpzAUvZUhw3gqaTnuhaTA2tro"
+        ]
+      }
+    },
+    "version": 1
+  }
+}
