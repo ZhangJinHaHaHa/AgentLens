@@ -1,0 +1,19 @@
+services:
+  polygon-edge-local:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: polygon-edge-local
+    env_file:
+      - .env
+    ports:
+      - "${EDGE_LOCAL_RPC_PORT:-18545}:8545"
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "/bin/sh", "/app/scripts/healthcheck.sh"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+    restart: unless-stopped
