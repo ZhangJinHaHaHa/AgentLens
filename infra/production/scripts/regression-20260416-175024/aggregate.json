@@ -1,0 +1,21 @@
+{
+  "iterations": 10,
+  "success": 10,
+  "failed": 0,
+  "successRate": "1.00",
+  "attestationNonZeroCount": 10,
+  "elapsedMedianMs": 18251,
+  "elapsedP95Ms": 18657,
+  "tokenIds": [
+    "3",
+    "12",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11"
+  ]
+}
