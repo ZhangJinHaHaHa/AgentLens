@@ -1,0 +1,10 @@
+{
+  "task_id": "local-audit-task",
+  "question": "Run the local sandbox smoke test",
+  "context": {
+    "history": []
+  },
+  "constraints": {
+    "response_format": "json"
+  }
+}
