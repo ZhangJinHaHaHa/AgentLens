@@ -1,0 +1,6 @@
+{
+  "agent_name": "risk-agent",
+  "image": "registry.example.com/agents/risk-agent:1.0.0",
+  "allowed_hosts": ["api.risk.com", "rpc.edge.local"],
+  "allowed_rpc_endpoints": ["https://rpc.edge.local"]
+}
