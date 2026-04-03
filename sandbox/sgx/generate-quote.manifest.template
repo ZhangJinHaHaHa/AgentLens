@@ -1,0 +1,64 @@
+# Gramine manifest template for generate-quote.py (TOML format, Gramine 1.9)
+#
+# Build:
+#   make SGX=1
+#
+# Run:
+#   echo '{"schemaVersion":"audit-attestation-request.v1",...}' | gramine-sgx ./generate-quote
+
+[loader]
+log_level = "{{ log_level }}"
+argv = ["python3", "/app/generate-quote.py"]
+
+[loader.env]
+LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}:/usr/lib:/usr/{{ arch_libdir }}"
+HOME = "/home/user"
+
+[libos]
+entrypoint = "{{ entrypoint }}"
+
+[[fs.mounts]]
+path = "/lib"
+uri = "file:{{ gramine.runtimedir() }}"
+
+[[fs.mounts]]
+path = "{{ arch_libdir }}"
+uri = "file:{{ arch_libdir }}"
+
+[[fs.mounts]]
+path = "/usr"
+uri = "file:/usr"
+
+[[fs.mounts]]
+path = "/etc"
+uri = "file:/etc"
+
+[[fs.mounts]]
+path = "/app"
+uri = "file:."
+
+[sgx]
+enclave_size = "256M"
+max_threads = 4
+debug = false
+remote_attestation = "dcap"
+
+trusted_files = [
+  "file:{{ entrypoint }}",
+  "file:{{ gramine.runtimedir() }}/",
+  "file:{{ arch_libdir }}/",
+  "file:/usr/{{ arch_libdir }}/",
+  "file:/usr/lib/python3/",
+  "file:/usr/lib/python3.10/",
+  "file:generate-quote.py",
+]
+
+allowed_files = [
+  "file:/etc/nsswitch.conf",
+  "file:/etc/host.conf",
+  "file:/etc/resolv.conf",
+  "file:/etc/ethers",
+  "file:/etc/hosts",
+  "file:/etc/group",
+  "file:/etc/passwd",
+]
