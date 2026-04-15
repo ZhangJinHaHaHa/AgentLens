@@ -1,0 +1,45 @@
+import type { TransactionReceiptResult } from "../chain/jsonRpcWriteClient";
+
+export interface WriteCompensateBondRequest {
+  tokenId: bigint;
+  auditId: number;
+  amount: bigint;
+  reasonCode: string;
+}
+
+export interface WriteCompensateBondDependencies {
+  submitContractCall: (request: {
+    method: "compensateBond";
+    args: {
+      tokenId: bigint;
+      auditId: number;
+      amount: bigint;
+      reasonCode: `0x${string}`;
+    };
+  }) => Promise<TransactionReceiptResult | unknown>;
+}
+
+function normalizeReasonCode(reasonCode: string): `0x${string}` {
+  if (/^0x[0-9a-fA-F]{64}$/u.test(reasonCode)) {
+    return reasonCode as `0x${string}`;
+  }
+
+  const encoded = Buffer.alloc(32);
+  encoded.write(reasonCode, "utf8");
+  return `0x${encoded.toString("hex")}`;
+}
+
+export async function writeCompensateBond(
+  request: WriteCompensateBondRequest,
+  deps: WriteCompensateBondDependencies
+): Promise<unknown> {
+  return deps.submitContractCall({
+    method: "compensateBond",
+    args: {
+      tokenId: request.tokenId,
+      auditId: request.auditId,
+      amount: request.amount,
+      reasonCode: normalizeReasonCode(request.reasonCode)
+    }
+  });
+}

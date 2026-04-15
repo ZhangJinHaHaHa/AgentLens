@@ -1,0 +1,6 @@
+{
+  "agent_name": "risk-agent",
+  "image": "",
+  "allowed_hosts": ["*.risk.com"],
+  "allowed_rpc_endpoints": ["not-a-url"]
+}
