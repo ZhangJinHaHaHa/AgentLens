@@ -1,0 +1,32 @@
+{
+  "name": "agent-shenji-sandbox",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "build:test-agent": "npm run build && docker build -t agent-shenji/test-agent:local -f test-agent/Dockerfile .",
+    "test": "npm run build && node --test dist/tests/**/*.test.js",
+    "run:listener": "npm run build && node dist/src/cli/listener.js",
+    "run:listener:once": "npm run run:listener -- --once",
+    "run:appeal:api": "npm run build && node dist/src/cli/appealApi.js",
+    "run:report:gateway": "npm run build && node dist/src/cli/reportGateway.js",
+    "run:report:verify": "npm run build && node dist/src/cli/reportVerify.js",
+    "run:evidence:verify": "npm run build && node dist/src/cli/evidenceVerify.js",
+    "run:attestation:verify": "npm run build && node dist/src/cli/attestationVerify.js",
+    "run:attestation:api": "npm run build && node dist/src/cli/attestationApi.js",
+    "run:attestation:command-provider": "npm run build && node dist/src/cli/attestationCommandProvider.js",
+    "run:local": "npm run build && node dist/src/cli/run.js",
+    "run:smoke": "npm run build && node dist/src/cli/smoke.js",
+    "run:acceptance": "npm run build && node dist/src/cli/acceptance.js"
+  },
+  "dependencies": {
+    "cids": "^1.1.9",
+    "cos-nodejs-sdk-v5": "^2.11.19",
+    "ethers": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.30",
+    "typescript": "^5.8.3"
+  }
+}

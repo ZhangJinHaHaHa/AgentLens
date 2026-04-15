@@ -1,0 +1,6 @@
+{
+  "agent_name": "local-test-agent",
+  "image": "agent-shenji/test-agent:local",
+  "allowed_hosts": ["1.1.1.1"],
+  "allowed_rpc_endpoints": ["http://1.1.1.1"]
+}

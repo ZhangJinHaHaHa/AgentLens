@@ -1,0 +1,15 @@
+{
+  "rpcUrl": "http://127.0.0.1:18545",
+  "chainId": "302512",
+  "registryAddress": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+  "stakeTransactionHash": "0x...",
+  "stakeBlockNumber": 0,
+  "tokenId": "1",
+  "writebackTransactionHash": "0x...",
+  "writebackBlockNumber": 0,
+  "processedCount": 1,
+  "latestStatus": "1",
+  "latestAuditScore": "100",
+  "latestManifestHash": "0x...",
+  "latestReportHash": "0x..."
+}
