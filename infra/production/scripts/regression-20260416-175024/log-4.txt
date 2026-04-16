@@ -1,0 +1,42 @@
+
+[17:51:19] Preflight: probing RPC and attestation API
+
+[17:51:20] Submitting stake for agent: regression-1776333079-4
+
+[17:51:26] Staked: tokenId=6 tx=0x0f530809eb93c91db313aadb76bb102ced351b8843b6e7129c8e7e75ee9a4829 block=901750
+
+[17:51:26] Polling getLatestAuditReport(6) until status != Pending (timeout=480000ms)
+
+[17:51:37] Audit completed
+{
+  "auditId": "1",
+  "timestamp": "1776333092",
+  "auditScore": "0",
+  "status": "2",
+  "manifestHash": "0x6b11a662c4082757c25a3d7bf9eac0157be1bd3bd867a080988dbd2e9c461489",
+  "reportHash": "0x003853e4d9ce83d0e324ac53f4c19459f6dceaeef1329344df946fd4c8e1faf4",
+  "reportCID": "QmYwAPJzv5CZsnAzt8auVTLN9uWw6tG6PvxBUw9u5VnXNf",
+  "attestationHash": "0xc8b9b13e6042025a501a6e4b173cf62df3de6d89c36f5918009c54b6b28309ad"
+}
+[17:51:37] On-chain attestationHash: 0xc8b9b13e6042025a501a6e4b173cf62df3de6d89c36f5918009c54b6b28309ad
+
+[17:51:37] Writing summary to /Users/waiieason/code/web3/agent-shenji/infra/production/scripts/regression-20260416-175024/summary-4.json
+
+[17:51:37] ✅ TEE E2E passed
+{
+  "status": "pass",
+  "agentName": "regression-1776333079-4",
+  "tokenId": "6",
+  "stakeTransactionHash": "0x0f530809eb93c91db313aadb76bb102ced351b8843b6e7129c8e7e75ee9a4829",
+  "stakeBlockNumber": 901750,
+  "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "auditStatus": "2",
+  "auditScore": "0",
+  "auditId": "1",
+  "manifestHash": "0x6b11a662c4082757c25a3d7bf9eac0157be1bd3bd867a080988dbd2e9c461489",
+  "reportHash": "0x003853e4d9ce83d0e324ac53f4c19459f6dceaeef1329344df946fd4c8e1faf4",
+  "reportCID": "QmYwAPJzv5CZsnAzt8auVTLN9uWw6tG6PvxBUw9u5VnXNf",
+  "attestationHash": "0xc8b9b13e6042025a501a6e4b173cf62df3de6d89c36f5918009c54b6b28309ad",
+  "expectedMeasurement": "1656d0e5f1dbac0e687662f79b8b5bf8629e40224567ecb823d1eb409f0b16b8",
+  "offlineAttestationVerified": "skipped"
+}

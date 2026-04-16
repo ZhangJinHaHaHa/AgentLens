@@ -1,0 +1,17 @@
+{
+  "status": "pass",
+  "agentName": "regression-1776333042-2",
+  "tokenId": "4",
+  "stakeTransactionHash": "0xa9b8d168ab24a770cc3eb090bc2d0d90d46b7c5b30f3f3be2fcf64ef845c4cec",
+  "stakeBlockNumber": 901732,
+  "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "auditStatus": "2",
+  "auditScore": "0",
+  "auditId": "1",
+  "manifestHash": "0x6b11a662c4082757c25a3d7bf9eac0157be1bd3bd867a080988dbd2e9c461489",
+  "reportHash": "0xc32ad1ec9b186abb921605b4266661cd99987d43e6e22ec964cf9c088caeb507",
+  "reportCID": "QmYwAPJzv5CZsnAzt8auVTLN9uWw6tG6PvxBUw9u5VnXNf",
+  "attestationHash": "0x07d36984e5c1b05cc11ea96e477924600a17f509ce302f21e83e8ced739506b3",
+  "expectedMeasurement": "1656d0e5f1dbac0e687662f79b8b5bf8629e40224567ecb823d1eb409f0b16b8",
+  "offlineAttestationVerified": "skipped"
+}

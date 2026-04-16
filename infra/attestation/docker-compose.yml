@@ -1,0 +1,53 @@
+# ==============================================================================
+# Agent Shenji — Attestation API (SGX host / M6ce)
+#
+# Runs independently from the main production compose. Deploy this on the
+# Tencent Cloud M6ce confidential-computing instance that exposes SGX device
+# nodes. The listener talks to this service over HTTP.
+#
+# Prerequisites on the host:
+#   * Intel SGX DCAP runtime installed (see sandbox/sgx/setup-sgx-env.sh).
+#   * /dev/sgx_enclave and /dev/sgx_provision present (is-sgx-available).
+#   * AESM running on the host (sudo systemctl status aesmd). The Gramine
+#     base image also ships an in-container AESM fallback, but mounting the
+#     host socket reduces cold-start latency for DCAP collateral lookups.
+# ==============================================================================
+services:
+  attestation-api:
+    build:
+      context: ../..
+      dockerfile: infra/attestation/Dockerfile
+    image: agent-shenji-attestation:latest
+    container_name: shenji-attestation-api
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      AUDIT_ATTESTATION_SERVICE_HOST: "0.0.0.0"
+      AUDIT_ATTESTATION_SERVICE_PORT: "3311"
+    # SGX device passthrough — required for Gramine to produce real DCAP quotes.
+    devices:
+      - /dev/sgx_enclave:/dev/sgx_enclave
+      - /dev/sgx_provision:/dev/sgx_provision
+    volumes:
+      # Persist the Gramine enclave signing key so MRENCLAVE is stable across
+      # container restarts. Loss of this volume = new MRENCLAVE = listener
+      # verification breaks until AUDIT_ATTESTATION_EXPECTED_MEASUREMENT is
+      # updated.
+      - attestation-gramine-keys:/root/.config/gramine
+      # Optional: host AESM socket (fallback on in-container AESM if missing).
+      - /var/run/aesmd:/var/run/aesmd
+    ports:
+      - "${ATTESTATION_PORT:-3311}:3311"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:3311/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      # First boot builds the manifest + may fetch DCAP collateral; be generous.
+      start_period: 120s
+
+volumes:
+  attestation-gramine-keys:
+    driver: local
