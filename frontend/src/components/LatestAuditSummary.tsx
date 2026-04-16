@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import type { AuditRecord } from "../lib/agentAuditRegistryClient";
 import { getAuditStatusLabel } from "../lib/auditStatus";
 import { formatTimestamp } from "../lib/format";
+import { AttestationBadge } from "./AttestationBadge";
 
 interface LatestAuditSummaryProps {
   audit: AuditRecord;
@@ -28,6 +29,12 @@ export function LatestAuditSummary({ audit, reportHref }: LatestAuditSummaryProp
         <div>
           <dt>Score</dt>
           <dd>{String(audit.auditScore)}</dd>
+        </div>
+        <div>
+          <dt>TEE attestation</dt>
+          <dd>
+            <AttestationBadge attestationHash={audit.attestationHash} />
+          </dd>
         </div>
         <div>
           <dt>Timestamp</dt>
