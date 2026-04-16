@@ -2,7 +2,10 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { writeAuditResult } from "../../src/listener/writeAuditResult";
+import type { WriteAuditResultDependencies } from "../../src/listener/writeAuditResult";
 import type { ProcessedAuditRequested } from "../../src/listener/types";
+
+type SubmitContractCallRequest = Parameters<WriteAuditResultDependencies["submitContractCall"]>[0];
 
 function buildProcessed(
   overrides: Partial<ProcessedAuditRequested["writeback"]> = {}
@@ -39,9 +42,7 @@ test("writeAuditResult maps ProcessedAuditRequested into recordAuditResult call 
   const submitResult = { transactionHash: "0xabc", blockNumber: 123 };
 
   const result = await writeAuditResult(buildProcessed({ status: "Passed" }), {
-    submitContractCall: async (
-      request: { method: string; args: Record<string, unknown> }
-    ) => {
+    submitContractCall: async (request: SubmitContractCallRequest) => {
       captured.push(request);
       return submitResult;
     }
@@ -90,9 +91,7 @@ test("writeAuditResult maps Failed status to enum 2 and preserves already-prefix
       manifestUrl: "ipfs://manifest-cid"
     }),
     {
-      submitContractCall: async (
-        request: { method: string; args: Record<string, unknown> }
-      ) => {
+      submitContractCall: async (request: SubmitContractCallRequest) => {
         captured.push(request);
         return { transactionHash: "0xdef", blockNumber: 222 };
       }
@@ -121,6 +120,56 @@ test("writeAuditResult maps Failed status to enum 2 and preserves already-prefix
   ]);
 });
 
+test("writeAuditResult routes to recordAuditResultV2 when dimensionalScores are present", async () => {
+  const captured: unknown[] = [];
+
+  const processed = buildProcessed({
+    attestationHash: "0x" + "f".repeat(64),
+    dimensionalScores: {
+      security: 8500,
+      taskExecution: 7200,
+      cognitive: 6100,
+      environment: 9000,
+      engineering: 7800,
+      compliance: 9500
+    }
+  });
+
+  await writeAuditResult(processed, {
+    submitContractCall: async (request: SubmitContractCallRequest) => {
+      captured.push(request);
+      return { transactionHash: "0xdef", blockNumber: 333 };
+    }
+  });
+
+  assert.equal(captured.length, 1);
+  const recorded = captured[0] as { method: string; args: Record<string, unknown> };
+  assert.equal(recorded.method, "recordAuditResultV2");
+  assert.deepEqual(recorded.args, {
+    tokenId: 1n,
+    auditScore: 100,
+    memoryPeakMb: 256,
+    cpuAvgMilli: 120,
+    requestIpCount: 1,
+    status: 1,
+    manifestHash: "0x" + "a".repeat(64),
+    reportHash: "0x" + "b".repeat(64),
+    evidenceRoot: "0x" + "e".repeat(64),
+    attestationHash: "0x" + "f".repeat(64),
+    evidenceCID: "",
+    reportCID: "",
+    manifestUrl: "https://example.com/manifest.json",
+    dimensionalScores: {
+      security: 8500,
+      taskExecution: 7200,
+      cognitive: 6100,
+      environment: 9000,
+      engineering: 7800,
+      compliance: 9500
+    }
+  });
+});
+
 test("writeAuditResult leaves calldata unchanged when ProcessedAuditRequested includes reportPersistence", async () => {
   const processed = buildProcessed();
   processed.reportPersistence = {
@@ -130,7 +179,7 @@ test("writeAuditResult leaves calldata unchanged when ProcessedAuditRequested in
 
   const captured: unknown[] = [];
   await writeAuditResult(processed, {
-    submitContractCall: async (request: { method: string; args: Record<string, unknown> }) => {
+    submitContractCall: async (request: SubmitContractCallRequest) => {
       captured.push(request);
       return { transactionHash: "0xabc", blockNumber: 123 };
     }

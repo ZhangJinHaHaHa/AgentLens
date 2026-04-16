@@ -4,7 +4,12 @@ import { join } from "node:path";
 
 import { utils } from "ethers";
 import { buildAuditReport } from "../../src/report/buildAuditReport";
-import { getAuditRegistryInterface, getRecordAuditResultEntry } from "../../src/listener/auditRegistryArtifact";
+import {
+  getAuditRegistryInterface,
+  getAuditRegistryV2Interface,
+  getRecordAuditResultEntry,
+  getRecordAuditResultV2Entry
+} from "../../src/listener/auditRegistryArtifact";
 import {
   createListenerRuntime,
   buildAuditRequestFromEvent,
@@ -1096,4 +1101,104 @@ test("createListenerRuntime wires attestation client into processAuditRequested 
   ]);
   assert.equal(processed.evidence?.attestationHash, "f".repeat(64));
   assert.equal(processed.writeback.attestationHash, "f".repeat(64));
+});
+
+test("createListenerRuntime encodes recordAuditResultV2 calldata when dimensionalScores are present", async () => {
+  assert.deepEqual(
+    getRecordAuditResultV2Entry().inputs.map((input) => input.type),
+    [
+      "uint256",
+      "uint32",
+      "uint32",
+      "uint32",
+      "uint32",
+      "uint8",
+      "bytes32",
+      "bytes32",
+      "bytes32",
+      "bytes32",
+      "string",
+      "string",
+      "string",
+      "tuple"
+    ]
+  );
+
+  const v2Interface = getAuditRegistryV2Interface();
+  const submittedTransactions: Array<{ to: string; data: `0x${string}` }> = [];
+  const originalWrite = process.stdout.write;
+  process.stdout.write = (() => true) as typeof process.stdout.write;
+
+  try {
+    const runtime = createListenerRuntime(
+      {
+        rpcUrl: "https://rpc.edge.local",
+        contractAddress: "0x2222222222222222222222222222222222222222",
+        pollIntervalMs: 777,
+        fetchImpl: (() => {
+          throw new Error("fetch should not be called in this test");
+        }) as typeof fetch,
+        writeback: {
+          enabled: true,
+          operatorPrivateKey: "0x1234",
+          chainId: 31337
+        }
+      },
+      {
+        createJsonRpcWriteClient: () => ({
+          submitTransaction: async (request) => {
+            submittedTransactions.push(request);
+            return {
+              transactionHash: `0x${"a".repeat(64)}` as `0x${string}`,
+              blockNumber: 201
+            };
+          }
+        })
+      }
+    );
+
+    const processed = buildProcessed();
+    processed.writeback.evidenceRoot = "e".repeat(64);
+    processed.writeback.attestationHash = "f".repeat(64);
+    processed.writeback.dimensionalScores = {
+      security: 8500,
+      taskExecution: 7200,
+      cognitive: 6100,
+      environment: 9000,
+      engineering: 7800,
+      compliance: 9500
+    };
+
+    await runtime.writeAuditResult?.(processed);
+  } finally {
+    process.stdout.write = originalWrite;
+  }
+
+  assert.equal(submittedTransactions.length, 1);
+  const decoded = v2Interface.decodeFunctionData(
+    "recordAuditResultV2",
+    submittedTransactions[0]?.data ?? "0x"
+  );
+
+  assert.equal(decoded[0]?.toString(), "1");
+  assert.equal(decoded[1]?.toString(), "100");
+  assert.equal(decoded[2]?.toString(), "256");
+  assert.equal(decoded[3]?.toString(), "120");
+  assert.equal(decoded[4]?.toString(), "1");
+  assert.equal(decoded[5]?.toString(), "1");
+  assert.equal(decoded[6], `0x${"a".repeat(64)}`);
+  assert.equal(decoded[7], `0x${"b".repeat(64)}`);
+  assert.equal(decoded[8], `0x${"e".repeat(64)}`);
+  assert.equal(decoded[9], `0x${"f".repeat(64)}`);
+  assert.equal(decoded[10], "");
+  assert.equal(decoded[11], "");
+  assert.equal(decoded[12], "https://example.com/manifest.json");
+
+  const scores = decoded[13] as unknown as [number, number, number, number, number, number];
+  assert.equal(scores[0], 8500);
+  assert.equal(scores[1], 7200);
+  assert.equal(scores[2], 6100);
+  assert.equal(scores[3], 9000);
+  assert.equal(scores[4], 7800);
+  assert.equal(scores[5], 9500);
 });
