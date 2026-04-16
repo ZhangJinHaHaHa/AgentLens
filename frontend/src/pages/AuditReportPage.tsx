@@ -1,6 +1,7 @@
 import { type FormEvent, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { AttestationVerificationCard } from "../components/AttestationVerificationCard";
 import { AuditQuestionsSection } from "../components/AuditQuestionsSection";
 import { EmptyState } from "../components/EmptyState";
 import { EvidenceInfo } from "../components/EvidenceInfo";
@@ -390,6 +391,11 @@ export function AuditReportPage({
           manifestUrl={auditRecord.manifestUrl}
           hashVerified={reportResult !== null}
           sourceUrl={reportResult?.sourceUrl}
+        />
+
+        <AttestationVerificationCard
+          attestationHash={auditRecord.attestationHash}
+          expected={config.attestation}
         />
 
         {verifiedReport ? (

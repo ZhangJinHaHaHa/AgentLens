@@ -29,6 +29,10 @@ export interface AuditRecord {
   reportHash: string;
   reportCID: string;
   manifestUrl: string;
+  // Keccak256 digest of the canonical attestation bundle the listener received
+  // from the SGX Attestation API. bytes32(0) means the audit was recorded
+  // without a TEE attestation (legacy / mock path).
+  attestationHash?: string;
   appealRequested: boolean;
   appealApproved: boolean;
 }
