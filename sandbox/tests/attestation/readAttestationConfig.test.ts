@@ -41,3 +41,28 @@ test("readAttestationConfig accepts explicit provider type and timeout", () => {
     timeoutMs: 2500
   });
 });
+
+test("readAttestationConfig surfaces MRENCLAVE pinning when expectations are present", () => {
+  const config = readAttestationConfig({
+    AUDIT_ATTESTATION_API_URL: "https://tee.example/attest",
+    AUDIT_ATTESTATION_EXPECTED_PROVIDER_TYPE: "sgx-dcap-v3-gramine",
+    AUDIT_ATTESTATION_EXPECTED_MEASUREMENT: "0x" + "a".repeat(64),
+    AUDIT_ATTESTATION_EXPECTED_QUOTE_FORMAT: "sgx-dcap-v3",
+    AUDIT_ATTESTATION_VERIFY_REPORT_DATA_BINDING: "true"
+  });
+
+  assert.deepEqual(config.verification, {
+    expectedProviderType: "sgx-dcap-v3-gramine",
+    expectedMeasurement: "0x" + "a".repeat(64),
+    expectedQuoteFormat: "sgx-dcap-v3",
+    verifyReportDataBinding: true
+  });
+});
+
+test("readAttestationConfig omits verification when no expectations are set", () => {
+  const config = readAttestationConfig({
+    AUDIT_ATTESTATION_API_URL: "https://tee.example/attest"
+  });
+
+  assert.equal(config.verification, undefined);
+});

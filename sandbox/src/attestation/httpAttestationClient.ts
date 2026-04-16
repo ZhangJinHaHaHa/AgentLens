@@ -1,9 +1,18 @@
 import {
+  createCompositeAttestationQuoteValidator,
+  createExpectedAttestationQuoteValidator,
+  type AttestationQuoteValidator
+} from "./attestationQuoteValidator";
+import {
   buildAuditAttestationArtifact,
   type CreateAuditAttestationInput,
   type CreateAuditAttestationResult
 } from "./buildAuditAttestation";
-import type { AttestationConfig } from "./readAttestationConfig";
+import type {
+  AttestationConfig,
+  AttestationVerificationConfig
+} from "./readAttestationConfig";
+import { createSgxDcapQuoteValidator } from "./sgxDcapQuoteValidator";
 
 export interface HttpAttestationClient {
   createAuditAttestation(input: CreateAuditAttestationInput): Promise<CreateAuditAttestationResult>;
@@ -15,6 +24,43 @@ function requireString(value: unknown, field: string): string {
   }
 
   return value;
+}
+
+function buildPerRequestQuoteValidator(
+  verification: AttestationVerificationConfig,
+  input: CreateAuditAttestationInput
+): AttestationQuoteValidator {
+  const validators: AttestationQuoteValidator[] = [
+    createExpectedAttestationQuoteValidator({
+      expectedProviderType: verification.expectedProviderType,
+      expectedMeasurement: verification.expectedMeasurement,
+      expectedQuoteFormat: verification.expectedQuoteFormat
+    })
+  ];
+
+  const shouldRunSgxValidator =
+    verification.expectedQuoteFormat === "sgx-dcap-v3" ||
+    verification.verifyReportDataBinding === true ||
+    Boolean(verification.expectedMeasurement);
+
+  if (shouldRunSgxValidator) {
+    validators.push(
+      createSgxDcapQuoteValidator({
+        expectedMrEnclave: verification.expectedMeasurement,
+        ...(verification.verifyReportDataBinding
+          ? {
+              expectedEventKey: input.event.eventKey,
+              expectedManifestHash: input.manifestHash,
+              expectedEvidenceRoot: input.evidenceRoot
+            }
+          : {})
+      })
+    );
+  }
+
+  return validators.length === 1
+    ? validators[0]
+    : createCompositeAttestationQuoteValidator(validators);
 }
 
 export function createHttpAttestationClient(
@@ -63,19 +109,32 @@ export function createHttpAttestationClient(
           quote?: unknown;
         };
 
+        const verifier = {
+          type: config.providerType,
+          measurement: requireString(payload.measurement, "measurement"),
+          quoteFormat: requireString(payload.quoteFormat, "quoteFormat"),
+          sessionPublicKey: requireString(payload.sessionPublicKey, "sessionPublicKey"),
+          quote: requireString(payload.quote, "quote")
+        };
+
+        if (config.verification) {
+          const validator = buildPerRequestQuoteValidator(config.verification, input);
+          await validator.validate({
+            providerType: verifier.type,
+            measurement: verifier.measurement,
+            quoteFormat: verifier.quoteFormat,
+            sessionPublicKey: verifier.sessionPublicKey,
+            quote: verifier.quote
+          });
+        }
+
         return buildAuditAttestationArtifact({
           schemaVersion: "audit-attestation.v1",
           eventKey: input.event.eventKey,
           tokenId: input.event.tokenId.toString(),
           manifestHash: input.manifestHash,
           evidenceRoot: input.evidenceRoot,
-          verifier: {
-            type: config.providerType,
-            measurement: requireString(payload.measurement, "measurement"),
-            quoteFormat: requireString(payload.quoteFormat, "quoteFormat"),
-            sessionPublicKey: requireString(payload.sessionPublicKey, "sessionPublicKey"),
-            quote: requireString(payload.quote, "quote")
-          }
+          verifier
         });
       } finally {
         clearTimeout(timeout);

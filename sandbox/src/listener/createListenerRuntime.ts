@@ -4,7 +4,10 @@ import { createLocalAuditRunOptions } from "../cli/localAuditOptions";
 import { loadManifestSource } from "../manifest/loadManifest";
 import { runLocalSandboxAudit } from "../runtime/runLocalSandboxAudit";
 import type { AuditSolveRequest, SandboxManifest } from "../types/manifest";
-import { getAuditRegistryInterface } from "./auditRegistryArtifact";
+import {
+  getAuditRegistryInterface,
+  getAuditRegistryV2Interface
+} from "./auditRegistryArtifact";
 import { createInMemoryEventDeduper } from "./inMemoryEventDeduper";
 import { getLatestBlockNumber, pollAuditRequestedLogs } from "./pollAuditRequestedLogs";
 import { processAuditRequested } from "./processAuditRequested";
@@ -237,25 +240,52 @@ async function writeProcessedSummary(processed: ProcessedAuditRequested): Promis
 function encodeWritebackCalldata(
   request: Parameters<WriteAuditResultDependencies["submitContractCall"]>[0]
 ): `0x${string}` {
-  if (request.method !== "recordAuditResult") {
-    throw new Error(`Unsupported writeback method: ${request.method}`);
+  if (request.method === "recordAuditResult") {
+    return getAuditRegistryInterface().encodeFunctionData(request.method, [
+      request.args.tokenId,
+      request.args.auditScore,
+      request.args.memoryPeakMb,
+      request.args.cpuAvgMilli,
+      request.args.requestIpCount,
+      request.args.status,
+      request.args.manifestHash,
+      request.args.reportHash,
+      request.args.evidenceRoot,
+      request.args.attestationHash,
+      request.args.evidenceCID,
+      request.args.reportCID,
+      request.args.manifestUrl
+    ]) as `0x${string}`;
   }
 
-  return getAuditRegistryInterface().encodeFunctionData(request.method, [
-    request.args.tokenId,
-    request.args.auditScore,
-    request.args.memoryPeakMb,
-    request.args.cpuAvgMilli,
-    request.args.requestIpCount,
-    request.args.status,
-    request.args.manifestHash,
-    request.args.reportHash,
-    request.args.evidenceRoot,
-    request.args.attestationHash,
-    request.args.evidenceCID,
-    request.args.reportCID,
-    request.args.manifestUrl
-  ]) as `0x${string}`;
+  if (request.method === "recordAuditResultV2") {
+    const scores = request.args.dimensionalScores;
+    return getAuditRegistryV2Interface().encodeFunctionData(request.method, [
+      request.args.tokenId,
+      request.args.auditScore,
+      request.args.memoryPeakMb,
+      request.args.cpuAvgMilli,
+      request.args.requestIpCount,
+      request.args.status,
+      request.args.manifestHash,
+      request.args.reportHash,
+      request.args.evidenceRoot,
+      request.args.attestationHash,
+      request.args.evidenceCID,
+      request.args.reportCID,
+      request.args.manifestUrl,
+      [
+        scores.security,
+        scores.taskExecution,
+        scores.cognitive,
+        scores.environment,
+        scores.engineering,
+        scores.compliance
+      ]
+    ]) as `0x${string}`;
+  }
+
+  throw new Error(`Unsupported writeback method: ${(request as { method: string }).method}`);
 }
 
 function encodeSlashBondCalldata(
