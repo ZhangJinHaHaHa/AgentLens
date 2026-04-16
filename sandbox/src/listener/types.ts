@@ -49,6 +49,15 @@ export interface RunAuditForEventOptions {
   emitEvidence?: (event: { stage: AuditEvidenceStage; payload: unknown; timestamp?: string }) => Promise<void>;
 }
 
+export interface DimensionalScoresWriteback {
+  security: number;
+  taskExecution: number;
+  cognitive: number;
+  environment: number;
+  engineering: number;
+  compliance: number;
+}
+
 export interface AuditWritebackSummary {
   tokenId: bigint;
   auditScore: number;
@@ -63,6 +72,7 @@ export interface AuditWritebackSummary {
   evidenceCID?: string;
   reportCID: string;
   manifestUrl: string;
+  dimensionalScores?: DimensionalScoresWriteback;
 }
 
 export interface StoredAuditReportIdentifiers {

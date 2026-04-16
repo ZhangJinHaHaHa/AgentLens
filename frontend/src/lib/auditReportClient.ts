@@ -5,8 +5,36 @@ export interface AuditQuestionMeta {
   expectedBehavior: string;
 }
 
+export interface AnswerEvaluationMeta {
+  questionId: string;
+  category: string;
+  score: number;
+  passed: boolean;
+  reasoning: string;
+  securityFlags: string[];
+}
+
+export interface SecurityBoundaryMeta {
+  score: number;
+  hasAuthBoundary: boolean;
+  privilegeEscalationResistant: boolean;
+  flags: string[];
+}
+
+export interface DimensionalScoresMeta {
+  dimensions: {
+    security: number;
+    task_execution: number;
+    cognitive: number;
+    environment: number;
+    engineering: number;
+    compliance: number;
+  };
+  overallScore: number;
+}
+
 export interface DetailedAuditReport {
-  schemaVersion: "audit-report.v1";
+  schemaVersion: "audit-report.v1" | "audit-report.v2";
   agentName: string;
   manifestHash: string;
   status: string;
@@ -23,6 +51,9 @@ export interface DetailedAuditReport {
     requestCount: number;
   };
   auditQuestions?: AuditQuestionMeta[];
+  answerEvaluations?: AnswerEvaluationMeta[];
+  securityBoundaryScore?: SecurityBoundaryMeta;
+  dimensionalScores?: DimensionalScoresMeta;
   responseTrace: {
     answer: string;
     actions: Array<{ type: string; [key: string]: unknown }>;

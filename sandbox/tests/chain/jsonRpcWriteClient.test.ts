@@ -37,7 +37,7 @@ function buildMockFetch(
   }) as typeof fetch;
 }
 
-const PRIVATE_KEY = "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef";
+const PRIVATE_KEY = "0xYOUR_DEPLOYER_PRIVATE_KEY_HERE";
 const SIGNER_ADDRESS = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
 const CONTRACT_ADDRESS = "0x1111111111111111111111111111111111111111";
 const TEST_CHAIN_ID = 31337;

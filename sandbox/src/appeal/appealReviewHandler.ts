@@ -2,6 +2,7 @@ import type {
   AppealCompensationExecutor,
   AppealCompensationResult
 } from "./appealCompensation";
+import type { AppealChainWriter } from "./appealChainWriter";
 import type { AppealReviewRecord } from "./appealReviewTypes";
 import { assertValidTransition } from "./appealReviewTypes";
 
@@ -19,6 +20,7 @@ export interface AppealReviewHandlerDependencies {
   readonly compensateAppeal?: AppealCompensationExecutor;
   readonly compensationAmount?: string;
   readonly compensationReasonCode?: string;
+  readonly appealChainWriter?: AppealChainWriter;
 }
 
 export interface AppealReviewHandler {
@@ -92,6 +94,20 @@ export function createAppealReviewHandler(
         compensationTxHash = result.transactionHash;
       }
 
+      // Write appeal resolution to chain (V2)
+      if (deps.appealChainWriter) {
+        try {
+          await deps.appealChainWriter.resolveAppealOnChain({
+            tokenId: record.tokenId,
+            appealId,
+            outcome: "approved"
+          });
+        } catch (err) {
+          // Non-fatal: log but proceed with off-chain update
+          console.error("[appealReviewHandler] resolveAppealOnChain (approved) failed:", err);
+        }
+      }
+
       return deps.store.update(appealId, {
         status: "approved",
         reviewerAddress,
@@ -108,6 +124,20 @@ export function createAppealReviewHandler(
     ): Promise<AppealReviewRecord> {
       const record = await loadRecord(deps.store, appealId);
       assertValidTransition(record.status, "rejected");
+
+      // Write appeal resolution to chain (V2)
+      if (deps.appealChainWriter) {
+        try {
+          await deps.appealChainWriter.resolveAppealOnChain({
+            tokenId: record.tokenId,
+            appealId,
+            outcome: "rejected"
+          });
+        } catch (err) {
+          // Non-fatal: log but proceed with off-chain update
+          console.error("[appealReviewHandler] resolveAppealOnChain (rejected) failed:", err);
+        }
+      }
 
       return deps.store.update(appealId, {
         status: "rejected",

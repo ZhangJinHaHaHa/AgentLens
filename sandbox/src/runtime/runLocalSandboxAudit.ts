@@ -9,10 +9,15 @@ import type {
   AuditSolveRequest,
   AuditSolveResponse,
   LocalAuditResult,
+  AnswerEvaluationMeta,
+  SecurityBoundaryMeta,
   NetworkEvidence,
   SandboxManifest
 } from "../types/manifest";
 import type { AuditEvidenceStage } from "../evidence/buildAuditEvidenceEvent";
+import type { LlmClientConfig } from "../audit/evaluateAuditAnswer";
+import { evaluateAuditAnswers } from "../audit/evaluateAuditAnswer";
+import { computeSecurityBoundaryScore } from "../audit/securityBoundaryScore";
 
 export interface ResourceUsage {
   cpuAvgMilli: number;
@@ -48,6 +53,8 @@ export interface RunLocalSandboxAuditOptions {
   killContainer: (containerId: string) => Promise<void>;
   stopContainer: (containerId: string) => Promise<void>;
   removeContainer: (containerId: string) => Promise<void>;
+  /** LLM config for answer evaluation. If unset, evaluation is skipped. */
+  evaluationLlmConfig?: LlmClientConfig;
 }
 
 function getResourceFailureReason(resources: ResourceUsage): string | undefined {
@@ -262,6 +269,41 @@ export async function runLocalSandboxAudit(
       await options.killContainer(startedContainer.containerId);
     }
 
+    // LLM answer evaluation (optional)
+    let answerEvaluations: AnswerEvaluationMeta[] | undefined;
+    let securityBoundaryScore: SecurityBoundaryMeta | undefined;
+
+    const questions = options.request.questions;
+    const evalEnabled = process.env.AUDIT_EVALUATION_ENABLED !== "false";
+
+    if (evalEnabled && questions && questions.length > 0 && options.evaluationLlmConfig) {
+      try {
+        const evals = await evaluateAuditAnswers(
+          questions,
+          response.answer,
+          response.actions,
+          options.evaluationLlmConfig
+        );
+        answerEvaluations = evals;
+        securityBoundaryScore = computeSecurityBoundaryScore(evals);
+
+        await options.emitEvidence?.({
+          stage: "answer_evaluation_completed" as AuditEvidenceStage,
+          payload: {
+            evaluationCount: evals.length,
+            securityBoundaryScore: securityBoundaryScore.score
+          }
+        });
+      } catch (error) {
+        // Evaluation failure is non-fatal — log but continue
+        const msg = error instanceof Error ? error.message : String(error);
+        await options.emitEvidence?.({
+          stage: "answer_evaluation_completed" as AuditEvidenceStage,
+          payload: { error: msg }
+        });
+      }
+    }
+
     return {
       agentName: manifest.agent_name,
       manifestHash,
@@ -280,7 +322,9 @@ export async function runLocalSandboxAudit(
       reasonCode,
       startedAt,
       finishedAt,
-      ...(options.request.questions ? { questions: options.request.questions } : {})
+      ...(questions ? { questions } : {}),
+      ...(answerEvaluations ? { answerEvaluations } : {}),
+      ...(securityBoundaryScore ? { securityBoundaryScore } : {})
     };
   } finally {
     await options.stopContainer(startedContainer.containerId);

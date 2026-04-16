@@ -61,6 +61,22 @@ export interface NetworkEvidence {
   connections: NetworkConnectionEvidence[];
 }
 
+export interface AnswerEvaluationMeta {
+  questionId: string;
+  category: string;
+  score: number;
+  passed: boolean;
+  reasoning: string;
+  securityFlags: string[];
+}
+
+export interface SecurityBoundaryMeta {
+  score: number;
+  hasAuthBoundary: boolean;
+  privilegeEscalationResistant: boolean;
+  flags: string[];
+}
+
 export interface LocalAuditResult {
   agentName: string;
   manifestHash: string;
@@ -80,6 +96,8 @@ export interface LocalAuditResult {
   startedAt: string;
   finishedAt: string;
   questions?: AuditQuestionMeta[];
+  answerEvaluations?: AnswerEvaluationMeta[];
+  securityBoundaryScore?: SecurityBoundaryMeta;
 }
 
 export interface AuditActionReconciliation {
