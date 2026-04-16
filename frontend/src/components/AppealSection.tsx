@@ -1,7 +1,9 @@
 import { type FormEvent, useState } from "react";
 
 import type { AppealClient, AppealSubmissionInput } from "../lib/appealClient";
-import type { AuditRecord } from "../lib/agentAuditRegistryClient";
+import type { AuditRecord, ReputationRecordOnChain } from "../lib/agentAuditRegistryClient";
+import { ReputationBadge } from "./ReputationBadge";
+import { AppealHistoryTimeline, type AppealTimelineEntry } from "./AppealHistoryTimeline";
 
 interface AppealSectionProps {
   auditRecord: AuditRecord;
@@ -11,6 +13,8 @@ interface AppealSectionProps {
   isAppealable: boolean;
   appealStatusLabel: string;
   onAppealSubmitted: () => void;
+  reputation?: ReputationRecordOnChain;
+  appealHistory?: AppealTimelineEntry[];
 }
 
 type SubmissionState =
@@ -26,7 +30,9 @@ export function AppealSection({
   auditIndex,
   isAppealable,
   appealStatusLabel,
-  onAppealSubmitted
+  onAppealSubmitted,
+  reputation,
+  appealHistory
 }: AppealSectionProps): JSX.Element {
   const [appealReason, setAppealReason] = useState("");
   const [submissionState, setSubmissionState] = useState<SubmissionState>({
@@ -79,6 +85,15 @@ export function AppealSection({
   return (
     <section className="hero-card">
       <h2>Appeal</h2>
+
+      {reputation ? (
+        <ReputationBadge
+          successfulAppeals={reputation.successfulAppeals}
+          failedAppeals={reputation.failedAppeals}
+          reputationDelta={reputation.reputationDelta}
+        />
+      ) : null}
+
       <div className="appeal-status-container">
         <span className="appeal-status-label">Status: {appealStatusLabel}</span>
       </div>
@@ -114,6 +129,10 @@ export function AppealSection({
           Appeal submission is unavailable because the frontend appeal endpoint is not configured.
         </p>
       )}
+
+      {appealHistory && appealHistory.length > 0 ? (
+        <AppealHistoryTimeline appeals={appealHistory} />
+      ) : null}
     </section>
   );
 }

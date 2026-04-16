@@ -8,11 +8,13 @@ import { EmptyState } from "../components/EmptyState";
 import { LatestAuditSummary } from "../components/LatestAuditSummary";
 import { LoadingSkeleton } from "../components/LoadingSkeleton";
 import { NavHeader } from "../components/NavHeader";
+import { ReviewSection } from "../components/ReviewSection";
 import type { AppConfig } from "../config/appConfig";
 import { createAgentAuditRegistryClient, type AgentAuditRegistryReadContract } from "../lib/agentAuditRegistryClient";
 import { parseTokenIdInput } from "../lib/tokenId";
 import { useAgentCredit } from "../hooks/useAgentCredit";
 import { useAuditHistory } from "../hooks/useAuditHistory";
+import { useAgentReviews } from "../hooks/useAgentReviews";
 
 interface AgentDetailPageProps {
   config: AppConfig;
@@ -48,6 +50,7 @@ export function AgentDetailPage({ config, client }: AgentDetailPageProps): JSX.E
     tokenId: parsedTokenId.value,
     client: resolvedClient
   });
+  const agentReviews = useAgentReviews({ tokenId });
 
   if (agentCredit.status === "error") {
     return (
@@ -130,6 +133,18 @@ export function AgentDetailPage({ config, client }: AgentDetailPageProps): JSX.E
           <EmptyState
             title="Unable to load audit history"
             description={auditHistory.errorMessage ?? "The history query failed."}
+          />
+        ) : null}
+        {agentReviews.status === "loading" ? (
+          <LoadingSkeleton lines={4} title="Loading reviews" />
+        ) : agentReviews.status === "ready" ? (
+          <ReviewSection
+            tokenId={tokenId}
+            goodRatios={agentReviews.distribution.goodRatios}
+            neutralRatios={agentReviews.distribution.neutralRatios}
+            reviews={agentReviews.reviews}
+            hasAccess={agentReviews.hasAccess}
+            hasReviewed={agentReviews.hasReviewed}
           />
         ) : null}
         <ConfigPanel config={config} />

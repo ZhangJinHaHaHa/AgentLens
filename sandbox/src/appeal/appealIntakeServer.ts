@@ -6,6 +6,7 @@ import type {
   AppealTicket
 } from "./persistentAppealStore";
 import type { AppealCompensationExecutor } from "./appealCompensation";
+import type { AppealChainWriter } from "./appealChainWriter";
 
 export interface AppealStore {
   createAppeal(input: AppealCreateInput): Promise<AppealTicket>;
@@ -18,6 +19,7 @@ export interface AppealIntakeServerOptions {
   store: AppealStore;
   compensateAppeal?: AppealCompensationExecutor;
   adminToken?: string;
+  appealChainWriter?: AppealChainWriter;
 }
 
 interface AppealRequestLike extends AsyncIterable<Buffer | string> {
@@ -36,7 +38,7 @@ export function createAppealIntakeServer(
   options: AppealIntakeServerOptions
 ): Server {
   return createServer((request, response) =>
-    void handleAppealIntakeRequest(request, response, options.store, options.compensateAppeal, options.adminToken)
+    void handleAppealIntakeRequest(request, response, options.store, options.compensateAppeal, options.adminToken, options.appealChainWriter)
   );
 }
 
@@ -45,7 +47,8 @@ export async function handleAppealIntakeRequest(
   response: AppealResponseLike,
   store: AppealStore,
   compensateAppeal?: AppealCompensationExecutor,
-  adminToken?: string
+  adminToken?: string,
+  appealChainWriter?: AppealChainWriter
 ): Promise<void> {
   if (request.method === "PATCH" && request.url?.startsWith("/api/appeals/") && request.url.endsWith("/review")) {
     if (adminToken) {
@@ -127,6 +130,21 @@ export async function handleAppealIntakeRequest(
     try {
       const payload = parseAppealPayload(await readJsonBody(request));
       const created = await store.createAppeal(payload);
+
+      // Write appeal to chain (V2) — non-fatal
+      if (appealChainWriter) {
+        try {
+          await appealChainWriter.fileAppealOnChain({
+            tokenId: payload.tokenId,
+            auditId: payload.auditId,
+            evidenceHash: created.reportHash ?? "0x0000000000000000000000000000000000000000000000000000000000000000",
+            appealCID: created.appealId
+          });
+        } catch (chainErr) {
+          console.error("[appealIntakeServer] fileAppealOnChain failed:", chainErr);
+        }
+      }
+
       writeJson(response, 202, {
         appealId: created.appealId,
         status: created.status

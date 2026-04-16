@@ -68,7 +68,7 @@ COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
 # Create non-root user
 RUN addgroup -S shenji && adduser -S shenji -G shenji
-RUN mkdir -p /app/.runtime && chown -R shenji:shenji /app/.runtime
+RUN mkdir -p /app/.runtime /app/.runtime/reports-store && chown -R shenji:shenji /app/.runtime
 
 USER shenji
 

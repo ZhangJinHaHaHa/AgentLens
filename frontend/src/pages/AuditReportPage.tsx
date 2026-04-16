@@ -8,6 +8,9 @@ import { LoadingSkeleton } from "../components/LoadingSkeleton";
 import { NavHeader } from "../components/NavHeader";
 import { RawJsonViewer } from "../components/RawJsonViewer";
 import { SandboxExecutionSummary } from "../components/SandboxExecutionSummary";
+import { SecurityBoundaryCard } from "../components/SecurityBoundaryCard";
+import { DimensionalScoreCard } from "../components/DimensionalScoreCard";
+import type { DimensionalScoreData } from "../components/RadarScoreChart";
 import type { AppConfig } from "../config/appConfig";
 import { createAgentAuditRegistryClient, type AgentAuditRegistryReadContract, type AuditRecord } from "../lib/agentAuditRegistryClient";
 import {
@@ -415,8 +418,22 @@ export function AuditReportPage({
 
             <SandboxExecutionSummary report={verifiedReport} />
 
+            {verifiedReport.dimensionalScores ? (
+              <DimensionalScoreCard
+                scores={verifiedReport.dimensionalScores.dimensions as DimensionalScoreData}
+                overallScore={verifiedReport.dimensionalScores.overallScore}
+              />
+            ) : null}
+
+            {verifiedReport.securityBoundaryScore ? (
+              <SecurityBoundaryCard boundary={verifiedReport.securityBoundaryScore} />
+            ) : null}
+
             {verifiedReport.auditQuestions && verifiedReport.auditQuestions.length > 0 ? (
-              <AuditQuestionsSection questions={verifiedReport.auditQuestions} />
+              <AuditQuestionsSection
+                questions={verifiedReport.auditQuestions}
+                evaluations={verifiedReport.answerEvaluations}
+              />
             ) : null}
 
             <section className="hero-card">

@@ -22,6 +22,7 @@ services:
       - AUDIT_DOCKER_NETWORK=polygon-edge-external_default
     volumes:
       - listener-state:/app/.runtime/listener
+      - reports-store:/app/.runtime/reports-store
       - /var/run/docker.sock:/var/run/docker.sock:ro
     healthcheck:
       test: ["CMD", "node", "-e", "process.exit(0)"]
@@ -46,6 +47,8 @@ services:
     environment:
       - AUDIT_REPORT_GATEWAY_HOST=0.0.0.0
       - AUDIT_REPORT_GATEWAY_PORT=3310
+    volumes:
+      - reports-store:/app/.runtime/reports-store:ro
     ports:
       - "${REPORT_GATEWAY_PORT:-3310}:3310"
     healthcheck:
@@ -116,6 +119,8 @@ services:
 
 volumes:
   listener-state:
+    driver: local
+  reports-store:
     driver: local
   appeal-state:
     driver: local

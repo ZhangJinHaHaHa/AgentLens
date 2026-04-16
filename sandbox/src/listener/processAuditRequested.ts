@@ -1,4 +1,5 @@
 import { scoreAuditResult } from "../audit/scoreAuditResult";
+import { computeDimensionalScores } from "../audit/dimensionalScoring";
 import type { CreateAuditAttestationResult } from "../attestation/buildAuditAttestation";
 import { appendAuditEvidenceEvent, createAuditEvidenceChainContext } from "../evidence/evidenceChain";
 import { ZERO_EVIDENCE_HASH } from "../evidence/buildAuditEvidenceEvent";
@@ -8,6 +9,7 @@ import type { LocalAuditResult } from "../types/manifest";
 import type {
   AuditRequestedEvent,
   AuditWritebackSummary,
+  DimensionalScoresWriteback,
   ProcessedAuditRequested,
   ProcessedReportStorageSummary
 } from "./types";
@@ -57,6 +59,21 @@ function buildWritebackSummary(
 ): AuditWritebackSummary {
   const scored = scoreAuditResult(result);
 
+  // Compute dimensional scores if evaluations are available
+  let dimensionalScores: DimensionalScoresWriteback | undefined;
+
+  if (result.answerEvaluations && result.answerEvaluations.length > 0) {
+    const dimScores = computeDimensionalScores(result);
+    dimensionalScores = {
+      security: dimScores.dimensions.security * 100,
+      taskExecution: dimScores.dimensions.task_execution * 100,
+      cognitive: dimScores.dimensions.cognitive * 100,
+      environment: dimScores.dimensions.environment * 100,
+      engineering: dimScores.dimensions.engineering * 100,
+      compliance: dimScores.dimensions.compliance * 100
+    };
+  }
+
   return {
     tokenId: event.tokenId,
     auditScore: scored.auditScore,
@@ -70,7 +87,8 @@ function buildWritebackSummary(
     attestationHash,
     evidenceCID,
     reportCID,
-    manifestUrl: event.manifestUrl
+    manifestUrl: event.manifestUrl,
+    ...(dimensionalScores ? { dimensionalScores } : {})
   };
 }
 

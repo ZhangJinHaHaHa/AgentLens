@@ -5,12 +5,14 @@ import type {
   AuditActionReconciliation,
   AuditDecisionClassification,
   AuditQuestionMeta,
+  AnswerEvaluationMeta,
+  SecurityBoundaryMeta,
   LocalAuditResult,
   NetworkEvidence
 } from "../types/manifest";
 
 export interface DetailedAuditReport {
-  schemaVersion: "audit-report.v1";
+  schemaVersion: "audit-report.v1" | "audit-report.v2";
   agentName: string;
   manifestHash: string;
   status: string;
@@ -28,6 +30,8 @@ export interface DetailedAuditReport {
   };
   networkEvidence?: NetworkEvidence;
   auditQuestions?: AuditQuestionMeta[];
+  answerEvaluations?: AnswerEvaluationMeta[];
+  securityBoundaryScore?: SecurityBoundaryMeta;
   responseTrace: {
     answer: string;
     actions: AuditAction[];
@@ -66,8 +70,11 @@ export function buildAuditReport(
     };
   } = {}
 ): AuditReportArtifact {
+  const hasEvaluations = result.answerEvaluations && result.answerEvaluations.length > 0;
+  const schemaVersion = hasEvaluations ? "audit-report.v2" : "audit-report.v1";
+
   const report: DetailedAuditReport = {
-    schemaVersion: "audit-report.v1",
+    schemaVersion,
     agentName: result.agentName,
     manifestHash: result.manifestHash,
     status: result.status,
@@ -85,6 +92,8 @@ export function buildAuditReport(
     },
     ...(result.networkEvidence ? { networkEvidence: result.networkEvidence } : {}),
     ...(result.questions?.length ? { auditQuestions: result.questions } : {}),
+    ...(hasEvaluations ? { answerEvaluations: result.answerEvaluations } : {}),
+    ...(result.securityBoundaryScore ? { securityBoundaryScore: result.securityBoundaryScore } : {}),
     responseTrace: {
       answer: result.answer,
       actions: result.actions,
