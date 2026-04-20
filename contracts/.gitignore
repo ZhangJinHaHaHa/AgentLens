@@ -1,7 +1,0 @@
-artifacts/*
-!artifacts/AgentAuditRegistry.json
-cache/
-deployments/
-.home/
-.xdg/
-node_modules/
