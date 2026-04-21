@@ -1,0 +1,14 @@
+{
+  "name": "agent-shenji-zk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ZK circuits and tooling for Agent Shenji audit verification",
+  "scripts": {
+    "compile": "bash scripts/compile-circuits.sh",
+    "clean": "rm -rf build"
+  },
+  "dependencies": {
+    "circomlib": "^2.0.5",
+    "snarkjs": "^0.7.4"
+  }
+}
