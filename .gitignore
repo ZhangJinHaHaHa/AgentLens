@@ -38,8 +38,6 @@ frontend/vite.config.js
 infra/polygon-edge-local/.env
 infra/polygon-edge-external/.env
 
-# Markdown docs
-*.md
 
 # Codex tool memory
 .omx/
