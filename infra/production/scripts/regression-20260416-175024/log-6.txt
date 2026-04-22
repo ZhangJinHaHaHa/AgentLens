@@ -20,7 +20,7 @@
 }
 [17:52:14] On-chain attestationHash: 0xa4eb201b6673377bf0acadc5159828b22c622b7665406ad62de5cc69fd192a01
 
-[17:52:14] Writing summary to /Users/waiieason/code/web3/agent-shenji/infra/production/scripts/regression-20260416-175024/summary-6.json
+[17:52:14] Writing summary to <LOCAL_PROJECT_PATH>/infra/production/scripts/regression-20260416-175024/summary-6.json
 
 [17:52:14] ✅ TEE E2E passed
 {
@@ -37,6 +37,6 @@
   "reportHash": "0x7b0958a6392f4b8d54b4ad7cf95491b8ca5b5e489be1ef11da27bb4286b7a513",
   "reportCID": "QmYwAPJzv5CZsnAzt8auVTLN9uWw6tG6PvxBUw9u5VnXNf",
   "attestationHash": "0xa4eb201b6673377bf0acadc5159828b22c622b7665406ad62de5cc69fd192a01",
-  "expectedMeasurement": "YOUR_MRENCLAVE_MEASUREMENT_HEX",
+  "expectedMeasurement": "1656d0e5f1dbac0e687662f79b8b5bf8629e40224567ecb823d1eb409f0b16b8",
   "offlineAttestationVerified": "skipped"
 }
