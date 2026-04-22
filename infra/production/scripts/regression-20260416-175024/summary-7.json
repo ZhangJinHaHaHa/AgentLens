@@ -12,6 +12,6 @@
   "reportHash": "0x9fc50d04e1e36245f1c552b0917a4ca54a12ffd9253c04a90e6b9c192300010b",
   "reportCID": "QmYwAPJzv5CZsnAzt8auVTLN9uWw6tG6PvxBUw9u5VnXNf",
   "attestationHash": "0x053d1988b4ff2e7128961bd836649dac7394b49a340c0993d6c975053449cfae",
-  "expectedMeasurement": "YOUR_MRENCLAVE_MEASUREMENT_HEX",
+  "expectedMeasurement": "1656d0e5f1dbac0e687662f79b8b5bf8629e40224567ecb823d1eb409f0b16b8",
   "offlineAttestationVerified": "skipped"
 }
