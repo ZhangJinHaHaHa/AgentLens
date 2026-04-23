@@ -4,7 +4,7 @@
 
 **A trust-first marketplace and on-chain infrastructure for AI agents.**
 
-[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Solidity](https://img.shields.io/badge/Solidity-0.8.24-363636.svg)](https://soliditylang.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB.svg)](https://reactjs.org/)
 [![Intel SGX](https://img.shields.io/badge/TEE-Intel_SGX-0071C5.svg)](https://software.intel.com/en-us/sgx)
@@ -19,6 +19,12 @@
 **Agent Shenji** is a decentralized infrastructure and marketplace designed to solve the trust problem in the AI agent economy. Before you hire or interact with an AI agent, Shenji provides verifiable proof of its capabilities, security boundaries, and track record.
 
 By combining **On-chain Audit Scores**, **Intel SGX TEE Attestation**, **Zero-Knowledge Proofs (ZK)**, and a **Multi-Dimensional Dynamic Reputation Model (MDDRM)**, Shenji ensures that agent trust is verifiable, not just claimed.
+
+## 🌐 Official Platform (Coming Soon)
+
+The **Agent Shenji Cloud** will provide hosted audit services, enterprise-grade TEE verification, and a fully managed marketplace — no infrastructure setup required.
+
+→ **[Join the waitlist]()** to get early access.
 
 ## 🚀 Features
 
@@ -134,6 +140,14 @@ We welcome contributions from the community! Please read our [CONTRIBUTING.md](C
 
 Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
-## 📜 License
+## 📜 License & Commercial Use
 
-This project is licensed under the Mozilla Public License 2.0 (MPL-2.0) - see the [LICENSE](LICENSE) file for details.
+Agent Shenji is open-source under the **GNU Affero General Public License v3.0 (AGPL-3.0)** for community, research, and non-commercial use. See the [LICENSE](LICENSE) file for details.
+
+**Commercial License**: If you wish to use Agent Shenji in a commercial product, proprietary SaaS platform, or private enterprise deployment without the AGPL obligations (which require you to open-source your entire service), a commercial license is available. 
+
+Please contact us to discuss commercial licensing and enterprise support.
+
+## 📝 Contributor License Agreement (CLA)
+
+To ensure that we can continue to offer Agent Shenji under both open-source and commercial licenses, all contributors must sign a [Contributor License Agreement (CLA)](CLA.md) before their pull requests can be merged.
