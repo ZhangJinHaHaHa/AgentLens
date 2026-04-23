@@ -43,7 +43,7 @@ describe("readAppealChainWriterConfigFromEnv", () => {
       AUDIT_RPC_URL: "http://localhost:8545",
       AUDIT_REGISTRY_V2_ADDRESS: "0x1234567890abcdef1234567890abcdef12345678",
       AUDIT_CHAIN_ID: "302612",
-      AUDIT_OPERATOR_PRIVATE_KEY: "0xYOUR_PRIVATE_KEY_HERE"
+      AUDIT_OPERATOR_PRIVATE_KEY: "0x0000000000000000000000000000000000000000000000000000000000000000"
     });
 
     assert.ok(config);
@@ -58,7 +58,7 @@ describe("createAppealChainWriter", () => {
       rpcUrl: "http://localhost:8545",
       contractAddress: "0x1234567890abcdef1234567890abcdef12345678",
       chainId: 302612,
-      operatorPrivateKey: "0xYOUR_PRIVATE_KEY_HERE"
+      operatorPrivateKey: "0x0000000000000000000000000000000000000000000000000000000000000000"
     };
 
     const writer = createAppealChainWriter(config);
@@ -73,7 +73,7 @@ describe("createAppealChainWriter", () => {
       rpcUrl: "http://localhost:8545",
       contractAddress: "0x1234567890abcdef1234567890abcdef12345678",
       chainId: 302612,
-      operatorPrivateKey: "0xYOUR_PRIVATE_KEY_HERE"
+      operatorPrivateKey: "0x0000000000000000000000000000000000000000000000000000000000000000"
     };
 
     const writer = createAppealChainWriter(config, {
@@ -108,7 +108,7 @@ describe("createAppealChainWriter", () => {
       rpcUrl: "http://localhost:8545",
       contractAddress: "0x1234567890abcdef1234567890abcdef12345678",
       chainId: 302612,
-      operatorPrivateKey: "0xYOUR_PRIVATE_KEY_HERE"
+      operatorPrivateKey: "0x0000000000000000000000000000000000000000000000000000000000000000"
     };
 
     const writer = createAppealChainWriter(config, {
@@ -138,7 +138,7 @@ describe("createAppealChainWriter", () => {
       rpcUrl: "http://localhost:8545",
       contractAddress: "0x1234567890abcdef1234567890abcdef12345678",
       chainId: 302612,
-      operatorPrivateKey: "0xYOUR_PRIVATE_KEY_HERE"
+      operatorPrivateKey: "0x0000000000000000000000000000000000000000000000000000000000000000"
     };
 
     const writer = createAppealChainWriter(config, {

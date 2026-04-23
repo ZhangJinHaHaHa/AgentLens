@@ -95,8 +95,10 @@ function renderHomePage(client?: AgentAuditRegistryReadContract): void {
 }
 
 describe("HomePage", () => {
-  it("renders a tokenId input and submit button", () => {
+  it("renders a tokenId input and submit button after toggle", () => {
     renderHomePage();
+
+    fireEvent.click(screen.getByText(/direct lookup by token id/i));
 
     expect(screen.getByLabelText(/tokenid/i)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /search/i })).toBeInTheDocument();
@@ -105,6 +107,7 @@ describe("HomePage", () => {
   it("shows local validation feedback and does not navigate for invalid token input", () => {
     renderHomePage();
 
+    fireEvent.click(screen.getByText(/direct lookup by token id/i));
     fireEvent.change(screen.getByLabelText(/tokenid/i), { target: { value: "12.3" } });
     fireEvent.click(screen.getByRole("button", { name: /search/i }));
 
@@ -117,6 +120,7 @@ describe("HomePage", () => {
   it("navigates to the detail route when token input is valid", () => {
     renderHomePage();
 
+    fireEvent.click(screen.getByText(/direct lookup by token id/i));
     fireEvent.change(screen.getByLabelText(/tokenid/i), { target: { value: " 00123 " } });
     fireEvent.click(screen.getByRole("button", { name: /search/i }));
 

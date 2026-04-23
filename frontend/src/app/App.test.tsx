@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
 import { App } from "./App";
@@ -22,17 +22,28 @@ vi.mock("../lib/agentAuditRegistryClient", () => ({
     getLatestAuditReport: vi.fn().mockRejectedValue(new Error("execution reverted: TOKEN_NOT_FOUND")),
     getAuditCount: vi.fn().mockRejectedValue(new Error("execution reverted: TOKEN_NOT_FOUND")),
     getAuditReportByIndex: vi.fn().mockRejectedValue(new Error("execution reverted: TOKEN_NOT_FOUND"))
+  }),
+  createAgentAuditRegistryV2Client: () => ({
+    getAgentProfile: vi.fn().mockRejectedValue(new Error("execution reverted: TOKEN_NOT_FOUND")),
+    getLatestAuditReport: vi.fn().mockRejectedValue(new Error("execution reverted: TOKEN_NOT_FOUND")),
+    getAuditCount: vi.fn().mockRejectedValue(new Error("execution reverted: TOKEN_NOT_FOUND")),
+    getAuditReportByIndex: vi.fn().mockRejectedValue(new Error("execution reverted: TOKEN_NOT_FOUND")),
+    getReputation: vi.fn().mockRejectedValue(new Error("execution reverted: TOKEN_NOT_FOUND")),
+    getAppealCount: vi.fn().mockRejectedValue(new Error("execution reverted: TOKEN_NOT_FOUND")),
+    getAppealRecord: vi.fn().mockRejectedValue(new Error("execution reverted: TOKEN_NOT_FOUND"))
   })
 }));
 
 describe("App", () => {
-  it("renders a tokenId query surface", () => {
+  it("renders a tokenId query surface behind the direct lookup toggle", () => {
     render(
       <MemoryRouter future={routerFuture}>
         <App env={validEnv} />
       </MemoryRouter>
     );
 
+    // Token input is hidden by default; click toggle to show it
+    fireEvent.click(screen.getByText(/direct lookup by token id/i));
     expect(screen.getByLabelText(/tokenid/i)).toBeInTheDocument();
   });
 

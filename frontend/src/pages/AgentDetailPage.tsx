@@ -9,7 +9,10 @@ import { LatestAuditSummary } from "../components/LatestAuditSummary";
 import { LoadingSkeleton } from "../components/LoadingSkeleton";
 import { NavHeader } from "../components/NavHeader";
 import { ReputationBadge } from "../components/ReputationBadge";
+import { PricingCard } from "../components/PricingCard";
+import { RiskProfileCard } from "../components/RiskProfileCard";
 import { ReviewSection } from "../components/ReviewSection";
+import { TrustGuaranteeCard } from "../components/TrustGuaranteeCard";
 import type { AppConfig } from "../config/appConfig";
 import {
   createAgentAuditRegistryClient,
@@ -19,8 +22,12 @@ import {
 } from "../lib/agentAuditRegistryClient";
 import { parseTokenIdInput } from "../lib/tokenId";
 import { useAgentCredit } from "../hooks/useAgentCredit";
+import { useAgentPricing } from "../hooks/useAgentPricing";
+import { useAgentRiskProfile } from "../hooks/useAgentRiskProfile";
 import { useAuditHistory } from "../hooks/useAuditHistory";
 import { useAgentReviews } from "../hooks/useAgentReviews";
+import { createMarketplaceClient, type MarketplaceClient } from "../lib/marketplaceClient";
+import marketplaceArtifact from "../../../contracts/artifacts/AgentMarketplace.json";
 
 interface AgentDetailPageProps {
   config: AppConfig;
@@ -35,6 +42,11 @@ export function AgentDetailPage({ config, client }: AgentDetailPageProps): JSX.E
   );
   const [v2Client] = useState<AgentAuditRegistryV2Client>(
     () => createAgentAuditRegistryV2Client(config.registryAddress, config.rpcUrl, config.chainId)
+  );
+  const [resolvedMarketplaceClient] = useState<MarketplaceClient | null>(
+    () => config.marketplaceAddress
+      ? createMarketplaceClient(config.marketplaceAddress, marketplaceArtifact.abi, config.rpcUrl, config.chainId)
+      : null
   );
 
   if (!parsedTokenId.ok) {
@@ -55,6 +67,17 @@ export function AgentDetailPage({ config, client }: AgentDetailPageProps): JSX.E
     tokenId: parsedTokenId.value,
     client: resolvedClient,
     v2Client
+  });
+  const riskProfile = useAgentRiskProfile({
+    tokenId: parsedTokenId.value,
+    v2Client,
+    reputationScore: agentCredit.reputation?.currentReputationScore ?? 5000,
+    auditCount: agentCredit.profile ? Number(agentCredit.profile.auditCount) : 0,
+    attestationVerified: false
+  });
+  const agentPricing = useAgentPricing({
+    tokenId: parsedTokenId.value,
+    marketplaceClient: resolvedMarketplaceClient
   });
   const auditHistory = useAuditHistory({
     tokenId: parsedTokenId.value,
@@ -113,17 +136,45 @@ export function AgentDetailPage({ config, client }: AgentDetailPageProps): JSX.E
       <NavHeader backHref="/" backLabel="Home" />
       <div className="page-content">
         <section className="hero-card">
-          <p className="eyebrow">Agent detail</p>
+          <p className="eyebrow">Agent Profile</p>
           <h1>{agentCredit.profile.agentName || `Agent ${tokenId}`}</h1>
-          <p className="intro">{`Connected to chain ${config.chainId}. Summary-only registry reads are active.`}</p>
+          <p className="intro">
+            {`Verified on-chain. ${Number(agentCredit.profile.auditCount)} audit${Number(agentCredit.profile.auditCount) !== 1 ? "s" : ""} completed.`}
+          </p>
         </section>
         <AgentProfileCard profile={agentCredit.profile} />
+        {agentPricing.status === "ready" && agentPricing.pricing ? (
+          <PricingCard
+            pricePerDay={agentPricing.pricing.pricePerDay}
+            buyPrice={agentPricing.pricing.buyPrice}
+            configured={agentPricing.pricing.configured}
+            accessCount={agentPricing.accessCount}
+          />
+        ) : null}
         {agentCredit.reputation !== null ? (
           <ReputationBadge
             currentReputationScore={agentCredit.reputation.currentReputationScore}
             successfulAppeals={agentCredit.reputation.successfulAppeals}
             failedAppeals={agentCredit.reputation.failedAppeals}
             reputationDelta={agentCredit.reputation.reputationDelta}
+          />
+        ) : null}
+        {riskProfile.status === "ready" && riskProfile.riskProfile ? (
+          <RiskProfileCard
+            riskProfile={riskProfile.riskProfile}
+            averageScores={riskProfile.averageScores}
+          />
+        ) : riskProfile.status === "loading" ? (
+          <LoadingSkeleton lines={4} title="Loading risk profile" />
+        ) : null}
+        {agentCredit.reputation !== null ? (
+          <TrustGuaranteeCard
+            totalBond={agentCredit.profile.totalBond}
+            reputationScore={agentCredit.reputation.currentReputationScore}
+            auditCount={Number(agentCredit.profile.auditCount)}
+            successfulAppeals={agentCredit.reputation.successfulAppeals}
+            failedAppeals={agentCredit.reputation.failedAppeals}
+            blacklisted={agentCredit.profile.blacklisted}
           />
         ) : null}
         {agentCredit.latestAudit ? (

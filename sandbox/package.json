@@ -20,6 +20,12 @@
     "run:attestation:verify": "npm run build && node dist/src/cli/attestationVerify.js",
     "run:attestation:api": "npm run build && node dist/src/cli/attestationApi.js",
     "run:attestation:command-provider": "npm run build && node dist/src/cli/attestationCommandProvider.js",
+    "run:agent": "npm run build && node dist/src/cli/agentRegistry.js",
+    "run:agent:registry": "npm run build && node dist/src/cli/agentRegistry.js",
+    "run:agent:get-report": "npm run build && node dist/src/cli/agentRegistry.js get-report",
+    "run:agent:search": "npm run build && node dist/src/cli/agentRegistry.js search",
+    "run:agent:verify": "npm run build && node dist/src/cli/agentRegistry.js verify",
+    "run:agent:history": "npm run build && node dist/src/cli/agentRegistry.js history",
     "run:local": "npm run build && node dist/src/cli/run.js",
     "run:smoke": "npm run build && node dist/src/cli/smoke.js",
     "run:acceptance": "npm run build && node dist/src/cli/acceptance.js"

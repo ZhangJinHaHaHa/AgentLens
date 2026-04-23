@@ -17,7 +17,7 @@ describe("NavHeader", () => {
       </MemoryRouter>
     );
 
-    const brand = screen.getByText("Agent Shenji");
+    const brand = screen.getByRole("link", { name: /agent shenji/i });
     expect(brand).toHaveAttribute("href", "/");
   });
 

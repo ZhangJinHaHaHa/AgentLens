@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 
-import type { AgentAuditRegistryReadContract } from "../lib/agentAuditRegistryClient";
+import type { AgentAuditRegistryReadContract, AgentAuditRegistryV2Client } from "../lib/agentAuditRegistryClient";
+import type { MarketplaceClient } from "../lib/marketplaceClient";
 import type { AgentListEntry } from "../components/AgentListItem";
 import { normalizeContractReadError } from "../lib/normalizeContractReadError";
+import { classifyRisk } from "../lib/riskLevel";
 
 const SCAN_BATCH_SIZE = 10;
 
+const ZERO_BYTES32 = "0x0000000000000000000000000000000000000000000000000000000000000000";
+
 interface UseAgentListOptions {
   client: AgentAuditRegistryReadContract;
+  v2Client?: AgentAuditRegistryV2Client;
+  marketplaceClient?: MarketplaceClient;
 }
 
 interface UseAgentListState {
@@ -33,7 +39,9 @@ const initialState: UseAgentListState = {
 };
 
 export function useAgentList({
-  client
+  client,
+  v2Client,
+  marketplaceClient
 }: UseAgentListOptions): UseAgentListState & {
   loadMore: () => void;
   refresh: () => void;
@@ -48,6 +56,8 @@ export function useAgentList({
     async function loadInitialBatch(): Promise<void> {
       const result = await scanAgentBatch({
         client,
+        v2Client,
+        marketplaceClient,
         startId: 1,
         batchSize: SCAN_BATCH_SIZE
       });
@@ -85,7 +95,7 @@ export function useAgentList({
     return () => {
       cancelled = true;
     };
-  }, [client]);
+  }, [client, v2Client, marketplaceClient]);
 
   function loadMore(): void {
     if (state.status !== "ready" || state.isLoadingMore || !state.hasMore) {
@@ -99,6 +109,8 @@ export function useAgentList({
 
     void scanAgentBatch({
       client,
+      v2Client,
+      marketplaceClient,
       startId: state.nextScanId,
       batchSize: SCAN_BATCH_SIZE
     })
@@ -137,6 +149,8 @@ export function useAgentList({
 
 interface ScanAgentBatchOptions {
   client: AgentAuditRegistryReadContract;
+  v2Client?: AgentAuditRegistryV2Client;
+  marketplaceClient?: MarketplaceClient;
   startId: number;
   batchSize: number;
 }
@@ -147,8 +161,15 @@ interface ScanAgentBatchResult {
   consecutiveNotFound: number;
 }
 
+function isAttestationPresent(hash: string | undefined): boolean {
+  if (!hash) return false;
+  return hash !== ZERO_BYTES32;
+}
+
 async function scanAgentBatch({
   client,
+  v2Client,
+  marketplaceClient,
   startId,
   batchSize
 }: ScanAgentBatchOptions): Promise<ScanAgentBatchResult> {
@@ -164,11 +185,13 @@ async function scanAgentBatch({
 
       let latestStatus: bigint | number | null = null;
       let latestScore: bigint | number | null = null;
+      let attestationVerified = false;
 
       try {
         const latestAudit = await client.getLatestAuditReport(tokenId);
         latestStatus = latestAudit.status;
         latestScore = latestAudit.auditScore;
+        attestationVerified = isAttestationPresent(latestAudit.attestationHash);
       } catch (auditError) {
         const errorCode = normalizeContractReadError(auditError);
         if (errorCode !== "NO_AUDIT_RECORD") {
@@ -176,13 +199,35 @@ async function scanAgentBatch({
         }
       }
 
+      // Enrich with reputation and pricing in parallel (best-effort)
+      const enrichments = await Promise.allSettled([
+        v2Client ? v2Client.getReputation(tokenId) : Promise.reject(new Error("no v2")),
+        marketplaceClient ? marketplaceClient.getPricing(tokenId) : Promise.reject(new Error("no marketplace"))
+      ]);
+
+      const reputationResult = enrichments[0];
+      const pricingResult = enrichments[1];
+
+      const reputationScore = reputationResult.status === "fulfilled"
+        ? reputationResult.value.currentReputationScore
+        : null;
+
+      const pricing = pricingResult.status === "fulfilled"
+        ? pricingResult.value
+        : null;
+
       agents.push({
         tokenId: String(currentId),
         agentName: profile.agentName,
         developer: profile.developer,
         latestStatus,
         latestScore,
-        auditCount: profile.auditCount
+        auditCount: profile.auditCount,
+        reputationScore,
+        riskLevel: reputationScore !== null ? classifyRisk(reputationScore) : null,
+        attestationVerified,
+        lastAuditAt: Number(profile.lastAuditAt),
+        pricing
       });
 
       consecutiveNotFound = 0;

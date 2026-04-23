@@ -15,7 +15,12 @@ const agentFixture: AgentListEntry = {
   developer: "0x1111111111111111111111111111111111111111",
   latestStatus: 1,
   latestScore: 92,
-  auditCount: 5n
+  auditCount: 5n,
+  reputationScore: null,
+  riskLevel: null,
+  attestationVerified: false,
+  lastAuditAt: 0,
+  pricing: null
 };
 
 describe("AgentListItem", () => {

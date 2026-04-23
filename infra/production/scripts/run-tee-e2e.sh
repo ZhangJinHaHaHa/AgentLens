@@ -20,12 +20,12 @@ set -euo pipefail
 #   ./run-tee-e2e.sh --env infra/production/.env.e2e
 #
 #   # or pass everything on the command line
-#   TEE_E2E_RPC_URL=http://YOUR_PRODUCTION_SERVER_IP:18545 \
+#   TEE_E2E_RPC_URL=http://<YOUR_PRODUCTION_SERVER_IP>:18545 \
 #   TEE_E2E_REGISTRY_ADDRESS=0x4A679253410272dd5232B3Ff7cF5dbB88f295319 \
 #   TEE_E2E_CHAIN_ID=302612 \
 #   TEE_E2E_PRIVATE_KEY=0x... \
 #   TEE_E2E_MANIFEST_URL=https://example.com/manifest.json \
-#   TEE_E2E_EXPECTED_MEASUREMENT=YOUR_MRENCLAVE_MEASUREMENT_HEX \
+#   TEE_E2E_EXPECTED_MEASUREMENT=1656d0e5f1dbac0e687662f79b8b5bf8629e40224567ecb823d1eb409f0b16b8 \
 #     ./run-tee-e2e.sh
 #
 # Required env vars:

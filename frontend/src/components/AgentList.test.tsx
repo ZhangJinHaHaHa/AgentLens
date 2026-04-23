@@ -17,7 +17,12 @@ const agentsFixture: AgentListEntry[] = [
     developer: "0x1111111111111111111111111111111111111111",
     latestStatus: 1,
     latestScore: 92,
-    auditCount: 5n
+    auditCount: 5n,
+    reputationScore: null,
+    riskLevel: null,
+    attestationVerified: false,
+    lastAuditAt: 0,
+    pricing: null
   },
   {
     tokenId: "2",
@@ -25,7 +30,12 @@ const agentsFixture: AgentListEntry[] = [
     developer: "0x2222222222222222222222222222222222222222",
     latestStatus: 2,
     latestScore: 40,
-    auditCount: 3n
+    auditCount: 3n,
+    reputationScore: null,
+    riskLevel: null,
+    attestationVerified: false,
+    lastAuditAt: 0,
+    pricing: null
   }
 ];
 

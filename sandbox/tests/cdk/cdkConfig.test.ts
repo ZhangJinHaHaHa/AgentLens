@@ -8,7 +8,7 @@ import { loadCdkConfig } from "../../src/cdk/cdkConfig";
 
 test("loadCdkConfig returns production defaults when no config file and no env vars", () => {
   const config = loadCdkConfig({ cwd: os.tmpdir(), env: {} });
-  assert.equal(config.rpcUrl, "http://YOUR_PRODUCTION_SERVER_IP:18545");
+  assert.equal(config.rpcUrl, "http://<YOUR_PRODUCTION_SERVER_IP>:18545");
   assert.equal(config.chainId, 302612);
   assert.equal(config.registryAddress, "0x4A679253410272dd5232B3Ff7cF5dbB88f295319");
   assert.equal(config.privateKey, undefined);
@@ -66,7 +66,7 @@ test("loadCdkConfig throws on invalid chainId", () => {
 test("loadCdkConfig ignores missing config file gracefully", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "cdk-config-"));
   const config = loadCdkConfig({ cwd: tmpDir, env: {} });
-  assert.equal(config.rpcUrl, "http://YOUR_PRODUCTION_SERVER_IP:18545");
+  assert.equal(config.rpcUrl, "http://<YOUR_PRODUCTION_SERVER_IP>:18545");
   fs.rmSync(tmpDir, { recursive: true });
 });
 
@@ -74,6 +74,6 @@ test("loadCdkConfig ignores malformed config file", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "cdk-config-"));
   fs.writeFileSync(path.join(tmpDir, "shenji-cdk.config.json"), "not valid json!!!");
   const config = loadCdkConfig({ cwd: tmpDir, env: {} });
-  assert.equal(config.rpcUrl, "http://YOUR_PRODUCTION_SERVER_IP:18545");
+  assert.equal(config.rpcUrl, "http://<YOUR_PRODUCTION_SERVER_IP>:18545");
   fs.rmSync(tmpDir, { recursive: true });
 });

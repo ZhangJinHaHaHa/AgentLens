@@ -1,76 +1,95 @@
-import { type FormEvent, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from "react";
 
 import { AgentList } from "../components/AgentList";
 import type { AgentListEntry } from "../components/AgentListItem";
 import { LoadingSkeleton } from "../components/LoadingSkeleton";
+import { MarketplaceHero } from "../components/MarketplaceHero";
 import { NavHeader } from "../components/NavHeader";
-import { SearchFilterBar } from "../components/SearchFilterBar";
+import {
+  SearchFilterBar,
+  type RiskLevelFilter,
+  type AttestationFilter
+} from "../components/SearchFilterBar";
 import type { AppConfig } from "../config/appConfig";
 import { useAgentList } from "../hooks/useAgentList";
 import type { AuditStatusFilter } from "../lib/auditStatus";
 import { matchesStatusFilter } from "../lib/auditStatus";
-import { createAgentAuditRegistryClient, type AgentAuditRegistryReadContract } from "../lib/agentAuditRegistryClient";
-import { parseTokenIdInput } from "../lib/tokenId";
+import {
+  createAgentAuditRegistryClient,
+  createAgentAuditRegistryV2Client,
+  type AgentAuditRegistryReadContract,
+  type AgentAuditRegistryV2Client
+} from "../lib/agentAuditRegistryClient";
+import { createMarketplaceClient, type MarketplaceClient } from "../lib/marketplaceClient";
+import marketplaceArtifact from "../../../contracts/artifacts/AgentMarketplace.json";
 
 interface HomePageProps {
   config: AppConfig;
   client?: AgentAuditRegistryReadContract;
+  v2Client?: AgentAuditRegistryV2Client;
+  marketplaceClient?: MarketplaceClient;
 }
 
-export function HomePage({ config, client }: HomePageProps): JSX.Element {
-  const navigate = useNavigate();
-  const [tokenId, setTokenId] = useState("");
-  const [error, setError] = useState<string | null>(null);
+export function HomePage({ config, client, v2Client, marketplaceClient }: HomePageProps): JSX.Element {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<AuditStatusFilter>("all");
+  const [riskLevelFilter, setRiskLevelFilter] = useState<RiskLevelFilter>("all");
+  const [attestationFilter, setAttestationFilter] = useState<AttestationFilter>("all");
+
   const [resolvedClient] = useState<AgentAuditRegistryReadContract>(
     () => client ?? createAgentAuditRegistryClient(config)
   );
+  const [resolvedV2Client] = useState<AgentAuditRegistryV2Client>(
+    () => v2Client ?? createAgentAuditRegistryV2Client(config.registryAddress, config.rpcUrl, config.chainId)
+  );
+  const [resolvedMarketplaceClient] = useState<MarketplaceClient | undefined>(
+    () => {
+      if (marketplaceClient) return marketplaceClient;
+      if (config.marketplaceAddress) {
+        return createMarketplaceClient(
+          config.marketplaceAddress,
+          marketplaceArtifact.abi,
+          config.rpcUrl,
+          config.chainId
+        );
+      }
+      return undefined;
+    }
+  );
 
-  const agentList = useAgentList({ client: resolvedClient });
+  const agentList = useAgentList({
+    client: resolvedClient,
+    v2Client: resolvedV2Client,
+    marketplaceClient: resolvedMarketplaceClient
+  });
 
   const filteredAgents = useMemo(() => {
-    return filterAgents(agentList.agents, searchQuery, statusFilter);
-  }, [agentList.agents, searchQuery, statusFilter]);
+    return filterAgents(
+      agentList.agents,
+      searchQuery,
+      statusFilter,
+      riskLevelFilter,
+      attestationFilter
+    );
+  }, [agentList.agents, searchQuery, statusFilter, riskLevelFilter, attestationFilter]);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-    event.preventDefault();
+  const stats = useMemo(() => computeStats(agentList.agents), [agentList.agents]);
 
-    const parsedTokenId = parseTokenIdInput(tokenId);
-    if (!parsedTokenId.ok) {
-      setError(parsedTokenId.error);
-      return;
-    }
-
-    setError(null);
-    navigate(`/agent/${parsedTokenId.normalized}`);
-  }
+  const hasActiveFilters =
+    searchQuery.length > 0 ||
+    statusFilter !== "all" ||
+    riskLevelFilter !== "all" ||
+    attestationFilter !== "all";
 
   return (
     <main className="app-shell-full">
       <NavHeader />
       <div className="page-content">
-        <section className="hero-card">
-          <p className="eyebrow">Read-only registry query</p>
-          <h1>Agent credit lookup</h1>
-          <p className="intro">
-            Query an on-chain agent profile by tokenId and inspect the latest audit summary.
-          </p>
-          <form className="token-form" onSubmit={handleSubmit}>
-            <label htmlFor="tokenId">tokenId</label>
-            <input
-              id="tokenId"
-              name="tokenId"
-              type="text"
-              inputMode="numeric"
-              value={tokenId}
-              onChange={(event) => setTokenId(event.target.value)}
-            />
-            {error ? <p role="alert">{error}</p> : null}
-            <button type="submit">Search</button>
-          </form>
-        </section>
+        <MarketplaceHero
+          totalAgents={stats.total}
+          attestedCount={stats.attested}
+          averageScore={stats.averageScore}
+        />
 
         <section className="agent-browser-section">
           <SearchFilterBar
@@ -78,6 +97,10 @@ export function HomePage({ config, client }: HomePageProps): JSX.Element {
             onSearchChange={setSearchQuery}
             statusFilter={statusFilter}
             onStatusFilterChange={setStatusFilter}
+            riskLevelFilter={riskLevelFilter}
+            onRiskLevelFilterChange={setRiskLevelFilter}
+            attestationFilter={attestationFilter}
+            onAttestationFilterChange={setAttestationFilter}
           />
 
           {agentList.status === "loading" ? (
@@ -91,18 +114,18 @@ export function HomePage({ config, client }: HomePageProps): JSX.Element {
           ) : (
             <AgentList
               agents={filteredAgents}
-              hasMore={agentList.hasMore && searchQuery.length === 0 && statusFilter === "all"}
+              hasMore={agentList.hasMore && !hasActiveFilters}
               isLoadingMore={agentList.isLoadingMore}
               onLoadMore={agentList.loadMore}
               emptyTitle={
-                searchQuery.length > 0 || statusFilter !== "all"
+                hasActiveFilters
                   ? "No matching agents"
                   : "No agents registered"
               }
               emptyDescription={
-                searchQuery.length > 0 || statusFilter !== "all"
+                hasActiveFilters
                   ? "No agents match your search criteria. Try adjusting your filters."
-                  : "There are no registered agents on this registry yet. Use the lookup form above to search by token ID."
+                  : "There are no registered agents on this registry yet."
               }
             />
           )}
@@ -115,7 +138,9 @@ export function HomePage({ config, client }: HomePageProps): JSX.Element {
 function filterAgents(
   agents: readonly AgentListEntry[],
   searchQuery: string,
-  statusFilter: AuditStatusFilter
+  statusFilter: AuditStatusFilter,
+  riskLevelFilter: RiskLevelFilter,
+  attestationFilter: AttestationFilter
 ): AgentListEntry[] {
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
@@ -130,11 +155,45 @@ function filterAgents(
 
     if (statusFilter !== "all") {
       if (agent.latestStatus === null) {
-        return statusFilter === "pending";
+        if (statusFilter !== "pending") return false;
+      } else if (!matchesStatusFilter(agent.latestStatus, statusFilter)) {
+        return false;
       }
-      return matchesStatusFilter(agent.latestStatus, statusFilter);
+    }
+
+    if (riskLevelFilter !== "all") {
+      if (!agent.riskLevel) return false;
+      if (agent.riskLevel.level !== riskLevelFilter) return false;
+    }
+
+    if (attestationFilter === "verified" && !agent.attestationVerified) {
+      return false;
+    }
+    if (attestationFilter === "unverified" && agent.attestationVerified) {
+      return false;
     }
 
     return true;
   });
+}
+
+interface AgentStats {
+  total: number;
+  attested: number;
+  averageScore: number | null;
+}
+
+function computeStats(agents: readonly AgentListEntry[]): AgentStats {
+  const total = agents.length;
+  const attested = agents.filter((a) => a.attestationVerified).length;
+
+  const scores = agents
+    .filter((a) => a.latestScore !== null)
+    .map((a) => Number(a.latestScore));
+  const averageScore =
+    scores.length > 0
+      ? Math.round(scores.reduce((sum, s) => sum + s, 0) / scores.length)
+      : null;
+
+  return { total, attested, averageScore };
 }

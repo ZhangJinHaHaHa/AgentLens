@@ -16,6 +16,7 @@ export interface AppConfig {
   reportGatewayUrl?: string;
   appealApiUrl?: string;
   attestation?: AttestationUiConfig;
+  marketplaceAddress?: string;
 }
 
 export type AppConfigResult =
@@ -39,6 +40,7 @@ export interface AppEnv {
   VITE_AUDIT_ATTESTATION_EXPECTED_MEASUREMENT?: string;
   VITE_AUDIT_ATTESTATION_EXPECTED_QUOTE_FORMAT?: string;
   VITE_AUDIT_ATTESTATION_VERIFY_REPORT_DATA_BINDING?: string;
+  VITE_AUDIT_MARKETPLACE_ADDRESS?: string;
 }
 
 export function readAppConfig(env: AppEnv): AppConfigResult {
@@ -87,7 +89,10 @@ export function readAppConfig(env: AppEnv): AppConfigResult {
       ...(readOptionalEnvString(env.VITE_AUDIT_APPEAL_API_URL)
         ? { appealApiUrl: readOptionalEnvString(env.VITE_AUDIT_APPEAL_API_URL) }
         : {}),
-      ...(attestation ? { attestation } : {})
+      ...(attestation ? { attestation } : {}),
+      ...(readOptionalEnvString(env.VITE_AUDIT_MARKETPLACE_ADDRESS)
+        ? { marketplaceAddress: readOptionalEnvString(env.VITE_AUDIT_MARKETPLACE_ADDRESS) }
+        : {})
     }
   };
 }
