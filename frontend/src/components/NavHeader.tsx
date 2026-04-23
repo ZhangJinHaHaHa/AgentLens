@@ -15,13 +15,16 @@ export function NavHeader({
     <header className="nav-header">
       <div className="nav-header-content">
         <Link to="/" className="nav-header-brand">
-          {title}
+          <span className="nav-header-logo">S</span>
+          <span className="nav-header-title">{title}</span>
         </Link>
         {backHref ? (
           <Link to={backHref} className="nav-header-back">
-            {backLabel}
+            <span className="nav-header-back-arrow">&larr;</span> {backLabel}
           </Link>
-        ) : null}
+        ) : (
+          <span className="nav-header-tagline">Trusted Agent Infrastructure</span>
+        )}
       </div>
     </header>
   );

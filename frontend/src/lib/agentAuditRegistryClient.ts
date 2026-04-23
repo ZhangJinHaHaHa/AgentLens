@@ -87,6 +87,8 @@ export interface AgentAuditRegistryV2Client extends AgentAuditRegistryClient {
   getReputation(tokenId: bigint): Promise<ReputationRecordOnChain>;
   getAppealCount(tokenId: bigint): Promise<bigint>;
   getAppealRecord(tokenId: bigint, appealId: number): Promise<AppealRecordOnChain>;
+  getAverageScores(tokenId: bigint): Promise<DimensionalScoresOnChain>;
+  getDimensionalScores(tokenId: bigint, auditIndex: number): Promise<DimensionalScoresOnChain>;
 }
 
 export function createAgentAuditRegistryClient(
@@ -167,6 +169,28 @@ export function createAgentAuditRegistryV2Client(
         outcome: Number(rec.outcome),
         evidenceHash: String(rec.evidenceHash),
         appealCID: String(rec.appealCID)
+      };
+    },
+    async getAverageScores(tokenId) {
+      const scores = await contract.getAverageScores(tokenId);
+      return {
+        security: Number(scores.security),
+        taskExecution: Number(scores.taskExecution),
+        cognitive: Number(scores.cognitive),
+        environment: Number(scores.environment),
+        engineering: Number(scores.engineering),
+        compliance: Number(scores.compliance)
+      };
+    },
+    async getDimensionalScores(tokenId, auditIndex) {
+      const scores = await contract.getDimensionalScores(tokenId, auditIndex);
+      return {
+        security: Number(scores.security),
+        taskExecution: Number(scores.taskExecution),
+        cognitive: Number(scores.cognitive),
+        environment: Number(scores.environment),
+        engineering: Number(scores.engineering),
+        compliance: Number(scores.compliance)
       };
     }
   };

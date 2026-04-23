@@ -71,7 +71,7 @@ test("runRegisterCommand fails without private key", async () => {
 
 test("runRegisterCommand rejects stake below minimum", async () => {
   const originalEnv = process.env.SHENJI_CDK_PRIVATE_KEY;
-  process.env.SHENJI_CDK_PRIVATE_KEY = "0xYOUR_PRIVATE_KEY_HERE";
+  process.env.SHENJI_CDK_PRIVATE_KEY = "0x0000000000000000000000000000000000000000000000000000000000000000";
   const originalExitCode = process.exitCode;
 
   await runRegisterCommand({
@@ -92,7 +92,7 @@ test("runRegisterCommand rejects stake below minimum", async () => {
 
 test("runRegisterCommand succeeds with confirmation", async () => {
   const originalEnv = process.env.SHENJI_CDK_PRIVATE_KEY;
-  process.env.SHENJI_CDK_PRIVATE_KEY = "0xYOUR_PRIVATE_KEY_HERE";
+  process.env.SHENJI_CDK_PRIVATE_KEY = "0x0000000000000000000000000000000000000000000000000000000000000000";
   const originalExitCode = process.exitCode;
 
   const input = Readable.from("y\n");

@@ -7,6 +7,7 @@ export interface MarketplaceClient {
     buyPrice: bigint;
     configured: boolean;
   }>;
+  getAccessCount(tokenId: bigint): Promise<bigint>;
 }
 
 export function createMarketplaceClient(
@@ -24,6 +25,9 @@ export function createMarketplaceClient(
     },
     getPricing(tokenId) {
       return contract.getPricing(tokenId);
+    },
+    getAccessCount(tokenId) {
+      return contract.getAccessCount(tokenId);
     }
   };
 }

@@ -5,10 +5,10 @@ interface EmptyStateProps {
 
 export function EmptyState({ title, description }: EmptyStateProps): JSX.Element {
   return (
-    <section className="hero-card">
-      <p className="eyebrow">Read-only detail</p>
-      <h2>{title}</h2>
-      <p className="intro">{description}</p>
+    <section className="empty-state">
+      <div className="empty-state__icon">?</div>
+      <h2 className="empty-state__title">{title}</h2>
+      <p className="empty-state__desc">{description}</p>
     </section>
   );
 }

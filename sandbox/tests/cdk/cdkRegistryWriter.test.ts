@@ -39,7 +39,7 @@ test("stakeAgent encodes stake calldata and extracts tokenId from logs", async (
     rpcUrl: "http://localhost:8545",
     chainId: 31337,
     registryAddress: "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
-    privateKey: "0xYOUR_PRIVATE_KEY_HERE"
+    privateKey: "0x0000000000000000000000000000000000000000000000000000000000000000"
   };
 
   const result = await stakeAgent(
@@ -69,7 +69,7 @@ test("stakeAgent throws when AgentRegistered event missing", async () => {
     rpcUrl: "http://localhost:8545",
     chainId: 31337,
     registryAddress: "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
-    privateKey: "0xYOUR_PRIVATE_KEY_HERE"
+    privateKey: "0x0000000000000000000000000000000000000000000000000000000000000000"
   };
 
   await assert.rejects(

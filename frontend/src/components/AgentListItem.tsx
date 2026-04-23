@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 import { getAuditStatusLabel } from "../lib/auditStatus";
 import { truncateAddress } from "../lib/format";
+import type { RiskClassification } from "../lib/riskLevel";
 
 export interface AgentListEntry {
   tokenId: string;
@@ -10,6 +11,11 @@ export interface AgentListEntry {
   latestStatus: bigint | number | null;
   latestScore: bigint | number | null;
   auditCount: bigint | number;
+  reputationScore: number | null;
+  riskLevel: RiskClassification | null;
+  attestationVerified: boolean;
+  lastAuditAt: number;
+  pricing: { pricePerDay: bigint; buyPrice: bigint; configured: boolean } | null;
 }
 
 interface AgentListItemProps {

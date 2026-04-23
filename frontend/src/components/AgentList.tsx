@@ -1,4 +1,5 @@
-import { AgentListItem, type AgentListEntry } from "./AgentListItem";
+import { EnhancedAgentCard } from "./EnhancedAgentCard";
+import type { AgentListEntry } from "./AgentListItem";
 import { EmptyState } from "./EmptyState";
 
 interface AgentListProps {
@@ -23,11 +24,10 @@ export function AgentList({
   }
 
   return (
-    <section className="hero-card agent-list-section">
-      <h2>Registered agents</h2>
+    <section className="agent-list-section">
       <ul className="agent-list" role="list">
         {agents.map((agent) => (
-          <AgentListItem key={agent.tokenId} agent={agent} />
+          <EnhancedAgentCard key={agent.tokenId} agent={agent} />
         ))}
       </ul>
       {hasMore ? (

@@ -33,3 +33,18 @@ export function formatBondWei(bond: bigint | number): string {
 
   return `${String(value)} wei`;
 }
+
+export function formatPriceEth(weiValue: bigint): string {
+  const eth = Number(weiValue) / 1e18;
+
+  if (eth === 0) {
+    return "Free";
+  }
+  if (eth >= 1) {
+    return `${eth.toFixed(2)} ETH`;
+  }
+  if (eth >= 0.01) {
+    return `${eth.toFixed(3)} ETH`;
+  }
+  return `${eth.toFixed(4)} ETH`;
+}
