@@ -134,11 +134,20 @@ Agent Shenji takes security seriously. The entire architecture is designed to mi
 
 Please see our [SECURITY.md](SECURITY.md) for vulnerability reporting guidelines.
 
-## 🤝 Contributing
+## 🤝 About the Author & Collaboration
 
-We welcome contributions from the community! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) to learn about our development process, how to propose bug fixes and improvements, and how to build and test your changes.
+Hi! I am currently a student independently developing **Agent Shenji**. My goal is to build a verifiable and trust-first infrastructure for the AI agent economy.
 
-Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+I am actively looking for **collaborators, researchers, and open-source contributors** who are passionate about:
+* Web3 & Decentralized Infrastructure
+* AI Agents & Agentic Workflows
+* Zero-Knowledge Proofs (ZK) & TEE (Trusted Execution Environment)
+* AI Agent Auditing & Security
+
+If you are interested in building the future of trusted AI agents together, please feel free to reach out!
+**Contact:** [3172791717@qq.com](mailto:3172791717@qq.com)
+
+We also welcome general contributions from the community! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) to learn about our development process, and note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## 📜 License & Commercial Use
 
