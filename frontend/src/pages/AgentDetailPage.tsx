@@ -11,6 +11,7 @@ import { NavHeader } from "../components/NavHeader";
 import { ReputationBadge } from "../components/ReputationBadge";
 import { PricingCard } from "../components/PricingCard";
 import { RiskProfileCard } from "../components/RiskProfileCard";
+import { AccessHistoryCard } from "../components/AccessHistoryCard";
 import { ReviewSection } from "../components/ReviewSection";
 import { TrustGuaranteeCard } from "../components/TrustGuaranteeCard";
 import type { AppConfig } from "../config/appConfig";
@@ -25,6 +26,7 @@ import { useAgentCredit } from "../hooks/useAgentCredit";
 import { useAgentPricing } from "../hooks/useAgentPricing";
 import { useAgentRiskProfile } from "../hooks/useAgentRiskProfile";
 import { useAuditHistory } from "../hooks/useAuditHistory";
+import { useAccessHistory } from "../hooks/useAccessHistory";
 import { useAgentReviews } from "../hooks/useAgentReviews";
 import { createMarketplaceClient, type MarketplaceClient } from "../lib/marketplaceClient";
 import marketplaceArtifact from "../../../contracts/artifacts/AgentMarketplace.json";
@@ -82,6 +84,10 @@ export function AgentDetailPage({ config, client }: AgentDetailPageProps): JSX.E
   const auditHistory = useAuditHistory({
     tokenId: parsedTokenId.value,
     client: resolvedClient
+  });
+  const accessHistory = useAccessHistory({
+    tokenId: String(parsedTokenId.value),
+    marketplaceClient: resolvedMarketplaceClient ?? undefined
   });
   const agentReviews = useAgentReviews({ tokenId });
 
@@ -202,6 +208,12 @@ export function AgentDetailPage({ config, client }: AgentDetailPageProps): JSX.E
           <EmptyState
             title="Unable to load audit history"
             description={auditHistory.errorMessage ?? "The history query failed."}
+          />
+        ) : null}
+        {accessHistory.status === "ready" ? (
+          <AccessHistoryCard
+            records={accessHistory.records}
+            totalCount={accessHistory.totalCount}
           />
         ) : null}
         {agentReviews.status === "loading" ? (
