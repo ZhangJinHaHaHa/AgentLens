@@ -7,6 +7,7 @@ import { searchForWorkspaceRoot } from "vite";
 export default defineConfig({
   plugins: [react()],
   server: {
+    allowedHosts: true,
     fs: {
       allow: [searchForWorkspaceRoot(process.cwd()), path.resolve(__dirname, "../contracts")]
     }
