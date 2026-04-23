@@ -23,7 +23,7 @@ export function NavHeader({
             <span className="nav-header-back-arrow">&larr;</span> {backLabel}
           </Link>
         ) : (
-          <span className="nav-header-tagline">Trusted Agent Infrastructure</span>
+          <span className="nav-header-tagline">Verify Before You Buy</span>
         )}
       </div>
     </header>

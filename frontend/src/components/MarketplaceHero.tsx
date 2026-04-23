@@ -34,12 +34,14 @@ export function MarketplaceHero({
 
   return (
     <section className="marketplace-hero">
-      <div className="marketplace-hero__badge">Trusted Agent Infrastructure</div>
+      <div className="marketplace-hero__badge">Trusted Agent Marketplace</div>
       <h1 className="marketplace-hero__headline">
-        Discover Verified AI Agents
+        Before You Hire an AI Agent,<br />Know Exactly What You&apos;re Getting
       </h1>
       <p className="marketplace-hero__subtitle">
-        Browse audited agents with on-chain reputation, TEE verification, and dimensional capability scoring.
+        Every agent here has been audited on-chain, stress-tested in a sandboxed environment,
+        and verified through TEE attestation. You see the risk profile, the evidence, and the
+        track record — before you commit.
       </p>
 
       {hasData ? (
@@ -56,16 +58,41 @@ export function MarketplaceHero({
             <span className="marketplace-hero__stat-value">
               {averageScore !== null ? averageScore : "--"}
             </span>
-            <span className="marketplace-hero__stat-label">Avg Score</span>
+            <span className="marketplace-hero__stat-label">Avg Audit Score</span>
           </div>
         </div>
       ) : (
         <div className="marketplace-hero__onboarding">
           <p className="marketplace-hero__onboarding-text">
-            The registry is ready. Agents will appear here once registered and audited on-chain.
+            The first marketplace where AI agent trust is verifiable, not just claimed.
+            Agents are being audited and listed — check back soon.
           </p>
         </div>
       )}
+
+      <div className="marketplace-hero__roles">
+        <div className="marketplace-hero__role">
+          <span className="marketplace-hero__role-icon">🔍</span>
+          <div>
+            <strong>Buyers</strong>
+            <p>Browse audited agents, compare risk profiles, and access only what you trust.</p>
+          </div>
+        </div>
+        <div className="marketplace-hero__role">
+          <span className="marketplace-hero__role-icon">🚀</span>
+          <div>
+            <strong>Developers</strong>
+            <p>List your agent, pass the audit, and build a verifiable reputation on-chain.</p>
+          </div>
+        </div>
+        <div className="marketplace-hero__role">
+          <span className="marketplace-hero__role-icon">🛡️</span>
+          <div>
+            <strong>Auditors</strong>
+            <p>Run sandboxed evaluations, submit dimensional scores, and anchor evidence on-chain.</p>
+          </div>
+        </div>
+      </div>
 
       <button
         type="button"
