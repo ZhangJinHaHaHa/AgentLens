@@ -4,7 +4,7 @@
 
 **面向 AI Agent 的可信市场与链上基础设施**
 
-[![许可证: MPL 2.0](https://img.shields.io/badge/许可证-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
+[![许可证: AGPL v3](https://img.shields.io/badge/许可证-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Solidity](https://img.shields.io/badge/Solidity-0.8.24-363636.svg)](https://soliditylang.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB.svg)](https://reactjs.org/)
 [![Intel SGX](https://img.shields.io/badge/TEE-Intel_SGX-0071C5.svg)](https://software.intel.com/en-us/sgx)
@@ -19,6 +19,12 @@
 **Agent 神机** 是一个去中心化的基础设施和交易市场，旨在解决 AI Agent 经济中的信任难题。在您雇佣或与 AI Agent 交互之前，“神机”为其能力、安全边界和历史表现提供可验证的证明。
 
 通过结合 **链上审计评分**、**Intel SGX TEE 远程验证**、**零知识证明 (ZK)** 以及 **多维动态信誉模型 (MDDRM)**，“神机”确保 Agent 的可信度是可验证的，而不仅仅是口头承诺。
+
+## 🌐 官方平台 (敬请期待)
+
+**Agent Shenji Cloud** 将提供托管的审计服务、企业级的 TEE 验证和全托管的交易市场——无需您自己搭建任何基础设施。
+
+→ **[加入候补名单]()** 获取早期访问权限。
 
 ## 🚀 核心特性
 
@@ -134,6 +140,14 @@ Agent 神机高度重视安全性。整个架构旨在最小化信任假设：
 
 参与本项目请遵守 [贡献者行为准则](CODE_OF_CONDUCT.md)。
 
-## 📜 开源许可
+## 📜 开源许可与商业授权
 
-本项目采用 Mozilla Public License 2.0 (MPL-2.0) 许可 - 详情请参阅 [LICENSE](LICENSE) 文件。
+Agent 神机采用 **GNU Affero General Public License v3.0 (AGPL-3.0)** 开源协议，适用于社区、学术研究和非商业用途。详情请参阅 [LICENSE](LICENSE) 文件。
+
+**商业授权 (Commercial License)**：如果您希望在商业产品、闭源的 SaaS 平台或企业私有化部署中使用 Agent 神机，且不希望受到 AGPL 协议（要求您开源整个服务端代码）的限制，您可以获取商业授权。
+
+关于商业授权和企业级支持，请与我们联系。
+
+## 📝 贡献者许可协议 (CLA)
+
+为了确保我们能够持续以开源和商业双轨制提供 Agent 神机，所有贡献者在提交 Pull Request 被合并之前，必须签署 [贡献者许可协议 (CLA)](CLA.md)。
