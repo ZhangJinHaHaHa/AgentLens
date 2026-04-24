@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🏓 AgentLens
+<img src="popo-mascot.png" alt="Popo — AgentLens Mascot" width="180" />
+
+# AgentLens
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Solidity](https://img.shields.io/badge/Solidity-0.8.24-363636.svg)](https://soliditylang.org/)
