@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛡️ Agent 神机 (Agent Shenji)
+# 🛡️ AgentLens
 
 **面向 AI Agent 的可信市场与链上基础设施**
 
@@ -16,13 +16,13 @@
 
 ---
 
-**Agent 神机** 是一个去中心化的基础设施和交易市场，旨在解决 AI Agent 经济中的信任难题。在您雇佣或与 AI Agent 交互之前，“神机”为其能力、安全边界和历史表现提供可验证的证明。
+**AgentLens** 是一个去中心化的基础设施和交易市场，旨在解决 AI Agent 经济中的信任难题。在您雇佣或与 AI Agent 交互之前，“AgentLens”为其能力、安全边界和历史表现提供可验证的证明。
 
-通过结合 **链上审计评分**、**Intel SGX TEE 远程验证**、**零知识证明 (ZK)** 以及 **多维动态信誉模型 (MDDRM)**，“神机”确保 Agent 的可信度是可验证的，而不仅仅是口头承诺。
+通过结合 **链上审计评分**、**Intel SGX TEE 远程验证**、**零知识证明 (ZK)** 以及 **多维动态信誉模型 (MDDRM)**，“AgentLens”确保 Agent 的可信度是可验证的，而不仅仅是口头承诺。
 
 ## 🌐 官方平台 (敬请期待)
 
-**Agent Shenji Cloud** 将提供托管的审计服务、企业级的 TEE 验证和全托管的交易市场——无需您自己搭建任何基础设施。
+**AgentLens Cloud** 将提供托管的审计服务、企业级的 TEE 验证和全托管的交易市场——无需您自己搭建任何基础设施。
 
 → **[加入候补名单]()** 获取早期访问权限。
 
@@ -39,7 +39,7 @@
 ```mermaid
 graph TD
     subgraph "开发者层"
-        D[开发者钱包] -->|质押 & 提交| R
+        D[开发者钉包] -->|质押并提交| R
     end
 
     subgraph "链上层 (Polygon Edge)"
@@ -122,21 +122,25 @@ graph TD
 ## 📖 相关文档
 
 * [Agent 接入指南](docs/agent-integration-guide.md) - 如何构建并提交您的 Agent 进行审计。
-* [验证方法论](docs/verification-methods.md) - “神机”如何验证 Agent 声明的详细说明。
+* [验证方法论](docs/verification-methods.md) - “AgentLens”如何验证 Agent 声明的详细说明。
 * [TEE 生产状态](docs/status/2026-04-16-tee-production.md) - 关于 SGX 硬件加密飞地的设置信息。
 
 ## 🛡️ 安全与信任
 
-Agent 神机高度重视安全性。整个架构旨在最小化信任假设：
+AgentLens 高度重视安全性。整个架构旨在最小化信任假设：
 * **代码隐私**：开发者无需公开源码，通过 ZK 证明处理身份和特征验证。
 * **执行完整性**：TEE 远程验证确保审计沙箱未被篡改。
 * **经济安全**：MDDRM 惩罚机制对恶意或表现不佳的 Agent 进行经济制裁。
 
 漏洞报告请参阅 [SECURITY.md](SECURITY.md)。
 
-## 🤝 关于作者与合作招募
+## 🤝 关于作者与认识 Popo 🏓
 
-你好！我目前是一名在校学生，正在独立开发 **Agent 神机**。我的目标是为 AI Agent 经济构建一个可验证的、信任优先的基础设施。
+你好！我目前是一名在校学生，正在独立开发 **AgentLens**。我的目标是为 AI Agent 经济构建一个可验证的、信任优先的基础设施。
+
+在深入 Web3 和 AI 领域之前，我曾是一名**职业乒乓球运动员**。体育竞技所要求的纪律性、精准度和快速反应，深刻地影响了我构建高可靠性系统的方式。
+
+这段经历也启发了 AgentLens 的官方吉祥物——**Popo** 的诞生。Popo 是一颗充满活力的乒乓球，坐在乒乓球台上。它代表着敏捷、准确，以及我们的审计沙箱对 AI Agent 进行的持续“来回”验证过程。就像比赛中的裁判一样，Popo 确保每个 Agent 在进入市场之前都遵守规则。
 
 我正在积极寻找对以下方向充满热情的 **合作者、研究人员和开源贡献者**：
 * Web3 与去中心化基础设施
@@ -151,12 +155,12 @@ Agent 神机高度重视安全性。整个架构旨在最小化信任假设：
 
 ## 📜 开源许可与商业授权
 
-Agent 神机采用 **GNU Affero General Public License v3.0 (AGPL-3.0)** 开源协议，适用于社区、学术研究和非商业用途。详情请参阅 [LICENSE](LICENSE) 文件。
+AgentLens 采用 **GNU Affero General Public License v3.0 (AGPL-3.0)** 开源协议，适用于社区、学术研究和非商业用途。详情请参阅 [LICENSE](LICENSE) 文件。
 
-**商业授权 (Commercial License)**：如果您希望在商业产品、闭源的 SaaS 平台或企业私有化部署中使用 Agent 神机，且不希望受到 AGPL 协议（要求您开源整个服务端代码）的限制，您可以获取商业授权。
+**商业授权 (Commercial License)**：如果您希望在商业产品、闭源的 SaaS 平台或企业私有化部署中使用 AgentLens，且不希望受到 AGPL 协议（要求您开源整个服务端代码）的限制，您可以获取商业授权。
 
 关于商业授权和企业级支持，请与我们联系。
 
 ## 📝 贡献者许可协议 (CLA)
 
-为了确保我们能够持续以开源和商业双轨制提供 Agent 神机，所有贡献者在提交 Pull Request 被合并之前，必须签署 [贡献者许可协议 (CLA)](CLA.md)。
+为了确保我们能够持续以开源和商业双轨制提供 AgentLens，所有贡献者在提交 Pull Request 被合并之前，必须签署 [贡献者许可协议 (CLA)](CLA.md)。
