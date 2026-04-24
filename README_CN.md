@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛡️ AgentLens
+# 🏓 AgentLens
 
 **面向 AI Agent 的可信市场与链上基础设施**
 

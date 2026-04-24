@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛡️ AgentLens
+# 🏓 AgentLens
 
 **A trust-first marketplace and on-chain infrastructure for AI agents.**
 
