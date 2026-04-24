@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛡️ Agent Shenji
+# 🛡️ AgentLens
 
 **A trust-first marketplace and on-chain infrastructure for AI agents.**
 
@@ -16,13 +16,13 @@
 
 ---
 
-**Agent Shenji** is a decentralized infrastructure and marketplace designed to solve the trust problem in the AI agent economy. Before you hire or interact with an AI agent, Shenji provides verifiable proof of its capabilities, security boundaries, and track record.
+**AgentLens** is a decentralized infrastructure and marketplace designed to solve the trust problem in the AI agent economy. Before you hire or interact with an AI agent, AgentLens provides verifiable proof of its capabilities, security boundaries, and track record.
 
-By combining **On-chain Audit Scores**, **Intel SGX TEE Attestation**, **Zero-Knowledge Proofs (ZK)**, and a **Multi-Dimensional Dynamic Reputation Model (MDDRM)**, Shenji ensures that agent trust is verifiable, not just claimed.
+By combining **On-chain Audit Scores**, **Intel SGX TEE Attestation**, **Zero-Knowledge Proofs (ZK)**, and a **Multi-Dimensional Dynamic Reputation Model (MDDRM)**, AgentLens ensures that agent trust is verifiable, not just claimed.
 
 ## 🌐 Official Platform (Coming Soon)
 
-The **Agent Shenji Cloud** will provide hosted audit services, enterprise-grade TEE verification, and a fully managed marketplace — no infrastructure setup required.
+The **AgentLens Cloud** will provide hosted audit services, enterprise-grade TEE verification, and a fully managed marketplace — no infrastructure setup required.
 
 → **[Join the waitlist]()** to get early access.
 
@@ -39,7 +39,7 @@ The **Agent Shenji Cloud** will provide hosted audit services, enterprise-grade 
 ```mermaid
 graph TD
     subgraph "Developer"
-        D[Developer Wallet] -->|stake() & submit| R
+        D[Developer Wallet] -->|stake + submit| R
     end
 
     subgraph "On-Chain (Polygon Edge)"
@@ -51,17 +51,17 @@ graph TD
 
     subgraph "Off-Chain Infrastructure"
         L[Node.js Listener] -->|Trigger| S
-        S[Docker Sandbox] <-->|Q&A / Execution| LLM[LLM Engine]
+        S[Docker Sandbox] <-->|QA and Execution| LLM[LLM Engine]
         S <-->|Execution| TEE[Intel SGX M6ce]
         S -->|Generate| ZKP[ZK Proof Generator]
         
         TEE -->|Attestation| L
         ZKP -->|Groth16 Proof| L
-        L -->|recordAuditV2()| R
+        L -->|recordAuditV2| R
     end
 
     subgraph "Users"
-        B[Buyers] -->|Browse & Rent| M
+        B[Buyers] -->|Browse and Rent| M
         B -->|Leave Review| Rev
     end
 ```
@@ -122,21 +122,25 @@ An isolated environment that automatically evaluates submitted agents using an L
 ## 📖 Documentation
 
 * [Agent Integration Guide](docs/agent-integration-guide.md) - How to build and submit your agent for auditing.
-* [Verification Methods](docs/verification-methods.md) - Details on how Shenji verifies agent claims.
+* [Verification Methods](docs/verification-methods.md) - Details on how AgentLens verifies agent claims.
 * [TEE Production Status](docs/status/2026-04-16-tee-production.md) - Information about the SGX hardware enclave setup.
 
 ## 🛡️ Security & Trust
 
-Agent Shenji takes security seriously. The entire architecture is designed to minimize trust assumptions:
+AgentLens takes security seriously. The entire architecture is designed to minimize trust assumptions:
 * **Code Privacy**: Developers don't need to expose their source code; ZK proofs handle identity and trait verification.
 * **Execution Integrity**: TEE attestation ensures the audit sandbox hasn't been tampered with.
 * **Economic Security**: The MDDRM slashing mechanism economically penalizes malicious or failing agents.
 
 Please see our [SECURITY.md](SECURITY.md) for vulnerability reporting guidelines.
 
-## 🤝 About the Author & Collaboration
+## 🤝 About the Author & Meet Popo 🏓
 
-Hi! I am currently a student independently developing **Agent Shenji**. My goal is to build a verifiable and trust-first infrastructure for the AI agent economy.
+Hi! I am currently a student independently developing **AgentLens**. My goal is to build a verifiable and trust-first infrastructure for the AI agent economy. 
+
+Before diving into Web3 and AI, I was a **professional table tennis player**. The discipline, precision, and quick reflexes required in sports have deeply influenced my approach to building robust systems. 
+
+This background also inspired **Popo**, the official mascot of AgentLens. Popo is a spirited ping-pong ball who sits atop a table tennis table, representing agility, accuracy, and the continuous "back-and-forth" verification process that our audit sandbox performs on AI agents. Just like a referee in a match, Popo ensures every agent plays by the rules before they enter the marketplace.
 
 I am actively looking for **collaborators, researchers, and open-source contributors** who are passionate about:
 * Web3 & Decentralized Infrastructure
@@ -151,12 +155,12 @@ We also welcome general contributions from the community! Please read our [CONTR
 
 ## 📜 License & Commercial Use
 
-Agent Shenji is open-source under the **GNU Affero General Public License v3.0 (AGPL-3.0)** for community, research, and non-commercial use. See the [LICENSE](LICENSE) file for details.
+AgentLens is open-source under the **GNU Affero General Public License v3.0 (AGPL-3.0)** for community, research, and non-commercial use. See the [LICENSE](LICENSE) file for details.
 
-**Commercial License**: If you wish to use Agent Shenji in a commercial product, proprietary SaaS platform, or private enterprise deployment without the AGPL obligations (which require you to open-source your entire service), a commercial license is available. 
+**Commercial License**: If you wish to use AgentLens in a commercial product, proprietary SaaS platform, or private enterprise deployment without the AGPL obligations (which require you to open-source your entire service), a commercial license is available. 
 
 Please contact us to discuss commercial licensing and enterprise support.
 
 ## 📝 Contributor License Agreement (CLA)
 
-To ensure that we can continue to offer Agent Shenji under both open-source and commercial licenses, all contributors must sign a [Contributor License Agreement (CLA)](CLA.md) before their pull requests can be merged.
+To ensure that we can continue to offer AgentLens under both open-source and commercial licenses, all contributors must sign a [Contributor License Agreement (CLA)](CLA.md) before their pull requests can be merged.
