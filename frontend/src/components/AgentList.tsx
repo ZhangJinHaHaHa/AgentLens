@@ -20,7 +20,9 @@ export function AgentList({
   emptyDescription = "There are no registered agents matching your search criteria."
 }: AgentListProps): JSX.Element {
   if (agents.length === 0) {
-    return <EmptyState title={emptyTitle} description={emptyDescription} />;
+    // showPopo=true when there are genuinely no agents (not a filtered-out result)
+    const isNoAgentsAtAll = emptyTitle === "No agents registered";
+    return <EmptyState title={emptyTitle} description={emptyDescription} showPopo={isNoAgentsAtAll} />;
   }
 
   return (
