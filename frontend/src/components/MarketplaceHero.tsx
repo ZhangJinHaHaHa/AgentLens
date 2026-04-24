@@ -34,7 +34,7 @@ export function MarketplaceHero({
 
   return (
     <section className="marketplace-hero">
-      <div className="marketplace-hero__badge">Trusted Agent Marketplace</div>
+      <div className="marketplace-hero__badge">AgentLens — Trusted Agent Marketplace</div>
       <h1 className="marketplace-hero__headline">
         Before You Hire an AI Agent,<br />Know Exactly What You&apos;re Getting
       </h1>

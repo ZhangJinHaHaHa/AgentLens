@@ -7,6 +7,7 @@ import { readAppConfig } from "../config/appConfig";
 import { AgentDetailPage } from "../pages/AgentDetailPage";
 import { AuditReportPage } from "../pages/AuditReportPage";
 import { HomePage } from "../pages/HomePage";
+import { PopoWelcome } from "../components/PopoWelcome";
 
 interface AppProps {
   env?: AppEnv;
@@ -21,6 +22,7 @@ export function App({ env = import.meta.env }: AppProps): JSX.Element {
 
   return (
     <ErrorBoundary>
+      <PopoWelcome />
       <Routes>
         <Route path="/" element={<HomePage config={configResult.config} />} />
         <Route path="/agent/:tokenId" element={<AgentDetailPage config={configResult.config} />} />

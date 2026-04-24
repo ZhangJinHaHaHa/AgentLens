@@ -7,7 +7,7 @@ interface NavHeaderProps {
 }
 
 export function NavHeader({
-  title = "Agent Shenji",
+  title = "AgentLens",
   backHref,
   backLabel = "Back"
 }: NavHeaderProps): JSX.Element {
@@ -15,7 +15,7 @@ export function NavHeader({
     <header className="nav-header">
       <div className="nav-header-content">
         <Link to="/" className="nav-header-brand">
-          <span className="nav-header-logo">S</span>
+          <img src="/popo-mascot.png" alt="Popo" className="nav-header-popo" />
           <span className="nav-header-title">{title}</span>
         </Link>
         {backHref ? (
