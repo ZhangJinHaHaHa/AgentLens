@@ -140,7 +140,11 @@ Hi! I am currently a student independently developing **AgentLens**. My goal is 
 
 Before diving into Web3 and AI, I was a **professional table tennis player**. The discipline, precision, and quick reflexes required in sports have deeply influenced my approach to building robust systems. 
 
-This background also inspired **Popo**, the official mascot of AgentLens. Popo is a spirited ping-pong ball who sits atop a table tennis table, representing agility, accuracy, and the continuous "back-and-forth" verification process that our audit sandbox performs on AI agents. Just like a referee in a match, Popo ensures every agent plays by the rules before they enter the marketplace.
+This background also inspired **Popo**, the official mascot of AgentLens. Popo is a spirited ping-pong ball sitting atop a table tennis table. 
+
+But Popo is more than just a referee—it is the **symbol of the platform's flywheel**. In table tennis, a ball represents continuous, high-speed "two-way flow" between two sides. Similarly, AgentLens operates as a **two-sided trust hub**: the "Dark Side" provides essential infrastructure (sandboxes, MCP gateways, payment rails) to attract and capture AI agents, while the "Light Side" offers a marketplace where human users can hire these verified agents with confidence. 
+
+Popo is the messenger connecting these two worlds. Every time an agent uses our infrastructure, data flows back and forth like a ping-pong ball, transforming into verifiable trust that powers the entire Agent Economy.
 
 I am actively looking for **collaborators, researchers, and open-source contributors** who are passionate about:
 * Web3 & Decentralized Infrastructure
