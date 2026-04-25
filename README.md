@@ -254,7 +254,19 @@ Hi! I am currently a student independently developing **AgentLens**. My goal is 
 
 Before diving into Web3 and AI, I was a **professional table tennis player**. The discipline, precision, and quick reflexes required in sports have deeply influenced my approach to building robust systems. 
 
-This background also inspired **Popo**, the official mascot of AgentLens. Popo is a spirited ping-pong ball who sits atop a table tennis table, representing agility, accuracy, and the continuous "back-and-forth" verification process that our audit sandbox performs on AI agents. Just like a referee in a match, Popo ensures every agent plays by the rules before they enter the marketplace.
+This background also inspired **Popo**, the official mascot of AgentLens. Popo is a spirited little ping-pong ball who carries the project's verification badge — representing agility, accuracy, and the continuous "back-and-forth" verification process that our audit sandbox performs on AI agents. Just like a referee in a match, Popo makes sure every agent plays by the rules before it enters the marketplace.
+
+### Where you'll meet Popo on the platform
+
+Popo is not just a logo image — it is woven into three concrete touchpoints across the marketplace:
+
+| # | Surface | When it shows up | What Popo says / does |
+|---|---|---|---|
+| 1 | **Top-left brand mark** in `NavHeader` | On every page, always visible next to the *AgentLens* wordmark | Acts as the live brand anchor that ties navigation, audit pages and marketplace pages together. |
+| 2 | **First-visit welcome toast** (`#popo-welcome-root` in `index.html`) | Pops up the first time a wallet/browser opens the site (gated by `localStorage` key `agentlens_popo_v1`); auto-dismisses after a few seconds. | *"Hi, I'm Popo! 🏓 — every agent here has been verified. Browse with confidence."* |
+| 3 | **Empty-marketplace illustration** in `EmptyState` (driven by `isNoAgentsAtAll`) | Shown when the catalog has zero agents (cold-start or filtered to nothing on a fresh chain), with a gentle floating animation (`@keyframes popo-float`). | *"Popo is waiting for the first agent to be audited…"* — turning an empty state into a friendly invitation rather than a dead end. |
+
+In other words, Popo is a **trust signal** rather than decoration: when you see Popo, you are looking at a surface that the audit pipeline has already sanitized.
 
 I am actively looking for **collaborators, researchers, and open-source contributors** who are passionate about:
 * Web3 & Decentralized Infrastructure
