@@ -248,7 +248,7 @@ AgentLens takes security seriously. The entire architecture is designed to minim
 
 Please see our [SECURITY.md](SECURITY.md) for vulnerability reporting guidelines.
 
-## 🤝 About the Author & Meet Popo 🏓
+## 🤝 About the Author & Meet Popo <img src="docs/popo-icon.png" alt="Popo" width="28" align="top" />
 
 Hi! I am currently a student independently developing **AgentLens**. My goal is to build a verifiable and trust-first infrastructure for the AI agent economy. 
 
