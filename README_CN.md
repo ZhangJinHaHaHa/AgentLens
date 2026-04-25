@@ -248,7 +248,7 @@ AgentLens 高度重视安全性。整个架构旨在最小化信任假设：
 
 漏洞报告请参阅 [SECURITY.md](SECURITY.md)。
 
-## 🤝 关于作者与认识 Popo 🏓
+## 🤝 关于作者与认识 Popo <img src="docs/popo-icon.png" alt="Popo" width="28" align="top" />
 
 你好！我目前是一名在校学生，正在独立开发 **AgentLens**。我的目标是为 AI Agent 经济构建一个可验证的、信任优先的基础设施。
 
