@@ -3,7 +3,7 @@ import path from "node:path";
 
 import type { CdkConfig } from "./cdkTypes";
 
-const DEFAULT_RPC_URL = "http://<YOUR_PRODUCTION_SERVER_IP>:18545";
+const DEFAULT_RPC_URL = "http://127.0.0.1:18545";
 const DEFAULT_CHAIN_ID = 302612;
 const DEFAULT_REGISTRY_ADDRESS = "0x4A679253410272dd5232B3Ff7cF5dbB88f295319";
 

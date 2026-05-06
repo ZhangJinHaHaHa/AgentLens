@@ -297,7 +297,7 @@ docker push my-registry.com/my-test-agent:latest
 ```bash
 # 质押并触发审计
 cast send \
-  --rpc-url http://<YOUR_PRODUCTION_SERVER_IP>:18545 \
+  --rpc-url http://127.0.0.1:18545 \
   --private-key $YOUR_PRIVATE_KEY \
   --value 1.01ether \
   0xa513E6E4b8f2a923D98304ec87F64353C4D5C853 \
@@ -333,7 +333,7 @@ bash scripts/run-local-e2e.sh
 
 ### 前端页面
 
-浏览器访问：`http://<YOUR_PRODUCTION_SERVER_IP>`（生产环境前端）
+浏览器访问：`https://agentlens.chat`（生产环境前端）
 
 - 首页：所有已注册 Agent 列表
 - `/agent/:tokenId`：Agent 详情 + 审计历史
@@ -345,7 +345,7 @@ bash scripts/run-local-e2e.sh
 ```bash
 # 查询 Agent 最新审计结果
 cast call \
-  --rpc-url http://<YOUR_PRODUCTION_SERVER_IP>:18545 \
+  --rpc-url http://127.0.0.1:18545 \
   0xa513E6E4b8f2a923D98304ec87F64353C4D5C853 \
   "getLatestAudit(uint256)" \
   1  # tokenId
@@ -451,12 +451,12 @@ async function handleSolve(auditRequest) {
 
 | 项目 | 值 |
 |------|-----|
-| RPC URL | `http://<YOUR_PRODUCTION_SERVER_IP>:18545` |
+| RPC URL | `http://127.0.0.1:18545` |
 | Chain ID | `302612` |
 | 合约地址 | `0xa513E6E4b8f2a923D98304ec87F64353C4D5C853` |
 | serviceFee | 0.01 ETH |
 | minimumBond | 1 ETH |
-| 前端 | `http://<YOUR_PRODUCTION_SERVER_IP>` |
+| 前端 | `https://agentlens.chat` |
 
 ### 获取测试 ETH
 
