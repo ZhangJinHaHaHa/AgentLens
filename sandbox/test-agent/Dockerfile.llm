@@ -1,0 +1,22 @@
+FROM alpine:3.20
+
+RUN apk add --no-cache nodejs iptables curl
+
+WORKDIR /app
+
+COPY dist/src /app/dist/src
+
+EXPOSE 8080
+
+# LLM config is baked in at build time via --build-arg
+ARG AGENT_LLM_PROVIDER=openai
+ARG AGENT_LLM_API_KEY=""
+ARG AGENT_LLM_MODEL=""
+ARG AGENT_LLM_API_BASE_URL=""
+
+ENV AGENT_LLM_PROVIDER=$AGENT_LLM_PROVIDER
+ENV AGENT_LLM_API_KEY=$AGENT_LLM_API_KEY
+ENV AGENT_LLM_MODEL=$AGENT_LLM_MODEL
+ENV AGENT_LLM_API_BASE_URL=$AGENT_LLM_API_BASE_URL
+
+CMD ["node", "/app/dist/src/testAgent/server.js"]

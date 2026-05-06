@@ -42,7 +42,7 @@ MOCK_ATTESTATION_PID=""
 
 # ---- parse arguments ----
 ATTESTATION_MODE="mock"
-SGX_ATTESTATION_API_URL="${SGX_ATTESTATION_API_URL:-http://<YOUR_SGX_SERVER_IP>:3311}"
+SGX_ATTESTATION_API_URL="${SGX_ATTESTATION_API_URL:-http://43.134.90.165:3311}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in

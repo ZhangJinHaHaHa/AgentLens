@@ -20,7 +20,7 @@ set -euo pipefail
 #   ./run-tee-e2e.sh --env infra/production/.env.e2e
 #
 #   # or pass everything on the command line
-#   TEE_E2E_RPC_URL=http://<YOUR_PRODUCTION_SERVER_IP>:18545 \
+#   TEE_E2E_RPC_URL=http://203.91.76.159:18545 \
 #   TEE_E2E_REGISTRY_ADDRESS=0x4A679253410272dd5232B3Ff7cF5dbB88f295319 \
 #   TEE_E2E_CHAIN_ID=302612 \
 #   TEE_E2E_PRIVATE_KEY=0x... \

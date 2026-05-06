@@ -20,11 +20,11 @@ stake() → AuditRequested → listener → SGX Attestation API (Gramine enclave
 | 组件                    | 部署位置                     | 端口    | 状态    |
 | ----------------------- | ---------------------------- | ------- | ------- |
 | AgentAuditRegistryV2    | Polygon Edge (chainId 302612) | 18545   | healthy |
-| shenji-listener         | <YOUR_PRODUCTION_SERVER_IP> (docker)       | 内部    | healthy |
-| shenji-report-gateway   | <YOUR_PRODUCTION_SERVER_IP> (docker)       | 3310    | healthy |
-| shenji-appeal-api       | <YOUR_PRODUCTION_SERVER_IP> (docker)       | 3312    | healthy |
-| shenji-frontend         | <YOUR_PRODUCTION_SERVER_IP> (docker)       | 80      | healthy |
-| Attestation API (SGX)   | <YOUR_SGX_SERVER_IP> (M6ce)         | 3311    | healthy |
+| shenji-listener         | 203.91.76.159 (docker)       | 内部    | healthy |
+| shenji-report-gateway   | 203.91.76.159 (docker)       | 3310    | healthy |
+| shenji-appeal-api       | 203.91.76.159 (docker)       | 3312    | healthy |
+| shenji-frontend         | 203.91.76.159 (docker)       | 80      | healthy |
+| Attestation API (SGX)   | 43.134.90.165 (M6ce)         | 3311    | healthy |
 
 - V2 合约：`0x4A679253410272dd5232B3Ff7cF5dbB88f295319`
 - Gramine enclave MRENCLAVE：`1656d0e5f1dbac0e687662f79b8b5bf8629e40224567ecb823d1eb409f0b16b8`

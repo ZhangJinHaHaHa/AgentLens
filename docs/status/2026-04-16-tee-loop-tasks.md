@@ -60,7 +60,7 @@ Attestation API 到 `attestationHash` 上链、前端 UI 展示，形成完整�
 ### #4 M6ce 服务器构建 Gramine SGX enclave 并记录 MRENCLAVE
 
 **动作**：
-- 在 M6ce (`<YOUR_SGX_SERVER_IP>`) 执行 `make SGX=1`，生成 `generate-quote.manifest.sgx`
+- 在 M6ce (`43.134.90.165`) 执行 `make SGX=1`，生成 `generate-quote.manifest.sgx`
 - 记录 MRENCLAVE：`1656d0e5f1dbac0e687662f79b8b5bf8629e40224567ecb823d1eb409f0b16b8`
 - 该值作为生产 listener + 前端共同 pin 的锚点
 
@@ -79,7 +79,7 @@ AUDIT_ATTESTATION_SERVICE_HOST=0.0.0.0
 AUDIT_ATTESTATION_SERVICE_PORT=3311
 ```
 
-**验证**：`curl http://<YOUR_SGX_SERVER_IP>:3311/attest` 返回非零 quote。
+**验证**：`curl http://43.134.90.165:3311/attest` 返回非零 quote。
 
 ---
 
@@ -87,8 +87,8 @@ AUDIT_ATTESTATION_SERVICE_PORT=3311
 
 **动作**：
 - 开放 M6ce 安全组 `3311` 端口（2026-04-11）
-- 生产机 (`<YOUR_PRODUCTION_SERVER_IP>`) 直连 M6ce 无代理
-- listener `AUDIT_ATTESTATION_API_URL=http://<YOUR_SGX_SERVER_IP>:3311/attest` 生效
+- 生产机 (`203.91.76.159`) 直连 M6ce 无代理
+- listener `AUDIT_ATTESTATION_API_URL=http://43.134.90.165:3311/attest` 生效
 
 ---
 
@@ -98,7 +98,7 @@ AUDIT_ATTESTATION_SERVICE_PORT=3311
 
 | 变量 | 值 |
 |------|-----|
-| `AUDIT_ATTESTATION_API_URL` | `http://<YOUR_SGX_SERVER_IP>:3311/attest` |
+| `AUDIT_ATTESTATION_API_URL` | `http://43.134.90.165:3311/attest` |
 | `AUDIT_ATTESTATION_PROVIDER_TYPE` | `sgx-dcap-v3-gramine` |
 | `AUDIT_ATTESTATION_EXPECTED_PROVIDER_TYPE` | `sgx-dcap` |
 | `AUDIT_ATTESTATION_EXPECTED_MEASUREMENT` | `1656d0e5…0b16b8` |
@@ -216,7 +216,7 @@ AUDIT_ATTESTATION_SERVICE_PORT=3311
 
 ```
 ┌──────────────────────────────────────────────┐
-│  <YOUR_PRODUCTION_SERVER_IP>  (ecs6824 / Tencent Cloud)    │
+│  203.91.76.159  (ecs6824 / Tencent Cloud)    │
 │  ┌────────────────────────────────────────┐  │
 │  │ shenji-listener  (docker, healthy)     │  │
 │  │   → httpAttestationClient              │  │
@@ -236,7 +236,7 @@ AUDIT_ATTESTATION_SERVICE_PORT=3311
                                                   │ HTTP
                                                   ▼
 ┌──────────────────────────────────────────────┐
-│  <YOUR_SGX_SERVER_IP>  (M6ce / SGX 宿主)             │
+│  43.134.90.165  (M6ce / SGX 宿主)             │
 │  ┌────────────────────────────────────────┐  │
 │  │ attestationApi.ts (3311)               │  │
 │  │   → gramine-sgx ./generate-quote       │  │

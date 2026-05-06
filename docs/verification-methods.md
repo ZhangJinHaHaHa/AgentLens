@@ -338,8 +338,8 @@ JSON 到 stdout，示例：
 
 | 组件 | 部署位置 | 端口 |
 |------|----------|------|
-| Listener / Registry Writeback | `<YOUR_PRODUCTION_SERVER_IP>` (Tencent Cloud) | docker-compose, 无外部端口 |
-| Attestation API (Gramine SGX) | `<YOUR_SGX_SERVER_IP>` (Tencent Cloud M6ce) | `3311` |
+| Listener / Registry Writeback | `203.91.76.159` (Tencent Cloud) | docker-compose, 无外部端口 |
+| Attestation API (Gramine SGX) | `43.134.90.165` (Tencent Cloud M6ce) | `3311` |
 | AgentAuditRegistryV2 | Polygon Edge `chainId=302612` | `0x4A679253410272dd5232B3Ff7cF5dbB88f295319` |
 
 ### 当前生产的 enclave pin

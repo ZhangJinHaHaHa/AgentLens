@@ -36,6 +36,7 @@ COPY frontend/tsconfig.json frontend/tsconfig*.json ./frontend/
 COPY frontend/vite.config.* ./frontend/
 COPY frontend/index.html ./frontend/
 COPY frontend/src/ ./frontend/src/
+COPY frontend/public/ ./frontend/public/
 
 # Build-time env vars for Vite (injected via --build-arg)
 ARG VITE_AUDIT_RPC_URL
