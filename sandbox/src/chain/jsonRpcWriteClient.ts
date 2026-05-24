@@ -25,6 +25,7 @@ export interface CreateJsonRpcWriteClientOptions {
   chainId: number;
   privateKey: string;
   pollIntervalMs?: number;
+  receiptTimeoutMs?: number;
   fetchImpl?: typeof fetch;
 }
 
@@ -109,8 +110,11 @@ async function waitForReceipt(
   rpcUrl: string,
   transactionHash: `0x${string}`,
   pollIntervalMs: number,
+  receiptTimeoutMs: number,
   fetchImpl: typeof fetch
 ): Promise<TransactionReceiptResult> {
+  const startedAt = Date.now();
+
   for (;;) {
     const receipt = await jsonRpcRequest<RawTransactionReceipt | null>(
       rpcUrl,
@@ -120,6 +124,11 @@ async function waitForReceipt(
     );
 
     if (!receipt) {
+      const elapsedMs = Date.now() - startedAt;
+      if (elapsedMs >= receiptTimeoutMs) {
+        throw new Error(`transaction ${transactionHash} was not mined within ${receiptTimeoutMs}ms`);
+      }
+
       await sleep(pollIntervalMs);
       continue;
     }
@@ -146,6 +155,7 @@ export function createJsonRpcWriteClient(
   const wallet = new Wallet(options.privateKey);
   const fetchImpl = options.fetchImpl ?? fetch;
   const pollIntervalMs = options.pollIntervalMs ?? 1000;
+  const receiptTimeoutMs = options.receiptTimeoutMs ?? 120_000;
   const signerAddress = wallet.address.toLowerCase();
 
   return {
@@ -195,7 +205,7 @@ export function createJsonRpcWriteClient(
         fetchImpl
       );
 
-      return waitForReceipt(options.rpcUrl, transactionHash, pollIntervalMs, fetchImpl);
+      return waitForReceipt(options.rpcUrl, transactionHash, pollIntervalMs, receiptTimeoutMs, fetchImpl);
     }
   };
 }

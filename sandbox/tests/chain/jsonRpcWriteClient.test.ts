@@ -162,6 +162,39 @@ test("createJsonRpcWriteClient sends a signed raw transaction and waits for a su
   assert.equal(parsedTx.from?.toLowerCase(), SIGNER_ADDRESS);
 });
 
+
+test("createJsonRpcWriteClient times out when the receipt never arrives", async () => {
+  const txHash = `0x${"d".repeat(64)}`;
+  const fetchImpl = buildMockFetch(
+    [
+      { jsonrpc: "2.0", id: 1, result: TEST_NONCE_HEX },
+      { jsonrpc: "2.0", id: 1, result: TEST_GAS_LIMIT_HEX },
+      { jsonrpc: "2.0", id: 1, result: TEST_GAS_PRICE_HEX },
+      { jsonrpc: "2.0", id: 1, result: txHash },
+      { jsonrpc: "2.0", id: 1, result: null }
+    ],
+    []
+  );
+
+  const client = createJsonRpcWriteClient({
+    rpcUrl: "http://localhost:8545",
+    chainId: TEST_CHAIN_ID,
+    privateKey: PRIVATE_KEY,
+    pollIntervalMs: 0,
+    receiptTimeoutMs: 0,
+    fetchImpl
+  });
+
+  await assert.rejects(
+    () =>
+      client.submitTransaction({
+        to: CONTRACT_ADDRESS,
+        data: RECORD_AUDIT_RESULT_CALL_DATA
+      }),
+    /was not mined within 0ms/i
+  );
+});
+
 test("createJsonRpcWriteClient throws a clear error when the mined receipt has status 0x0", async () => {
   const txHash = `0x${"e".repeat(64)}`;
   const fetchImpl = buildMockFetch(
