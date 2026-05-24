@@ -131,7 +131,7 @@ export function createAgentAuditRegistryV2Client(
   chainId: number
 ): AgentAuditRegistryV2Client {
   const provider = new JsonRpcProvider(rpcUrl, chainId);
-  const contract = new Contract(contractAddress, v3Artifact.abi as InterfaceAbi, provider);
+  const contract = new Contract(contractAddress, v2Artifact.abi as InterfaceAbi, provider);
 
   return {
     getAgentProfile(tokenId) {
