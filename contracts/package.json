@@ -7,6 +7,7 @@
     "compile": "node scripts/compile.js",
     "deploy:local": "npm run compile && HOME=$PWD/.home XDG_CONFIG_HOME=$PWD/.xdg/config XDG_DATA_HOME=$PWD/.xdg/data npx hardhat run --no-compile scripts/runDeployLocal.js --network hardhat",
     "deploy:edge": "npm run compile && node scripts/runDeployEdge.js",
+    "test:zk": "node scripts/compileZk.js && npx hardhat test tests/ZkAuditVerifier.test.js --no-compile",
     "test": "npm run compile && HOME=$PWD/.home XDG_CONFIG_HOME=$PWD/.xdg/config XDG_DATA_HOME=$PWD/.xdg/data npx hardhat test --no-compile"
   },
   "devDependencies": {

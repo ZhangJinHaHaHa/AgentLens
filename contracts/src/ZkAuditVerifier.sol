@@ -72,6 +72,9 @@ contract ZkAuditVerifier {
     // tokenId => number of verified audit proofs
     mapping(uint256 => uint256) public auditProofCount;
 
+    // Global dedup: each Groth16 proof may only be consumed once
+    mapping(bytes32 => bool) private _usedProofHashes;
+
     // --- Modifiers ---
 
     modifier onlyOwner() {
@@ -108,7 +111,9 @@ contract ZkAuditVerifier {
      * @param dimensionalScores The 6 claimed dimensional scores [0-100]
      * @param overallScore The claimed weighted overall score [0-100]
      * @param inputCommitment Poseidon hash binding the proof to private inputs
-     * @param proof The Groth16 proof (a, b, c points)
+     * @param a Groth16 proof component A
+     * @param b Groth16 proof component B
+     * @param c Groth16 proof component C
      */
     function verifyAuditScore(
         uint256 tokenId,
@@ -131,17 +136,17 @@ contract ZkAuditVerifier {
         pubInputs[7] = inputCommitment;
 
         // Call the Groth16 verifier
-        bool valid = _callGroth16Verifier(
+        bool valid = _callGroth16Verifier8(
             auditScoreVerifierContract,
             a, b, c,
-            pubInputs,
-            8
+            pubInputs
         );
 
         require(valid, "INVALID_PROOF");
 
-        // Store the verified proof
         bytes32 proofHash = keccak256(abi.encodePacked(a[0], a[1], b[0][0], b[0][1], c[0], c[1]));
+        require(!_usedProofHashes[proofHash], "PROOF_REPLAYED");
+        _usedProofHashes[proofHash] = true;
 
         auditScoreProofs[tokenId][auditId] = AuditScoreProof({
             tokenId: tokenId,
@@ -168,7 +173,9 @@ contract ZkAuditVerifier {
      * @param tokenId The agent's NFT token ID
      * @param fingerprintHash The public fingerprint hash
      * @param developerHash The developer ownership hash
-     * @param proof The Groth16 proof (a, b, c points)
+     * @param a Groth16 proof component A
+     * @param b Groth16 proof component B
+     * @param c Groth16 proof component C
      */
     function verifyFingerprint(
         uint256 tokenId,
@@ -186,16 +193,17 @@ contract ZkAuditVerifier {
         pubInputs[1] = tokenId;
         pubInputs[2] = developerHash;
 
-        bool valid = _callGroth16Verifier(
+        bool valid = _callGroth16Verifier3(
             fingerprintVerifierContract,
             a, b, c,
-            pubInputs,
-            3
+            pubInputs
         );
 
         require(valid, "INVALID_PROOF");
 
         bytes32 proofHash = keccak256(abi.encodePacked(a[0], a[1], b[0][0], b[0][1], c[0], c[1]));
+        require(!_usedProofHashes[proofHash], "PROOF_REPLAYED");
+        _usedProofHashes[proofHash] = true;
 
         fingerprintProofs[tokenId] = AgentFingerprintProof({
             tokenId: tokenId,
@@ -239,36 +247,36 @@ contract ZkAuditVerifier {
 
     // --- Internal: Generic Groth16 Verifier Call ---
 
-    function _callGroth16Verifier(
+    function _callGroth16Verifier8(
         address verifier,
         uint256[2] calldata a,
         uint256[2][2] calldata b,
         uint256[2] calldata c,
-        uint256[8] memory pubInputs,
-        uint256 numInputs
+        uint256[8] memory pubInputs
     ) internal view returns (bool) {
-        // snarkjs-generated verifiers expose:
-        //   verifyProof(uint[2] a, uint[2][2] b, uint[2] c, uint[N] input) → bool
-        // We encode the call dynamically based on numInputs
-        bytes memory payload;
+        bytes memory payload = abi.encodeWithSignature(
+            "verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[8])",
+            a, b, c, pubInputs
+        );
 
-        if (numInputs == 8) {
-            payload = abi.encodeWithSignature(
-                "verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[8])",
-                a, b, c, pubInputs
-            );
-        } else if (numInputs == 3) {
-            uint256[3] memory inputs3;
-            for (uint256 i = 0; i < 3; i++) {
-                inputs3[i] = pubInputs[i];
-            }
-            payload = abi.encodeWithSignature(
-                "verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[3])",
-                a, b, c, inputs3
-            );
-        } else {
-            revert("UNSUPPORTED_INPUT_COUNT");
+        (bool success, bytes memory result) = verifier.staticcall(payload);
+        if (!success || result.length < 32) {
+            return false;
         }
+        return abi.decode(result, (bool));
+    }
+
+    function _callGroth16Verifier3(
+        address verifier,
+        uint256[2] calldata a,
+        uint256[2][2] calldata b,
+        uint256[2] calldata c,
+        uint256[3] memory pubInputs
+    ) internal view returns (bool) {
+        bytes memory payload = abi.encodeWithSignature(
+            "verifyProof(uint256[2],uint256[2][2],uint256[2],uint256[3])",
+            a, b, c, pubInputs
+        );
 
         (bool success, bytes memory result) = verifier.staticcall(payload);
         if (!success || result.length < 32) {
