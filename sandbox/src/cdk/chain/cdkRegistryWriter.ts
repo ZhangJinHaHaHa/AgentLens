@@ -12,7 +12,7 @@ export interface CdkRegistryWriterOptions {
 
 function buildWriteClient(config: CdkConfig): JsonRpcWriteClient {
   if (!config.privateKey) {
-    throw new Error("privateKey is required for write operations. Set SHENJI_CDK_PRIVATE_KEY.");
+    throw new Error("privateKey is required for write operations. Set AGENTLENS_CDK_PRIVATE_KEY.");
   }
 
   return createJsonRpcWriteClient({

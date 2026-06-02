@@ -7,7 +7,7 @@ const DEFAULT_RPC_URL = "http://127.0.0.1:18545";
 const DEFAULT_CHAIN_ID = 302612;
 const DEFAULT_REGISTRY_ADDRESS = "0x4A679253410272dd5232B3Ff7cF5dbB88f295319";
 
-const CONFIG_FILE_NAME = "shenji-cdk.config.json";
+const CONFIG_FILE_NAME = "agentlens-cdk.config.json";
 
 interface RawConfigFile {
   rpcUrl?: unknown;
@@ -39,12 +39,12 @@ export function loadCdkConfig(options: { cwd?: string; env?: Record<string, stri
   const fileConfig = readConfigFile(cwd);
 
   const rpcUrl =
-    env.SHENJI_CDK_RPC_URL ??
+    env.AGENTLENS_CDK_RPC_URL ??
     (typeof fileConfig.rpcUrl === "string" ? fileConfig.rpcUrl : undefined) ??
     DEFAULT_RPC_URL;
 
   const chainIdRaw =
-    env.SHENJI_CDK_CHAIN_ID ??
+    env.AGENTLENS_CDK_CHAIN_ID ??
     (typeof fileConfig.chainId === "number" ? String(fileConfig.chainId) : undefined);
 
   const chainId = chainIdRaw !== undefined ? Number.parseInt(chainIdRaw, 10) : DEFAULT_CHAIN_ID;
@@ -54,11 +54,11 @@ export function loadCdkConfig(options: { cwd?: string; env?: Record<string, stri
   }
 
   const registryAddress =
-    env.SHENJI_CDK_REGISTRY_ADDRESS ??
+    env.AGENTLENS_CDK_REGISTRY_ADDRESS ??
     (typeof fileConfig.registryAddress === "string" ? fileConfig.registryAddress : undefined) ??
     DEFAULT_REGISTRY_ADDRESS;
 
-  const privateKey = env.SHENJI_CDK_PRIVATE_KEY ?? undefined;
+  const privateKey = env.AGENTLENS_CDK_PRIVATE_KEY ?? undefined;
 
   return { rpcUrl, chainId, registryAddress, privateKey };
 }

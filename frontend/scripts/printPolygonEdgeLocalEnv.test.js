@@ -49,11 +49,11 @@ describe("formatPolygonEdgeLocalEnv", () => {
   it("includes the primary repo deployment path when running from a .worktrees checkout", () => {
     expect(
       buildDeploymentPathCandidates(
-        "/Users/demo/agent-shenji/.worktrees/exec-local-baseline-a/frontend/scripts/printPolygonEdgeLocalEnv.js"
+        "/Users/demo/agentlens/.worktrees/exec-local-baseline-a/frontend/scripts/printPolygonEdgeLocalEnv.js"
       )
     ).toEqual([
-      "/Users/demo/agent-shenji/.worktrees/exec-local-baseline-a/contracts/deployments/polygon-edge-local/AgentAuditRegistry.json",
-      "/Users/demo/agent-shenji/contracts/deployments/polygon-edge-local/AgentAuditRegistry.json"
+      "/Users/demo/agentlens/.worktrees/exec-local-baseline-a/contracts/deployments/polygon-edge-local/AgentAuditRegistry.json",
+      "/Users/demo/agentlens/contracts/deployments/polygon-edge-local/AgentAuditRegistry.json"
     ]);
   });
 
@@ -72,14 +72,14 @@ describe("formatPolygonEdgeLocalEnv", () => {
         chainId: "302512"
       },
       fsDouble,
-      "/Users/demo/agent-shenji/frontend",
+      "/Users/demo/agentlens/frontend",
       {}
     );
 
-    expect(outputPath).toBe("/Users/demo/agent-shenji/frontend/.env.local");
+    expect(outputPath).toBe("/Users/demo/agentlens/frontend/.env.local");
     expect(writes).toEqual([
       {
-        filePath: "/Users/demo/agent-shenji/frontend/.env.local",
+        filePath: "/Users/demo/agentlens/frontend/.env.local",
         content: [
           "VITE_AUDIT_RPC_URL=http://127.0.0.1:18545",
           "VITE_AUDIT_REGISTRY_ADDRESS=0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",

@@ -1,12 +1,12 @@
 # Agent 接入审计测试指南
 
-本文档面向希望将 AI Agent接入 Agent Shenji 审计系统进行测试的开发者。
+本文档面向希望将 AI Agent接入 AgentLens 审计系统进行测试的开发者。
 
 ---
 
 ## 1. 系统概述
 
-Agent Shenji 是一个 **链上信用审计系统**。它的工作方式：
+AgentLens 是一个 **链上信用审计系统**。它的工作方式：
 
 ```
 开发者提交 Agent 信息（质押 + Manifest）

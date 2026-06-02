@@ -1,6 +1,6 @@
-# Contributing to Agent Shenji
+# Contributing to AgentLens
 
-First off, thank you for considering contributing to Agent Shenji! It's people like you that make Agent Shenji such a great tool.
+First off, thank you for considering contributing to AgentLens! It's people like you that make AgentLens such a great tool.
 
 ## Where do I go from here?
 
@@ -8,7 +8,7 @@ If you've noticed a bug or have a feature request, make sure to check our [Issue
 
 ## Fork & create a branch
 
-If this is something you think you can fix, then fork Agent Shenji and create a branch with a descriptive name.
+If this is something you think you can fix, then fork AgentLens and create a branch with a descriptive name.
 
 A good branch name would be (where issue #325 is the ticket you're working on):
 
@@ -38,7 +38,7 @@ At this point, you're ready to make your changes. Feel free to ask for help; eve
 
 ## Make a Pull Request
 
-At this point, you should switch back to your master branch and make sure it's up to date with Agent Shenji's master branch:
+At this point, you should switch back to your master branch and make sure it's up to date with AgentLens's master branch:
 
 ```sh
 git remote add upstream git@github.com:ZhangJinHaHaHa/Trusted-Agent-Marketplace.git

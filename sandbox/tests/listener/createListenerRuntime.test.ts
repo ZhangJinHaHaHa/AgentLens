@@ -133,7 +133,7 @@ test("createListenerRuntime wires report persistence into processAuditRequested"
       loadManifestSource: async () => ({
         manifest: {
           agent_name: "risk-agent",
-          image: "agent-shenji/test-agent:local",
+          image: "agentlens/test-agent:local",
           allowed_hosts: ["api.risk.com"],
           allowed_rpc_endpoints: ["https://rpc.edge.local"]
         },
@@ -255,7 +255,7 @@ test("createListenerRuntime wires remote report storage into processAuditRequest
       loadManifestSource: async () => ({
         manifest: {
           agent_name: "risk-agent",
-          image: "agent-shenji/test-agent:local",
+          image: "agentlens/test-agent:local",
           allowed_hosts: ["api.risk.com"],
           allowed_rpc_endpoints: ["https://rpc.edge.local"]
         },
@@ -978,7 +978,7 @@ test("createListenerRuntime passes dockerNetwork to createLocalAuditRunOptions",
       loadManifestSource: async () => ({
         manifest: {
           agent_name: "risk-agent",
-          image: "agent-shenji/test-agent:local",
+          image: "agentlens/test-agent:local",
           allowed_hosts: ["api.risk.com"],
           allowed_rpc_endpoints: ["https://rpc.edge.local"]
         },
@@ -1037,7 +1037,7 @@ test("createListenerRuntime wires attestation client into processAuditRequested 
       loadManifestSource: async () => ({
         manifest: {
           agent_name: "risk-agent",
-          image: "agent-shenji/test-agent:local",
+          image: "agentlens/test-agent:local",
           allowed_hosts: ["api.risk.com"],
           allowed_rpc_endpoints: ["https://rpc.edge.local"]
         },

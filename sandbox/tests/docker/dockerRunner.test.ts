@@ -68,7 +68,7 @@ test("pullImage skips docker pull when the image already exists locally", async 
   await pullImage(
     {
       agent_name: "local-test-agent",
-      image: "agent-shenji/test-agent:local",
+      image: "agentlens/test-agent:local",
       allowed_hosts: ["example.com"],
       allowed_rpc_endpoints: ["https://example.com"]
     },
@@ -78,7 +78,7 @@ test("pullImage skips docker pull when the image already exists locally", async 
   assert.deepEqual(calls, [
     {
       command: "docker",
-      args: ["image", "inspect", "agent-shenji/test-agent:local"]
+      args: ["image", "inspect", "agentlens/test-agent:local"]
     }
   ]);
 });
@@ -366,7 +366,7 @@ test("startContainer uses --network and --name instead of -p when networkName is
     },
     {
       commandRunner,
-      networkName: "shenji-network",
+      networkName: "agentlens-network",
       getDnsServers: async () => ["192.168.65.7"],
       resolveHost: async (host: string) => {
         if (host === "api.risk.com") {
@@ -384,13 +384,13 @@ test("startContainer uses --network and --name instead of -p when networkName is
 
   assert.equal(started.containerId, "container-net-123");
   assert.equal(started.port, PORT);
-  assert.match(started.host, /^shenji-audit-[0-9a-f]{8}$/);
+  assert.match(started.host, /^agentlens-audit-[0-9a-f]{8}$/);
 
   const runCall = calls[0];
   assert.ok(runCall);
   assert.equal(runCall.args[0], "run");
   assert.ok(runCall.args.includes("--network"), "should include --network flag");
-  assert.ok(runCall.args.includes("shenji-network"), "should include network name");
+  assert.ok(runCall.args.includes("agentlens-network"), "should include network name");
   assert.ok(runCall.args.includes("--name"), "should include --name flag");
   assert.ok(!runCall.args.includes("-p"), "should not include -p flag in network mode");
 });

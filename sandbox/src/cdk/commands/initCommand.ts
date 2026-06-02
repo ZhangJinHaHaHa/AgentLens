@@ -94,8 +94,8 @@ export async function runInitCommand(options: InitCommandOptions): Promise<void>
     printSuccess(`Manifest written to ${outputPath}`);
     process.stdout.write("\n");
     printInfo(`Next steps:`);
-    printInfo(`  1. ${dim("shenji-cdk validate --manifest " + outputPath)}`);
-    printInfo(`  2. ${dim("shenji-cdk register --manifest-url <url> --agent-name " + agentName)}`);
+    printInfo(`  1. ${dim("agentlens-cdk validate --manifest " + outputPath)}`);
+    printInfo(`  2. ${dim("agentlens-cdk register --manifest-url <url> --agent-name " + agentName)}`);
   } finally {
     cleanup();
   }

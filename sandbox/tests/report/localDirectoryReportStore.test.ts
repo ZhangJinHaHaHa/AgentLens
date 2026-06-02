@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import { createLocalDirectoryReportStore } from "../../src/report/localDirectoryReportStore";
 
 test("createLocalDirectoryReportStore persists uploaded report bytes under the object key path", async () => {
-  const baseDir = await mkdtemp(join(tmpdir(), "agent-shenji-local-report-store."));
+  const baseDir = await mkdtemp(join(tmpdir(), "agentlens-local-report-store."));
 
   try {
     const store = createLocalDirectoryReportStore({

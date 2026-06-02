@@ -97,7 +97,7 @@ test("processAuditRequested validates the manifest name, runs the sandbox audit,
       return {
         manifest: {
           agent_name: "risk-agent",
-          image: "agent-shenji/test-agent:local",
+          image: "agentlens/test-agent:local",
           allowed_hosts: ["api.risk.com"],
           allowed_rpc_endpoints: ["https://rpc.edge.local"]
         } satisfies SandboxManifest,
@@ -167,7 +167,7 @@ test("processAuditRequested uses an attestation provider and persists the local 
     loadManifestSource: async () => ({
       manifest: {
         agent_name: "risk-agent",
-        image: "agent-shenji/test-agent:local",
+        image: "agentlens/test-agent:local",
         allowed_hosts: ["api.risk.com"],
         allowed_rpc_endpoints: ["https://rpc.edge.local"]
       },
@@ -237,7 +237,7 @@ test("processAuditRequested returns a manifest mismatch failure without running 
       return {
         manifest: {
           agent_name: "another-agent",
-          image: "agent-shenji/test-agent:local",
+          image: "agentlens/test-agent:local",
           allowed_hosts: ["api.risk.com"],
           allowed_rpc_endpoints: ["https://rpc.edge.local"]
         },
@@ -282,7 +282,7 @@ test("processAuditRequested maps a failed audit result into a zero-score writeba
     loadManifestSource: async () => ({
       manifest: {
         agent_name: "risk-agent",
-        image: "agent-shenji/test-agent:local",
+        image: "agentlens/test-agent:local",
         allowed_hosts: ["api.risk.com"],
         allowed_rpc_endpoints: ["https://rpc.edge.local"]
       },
@@ -324,7 +324,7 @@ test("processAuditRequested treats a completed audit result with a reasonCode as
     loadManifestSource: async () => ({
       manifest: {
         agent_name: "risk-agent",
-        image: "agent-shenji/test-agent:local",
+        image: "agentlens/test-agent:local",
         allowed_hosts: ["api.risk.com"],
         allowed_rpc_endpoints: ["https://rpc.edge.local"]
       },
@@ -366,7 +366,7 @@ test("processAuditRequested stores the persisted report remotely and returns the
       return {
         manifest: {
           agent_name: "risk-agent",
-          image: "agent-shenji/test-agent:local",
+          image: "agentlens/test-agent:local",
           allowed_hosts: ["api.risk.com"],
           allowed_rpc_endpoints: ["https://rpc.edge.local"]
         } satisfies SandboxManifest,
@@ -422,7 +422,7 @@ test("processAuditRequested maps remote storage failures to a retryable infrastr
     loadManifestSource: async () => ({
       manifest: {
         agent_name: "risk-agent",
-        image: "agent-shenji/test-agent:local",
+        image: "agentlens/test-agent:local",
         allowed_hosts: ["api.risk.com"],
         allowed_rpc_endpoints: ["https://rpc.edge.local"]
       },
@@ -465,7 +465,7 @@ test("processAuditRequested preserves the original audit failure metadata when r
     loadManifestSource: async () => ({
       manifest: {
         agent_name: "risk-agent",
-        image: "agent-shenji/test-agent:local",
+        image: "agentlens/test-agent:local",
         allowed_hosts: ["api.risk.com"],
         allowed_rpc_endpoints: ["https://rpc.edge.local"]
       },
@@ -515,7 +515,7 @@ test("processAuditRequested rejects when report persistence fails", async () => 
         loadManifestSource: async () => ({
           manifest: {
             agent_name: "risk-agent",
-            image: "agent-shenji/test-agent:local",
+            image: "agentlens/test-agent:local",
             allowed_hosts: ["api.risk.com"],
             allowed_rpc_endpoints: ["https://rpc.edge.local"]
           },
@@ -544,7 +544,7 @@ test("processAuditRequested supports async buildAuditRequest and passes the load
   const receivedManifests: SandboxManifest[] = [];
   const manifest: SandboxManifest = {
     agent_name: "risk-agent",
-    image: "agent-shenji/test-agent:local",
+    image: "agentlens/test-agent:local",
     allowed_hosts: ["api.risk.com"],
     allowed_rpc_endpoints: ["https://rpc.edge.local"]
   };

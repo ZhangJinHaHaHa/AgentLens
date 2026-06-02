@@ -1,10 +1,10 @@
 # Contributor License Agreement (CLA)
 
-Thank you for your interest in contributing to **Agent Shenji**. 
+Thank you for your interest in contributing to **AgentLens**. 
 
 In order to clarify the intellectual property license granted with Contributions from any person or entity, we must have a Contributor License Agreement ("CLA") on file that has been signed by each Contributor, indicating agreement to the license terms below. This license is for your protection as a Contributor as well as the protection of the project and its users; it does not change your rights to use your own Contributions for any other purpose.
 
-Please read this document carefully before making a contribution. By submitting a Pull Request, you accept and agree to the following terms and conditions for Your present and future Contributions submitted to Agent Shenji.
+Please read this document carefully before making a contribution. By submitting a Pull Request, you accept and agree to the following terms and conditions for Your present and future Contributions submitted to AgentLens.
 
 ## 1. Definitions
 
