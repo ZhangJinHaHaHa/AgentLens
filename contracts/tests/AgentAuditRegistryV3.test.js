@@ -46,6 +46,41 @@ async function stakeAndPassAudit(contract, operator, developer, score) {
 }
 
 describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
+  it("lets the owner withdraw accrued service fees", async function () {
+    const { contract, owner, operator, developer } = await deployV3Registry();
+
+    await (await contract.connect(developer).stake("test-agent", "https://m.example.com", {
+      value: STAKE_VALUE
+    })).wait();
+
+    const fee = ethers.utils.parseEther("0.01");
+    assert.strictEqual((await contract.accruedServiceFees()).toString(), fee.toString());
+
+    const before = await ethers.provider.getBalance(operator.address);
+    await (await contract.connect(owner).withdrawServiceFees(operator.address, fee)).wait();
+    const after = await ethers.provider.getBalance(operator.address);
+
+    assert.strictEqual((await contract.accruedServiceFees()).toString(), "0");
+    assert.strictEqual(after.sub(before).toString(), fee.toString());
+  });
+
+  it("lets the operator release remaining bond to the developer", async function () {
+    const { contract, operator, developer } = await deployV3Registry();
+
+    await (await contract.connect(developer).stake("test-agent", "https://m.example.com", {
+      value: STAKE_VALUE
+    })).wait();
+
+    const releaseAmount = ethers.utils.parseEther("0.4");
+    const before = await ethers.provider.getBalance(developer.address);
+    await (await contract.connect(operator).releaseBond(1, releaseAmount)).wait();
+    const after = await ethers.provider.getBalance(developer.address);
+
+    const profile = await contract.getAgentProfile(1);
+    assert.strictEqual(after.sub(before).toString(), releaseAmount.toString());
+    assert.strictEqual(profile.totalBond.toString(), ethers.utils.parseEther("0.6").toString());
+  });
+
   it("audit pass increases currentReputationScore by BASE_POINTS * auditScore / 100", async function () {
     const { contract, operator, developer } = await deployV3Registry();
 

@@ -1,0 +1,18 @@
+{
+  "ids": {
+    "defi-trading": "DeFi 交易",
+    "customer-support": "客服自动化",
+    "devops-sre": "DevOps & SRE",
+    "data-analysis": "数据分析",
+    "developer-assistant": "研发助手",
+    "workflow-automation": "流程自动化",
+    "content-generation": "内容生成",
+    "market-research": "市场调研",
+    "ide-coding": "IDE 内编程",
+    "agentic-coding": "Agentic 自主编程",
+    "ui-prototyping": "UI 原型生成",
+    "fullstack-prototyping": "全栈原型搭建",
+    "knowledge-qa": "知识库问答",
+    "multimodal-chat": "多模态对话"
+  }
+}

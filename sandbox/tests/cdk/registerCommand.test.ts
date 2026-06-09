@@ -53,8 +53,8 @@ function makeWriteClient(tokenId: bigint): JsonRpcWriteClient {
 }
 
 test("runRegisterCommand fails without private key", async () => {
-  const originalEnv = process.env.AGENTLENS_CDK_PRIVATE_KEY;
-  delete process.env.AGENTLENS_CDK_PRIVATE_KEY;
+  const originalEnv = process.env.SHENJI_CDK_PRIVATE_KEY;
+  delete process.env.SHENJI_CDK_PRIVATE_KEY;
   const originalExitCode = process.exitCode;
 
   await runRegisterCommand({
@@ -65,13 +65,13 @@ test("runRegisterCommand fails without private key", async () => {
   assert.equal(process.exitCode, 1);
   process.exitCode = originalExitCode;
   if (originalEnv !== undefined) {
-    process.env.AGENTLENS_CDK_PRIVATE_KEY = originalEnv;
+    process.env.SHENJI_CDK_PRIVATE_KEY = originalEnv;
   }
 });
 
 test("runRegisterCommand rejects stake below minimum", async () => {
-  const originalEnv = process.env.AGENTLENS_CDK_PRIVATE_KEY;
-  process.env.AGENTLENS_CDK_PRIVATE_KEY = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+  const originalEnv = process.env.SHENJI_CDK_PRIVATE_KEY;
+  process.env.SHENJI_CDK_PRIVATE_KEY = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
   const originalExitCode = process.exitCode;
 
   await runRegisterCommand({
@@ -84,15 +84,15 @@ test("runRegisterCommand rejects stake below minimum", async () => {
   assert.equal(process.exitCode, 1);
   process.exitCode = originalExitCode;
   if (originalEnv !== undefined) {
-    process.env.AGENTLENS_CDK_PRIVATE_KEY = originalEnv;
+    process.env.SHENJI_CDK_PRIVATE_KEY = originalEnv;
   } else {
-    delete process.env.AGENTLENS_CDK_PRIVATE_KEY;
+    delete process.env.SHENJI_CDK_PRIVATE_KEY;
   }
 });
 
 test("runRegisterCommand succeeds with confirmation", async () => {
-  const originalEnv = process.env.AGENTLENS_CDK_PRIVATE_KEY;
-  process.env.AGENTLENS_CDK_PRIVATE_KEY = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+  const originalEnv = process.env.SHENJI_CDK_PRIVATE_KEY;
+  process.env.SHENJI_CDK_PRIVATE_KEY = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
   const originalExitCode = process.exitCode;
 
   const input = Readable.from("y\n");
@@ -108,8 +108,8 @@ test("runRegisterCommand succeeds with confirmation", async () => {
   assert.notEqual(process.exitCode, 1);
   process.exitCode = originalExitCode;
   if (originalEnv !== undefined) {
-    process.env.AGENTLENS_CDK_PRIVATE_KEY = originalEnv;
+    process.env.SHENJI_CDK_PRIVATE_KEY = originalEnv;
   } else {
-    delete process.env.AGENTLENS_CDK_PRIVATE_KEY;
+    delete process.env.SHENJI_CDK_PRIVATE_KEY;
   }
 });

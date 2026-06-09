@@ -155,6 +155,56 @@ test("openai client throws on non-200 response", async () => {
   );
 });
 
+// ── minimax provider ───────────────────────────────────────────────
+
+test("minimax client uses openai-compatible chat completions", async () => {
+  const captured: Array<{ url: string; headers: Record<string, string>; body: Record<string, unknown> }> = [];
+
+  const fetchImpl: FetchLike = async (input, init) => {
+    const body = JSON.parse(String(init?.body ?? "{}")) as Record<string, unknown>;
+    const headers: Record<string, string> = {};
+
+    if (init?.headers && typeof init.headers === "object" && !Array.isArray(init.headers)) {
+      for (const [k, v] of Object.entries(init.headers as Record<string, string>)) {
+        headers[k] = v;
+      }
+    }
+
+    captured.push({
+      url: String(input),
+      headers,
+      body
+    });
+
+    return new Response(
+      JSON.stringify({
+        choices: [
+          { message: { content: VALID_QUESTIONS_JSON } }
+        ]
+      }),
+      { status: 200, headers: { "content-type": "application/json" } }
+    );
+  };
+
+  const config: AuditQuestionConfig = {
+    provider: "minimax",
+    apiKey: "sk-minimax-test-key",
+    model: "MiniMax-M2.7",
+    questionCount: 2,
+    apiBaseUrl: "https://api.minimaxi.com/v1"
+  };
+
+  const client = createLlmClient(config, fetchImpl);
+  const questions = await client.generateAuditQuestions(SAMPLE_CONTEXT);
+
+  assert.equal(captured.length, 1);
+  assert.equal(captured[0].url, "https://api.minimaxi.com/v1/chat/completions");
+  assert.equal(captured[0].headers["authorization"], "Bearer sk-minimax-test-key");
+  assert.equal(captured[0].body.model, "MiniMax-M2.7");
+  assert.ok(Array.isArray(captured[0].body.messages), "body should have messages array");
+  assert.equal(questions.length, 2);
+});
+
 // ── anthropic provider ─────────────────────────────────────────────
 
 test("anthropic client sends correct request format", async () => {

@@ -1,0 +1,1018 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AgentLens C Line Demo</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f6f7f9;
+        color: #17202a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+      }
+
+      main {
+        width: min(1120px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 28px 0 40px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 28px;
+        line-height: 1.2;
+      }
+
+      h2 {
+        margin: 0 0 12px;
+        font-size: 16px;
+      }
+
+      p {
+        margin: 6px 0 0;
+        color: #5e6b78;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 650;
+        color: #334150;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        border: 1px solid #cbd5df;
+        border-radius: 8px;
+        padding: 10px 12px;
+        background: #ffffff;
+        color: #17202a;
+        font: inherit;
+      }
+
+      textarea {
+        min-height: 128px;
+        resize: vertical;
+      }
+
+      button {
+        border: 1px solid #17202a;
+        border-radius: 8px;
+        padding: 10px 14px;
+        background: #17202a;
+        color: #ffffff;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button.secondary {
+        border-color: #cbd5df;
+        background: #ffffff;
+        color: #17202a;
+      }
+
+      button:disabled {
+        cursor: wait;
+        opacity: 0.58;
+      }
+
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      }
+
+      .hero {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+        gap: 16px;
+      }
+
+      .panel {
+        border: 1px solid #dbe2ea;
+        border-radius: 8px;
+        background: #ffffff;
+        padding: 18px;
+      }
+
+      .stack {
+        display: grid;
+        gap: 14px;
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .status {
+        min-height: 42px;
+        border: 1px solid #dbe2ea;
+        border-radius: 8px;
+        padding: 10px 12px;
+        background: #f9fafb;
+        color: #334150;
+      }
+
+      .status.ok {
+        border-color: #9ad0b0;
+        background: #effaf3;
+      }
+
+      .status.warn {
+        border-color: #f2c879;
+        background: #fff8e8;
+      }
+
+      .status.error {
+        border-color: #efa2a2;
+        background: #fff0f0;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid #dbe2ea;
+        border-radius: 999px;
+        padding: 6px 10px;
+        background: #f9fafb;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .cards {
+        display: grid;
+        gap: 12px;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 16px;
+      }
+
+      .card {
+        border: 1px solid #dbe2ea;
+        border-radius: 8px;
+        padding: 14px;
+        background: #ffffff;
+      }
+
+      .card h3 {
+        margin: 0 0 8px;
+        font-size: 16px;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        margin: 10px 0;
+      }
+
+      .metric {
+        border-radius: 8px;
+        background: #f1f4f7;
+        padding: 10px;
+      }
+
+      .metric span {
+        display: block;
+        color: #6b7785;
+        font-size: 12px;
+      }
+
+      .metric strong {
+        display: block;
+        margin-top: 4px;
+        font-size: 20px;
+      }
+
+      pre {
+        overflow: auto;
+        max-height: 360px;
+        margin: 0;
+        border-radius: 8px;
+        background: #111827;
+        color: #d1fae5;
+        padding: 12px;
+        font-size: 12px;
+      }
+
+      .muted {
+        color: #6b7785;
+      }
+
+      .kv {
+        display: grid;
+        grid-template-columns: 128px minmax(0, 1fr);
+        gap: 6px 12px;
+        margin-top: 8px;
+        font-size: 13px;
+      }
+
+      .kv span {
+        color: #6b7785;
+      }
+
+      .kv code {
+        word-break: break-all;
+      }
+
+      @media (max-width: 840px) {
+        .hero,
+        .grid,
+        .feature-grid {
+          display: block;
+        }
+
+        .panel {
+          margin-top: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="hero">
+        <div>
+          <h1>AgentLens C 线最小验证页</h1>
+          <p>验证 Platform API、Google mock 钱包、积分、付费 LLM 推荐、订单桥接、使用后评分和退款结算。</p>
+        </div>
+        <div class="pill">静态页，不依赖 React env</div>
+      </div>
+
+      <div class="grid">
+        <section class="panel stack">
+          <h2>1. 输入与操作</h2>
+          <div>
+            <label for="apiBase">Platform API Base URL</label>
+            <input id="apiBase" value="http://127.0.0.1:8790" />
+          </div>
+          <div>
+            <label for="query">用户需求</label>
+            <textarea id="query">我需要一个最适合黑客松演示的自托管 RAG 知识库 Agent，最好有 API、能快速集成，并且要说明可信风险取舍。</textarea>
+          </div>
+          <div class="row">
+            <button id="healthBtn" class="secondary" type="button">检查 API</button>
+            <button id="connectBtn" type="button">创建 Google Mock 用户</button>
+            <button id="recommendBtn" type="button">付费 LLM 推荐一次</button>
+            <button id="run3Btn" class="secondary" type="button">连续跑 3 次</button>
+          </div>
+          <div id="status" class="status">等待操作。</div>
+          <div class="row">
+            <span class="pill">User: <code id="userId">未创建</code></span>
+            <span class="pill">Wallet: <code id="wallet">未创建</code></span>
+            <span class="pill">Balance: <code id="balance">-</code></span>
+          </div>
+        </section>
+
+        <section class="panel stack">
+          <h2>2. 最近一次结果</h2>
+          <div id="summary" class="status">还没有推荐结果。</div>
+          <div id="results" class="cards"></div>
+        </section>
+      </div>
+
+      <section class="feature-grid">
+        <div class="panel stack">
+          <h2>3. 订单 / 支付 / Gateway Lease</h2>
+          <p>演示 Web2 付款后签发平台 Gateway lease，并把链上授权保留为 pending_chain_grant。</p>
+          <div class="row">
+            <button id="accessFlowBtn" type="button">跑租赁 + Gateway Lease</button>
+            <button id="fullFlowBtn" class="secondary" type="button">跑完整 C 线流程</button>
+          </div>
+          <div id="accessResult" class="status">还没有订单结果。</div>
+        </div>
+
+        <div class="panel stack">
+          <h2>4. 使用后评分 / 推荐回灌</h2>
+          <p>演示订单获得平台 Gateway 访问权后提交一次使用评分，并把评分聚合进平台声誉和下一次推荐信号。</p>
+          <div class="row">
+            <button id="reviewFlowBtn" type="button">跑使用后评分</button>
+          </div>
+          <div id="reviewResult" class="status">还没有评分结果。</div>
+        </div>
+
+        <div class="panel stack">
+          <h2>5. 托管钱包导出 / 迁移</h2>
+          <p>演示 Google 用户生成托管钱包、可导出流程、迁移到外部钱包；页面不会展示私钥。</p>
+          <div class="row">
+            <button id="walletFlowBtn" type="button">跑钱包导出 + 迁移</button>
+          </div>
+          <div id="walletResult" class="status">还没有钱包迁移结果。</div>
+        </div>
+
+        <div class="panel stack">
+          <h2>6. 退款规则对比</h2>
+          <p>演示安全事件可退款、设计不匹配不可退款，并走人工 review/resolve 状态机。</p>
+          <div class="row">
+            <button id="refundFlowBtn" type="button">跑退款规则对比</button>
+          </div>
+          <div id="refundResult" class="status">还没有退款结果。</div>
+        </div>
+
+        <div class="panel stack">
+          <h2>7. 开发者结算 / 声誉</h2>
+          <p>Gateway lease 签发后生成 settlement，并可查看开发者分账、holdback 和本地声誉。</p>
+          <div id="settlementResult" class="status">跑 Gateway Lease 后会显示结算。</div>
+        </div>
+      </section>
+
+      <section class="panel stack" style="margin-top: 16px">
+        <h2>8. 调试日志</h2>
+        <pre id="log">[]</pre>
+      </section>
+    </main>
+
+    <script>
+      const state = {
+        user: null,
+        creditAccount: null,
+        developer: null,
+        lastOrder: null,
+        lastAccessBridge: null,
+        lastSettlement: null,
+        lastSettlementSummary: null,
+        lastReview: null,
+        logs: []
+      };
+
+      const els = {
+        apiBase: document.querySelector("#apiBase"),
+        query: document.querySelector("#query"),
+        healthBtn: document.querySelector("#healthBtn"),
+        connectBtn: document.querySelector("#connectBtn"),
+        recommendBtn: document.querySelector("#recommendBtn"),
+        run3Btn: document.querySelector("#run3Btn"),
+        accessFlowBtn: document.querySelector("#accessFlowBtn"),
+        fullFlowBtn: document.querySelector("#fullFlowBtn"),
+        reviewFlowBtn: document.querySelector("#reviewFlowBtn"),
+        walletFlowBtn: document.querySelector("#walletFlowBtn"),
+        refundFlowBtn: document.querySelector("#refundFlowBtn"),
+        status: document.querySelector("#status"),
+        userId: document.querySelector("#userId"),
+        wallet: document.querySelector("#wallet"),
+        balance: document.querySelector("#balance"),
+        summary: document.querySelector("#summary"),
+        results: document.querySelector("#results"),
+        accessResult: document.querySelector("#accessResult"),
+        reviewResult: document.querySelector("#reviewResult"),
+        walletResult: document.querySelector("#walletResult"),
+        refundResult: document.querySelector("#refundResult"),
+        settlementResult: document.querySelector("#settlementResult"),
+        log: document.querySelector("#log")
+      };
+
+      function apiBase() {
+        return els.apiBase.value.replace(/\/+$/, "");
+      }
+
+      function setBusy(isBusy) {
+        for (const button of [
+          els.healthBtn,
+          els.connectBtn,
+          els.recommendBtn,
+          els.run3Btn,
+          els.accessFlowBtn,
+          els.fullFlowBtn,
+          els.reviewFlowBtn,
+          els.walletFlowBtn,
+          els.refundFlowBtn
+        ]) {
+          button.disabled = isBusy;
+        }
+      }
+
+      function setStatus(message, kind = "") {
+        els.status.className = `status ${kind}`.trim();
+        els.status.textContent = message;
+      }
+
+      function setSummary(message, kind = "") {
+        els.summary.className = `status ${kind}`.trim();
+        els.summary.textContent = message;
+      }
+
+      function log(event, payload) {
+        state.logs.unshift({
+          at: new Date().toISOString(),
+          event,
+          payload
+        });
+        state.logs = state.logs.slice(0, 20);
+        els.log.textContent = JSON.stringify(state.logs, null, 2);
+      }
+
+      function refreshUser() {
+        els.userId.textContent = state.user?.platformUserId ?? "未创建";
+        els.wallet.textContent = state.user?.walletAddress ?? "未创建";
+        els.balance.textContent = state.creditAccount?.balance ?? "-";
+      }
+
+      async function fetchJson(path, options = {}) {
+        const timeoutMs = options.timeoutMs ?? 45000;
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
+
+        try {
+          const response = await fetch(`${apiBase()}${path}`, {
+            method: options.method ?? "GET",
+            headers: options.body ? { "Content-Type": "application/json" } : undefined,
+            body: options.body ? JSON.stringify(options.body) : undefined,
+            signal: controller.signal
+          });
+          const json = await response.json();
+          if (!response.ok) {
+            throw new Error(json.error || `HTTP ${response.status}`);
+          }
+          return json;
+        } catch (error) {
+          if (error && error.name === "AbortError") {
+            throw new Error(`请求 ${timeoutMs}ms 超时`);
+          }
+          throw error;
+        } finally {
+          window.clearTimeout(timeout);
+        }
+      }
+
+      async function checkHealth() {
+        setBusy(true);
+        setStatus("正在检查 API...");
+        try {
+          const json = await fetchJson("/health", { timeoutMs: 5000 });
+          setStatus(`API 正常：engine=${json.recommendationEngine}, cost=${json.recommendationCostCredits}`, "ok");
+          log("health", json);
+        } catch (error) {
+          setStatus(error.message, "error");
+          log("health_error", { message: error.message });
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      async function connectUser() {
+        setBusy(true);
+        setStatus("正在创建 Google mock 用户...");
+        try {
+          const runId = Date.now().toString(36);
+          const json = await fetchJson("/api/web2/google/mock", {
+            method: "POST",
+            body: {
+              googleSubject: `c-line-demo-${runId}`,
+              email: `c-line-demo-${runId}@example.com`,
+              emailVerified: true
+            }
+          });
+          state.user = json.user;
+          state.creditAccount = json.creditAccount;
+          refreshUser();
+          setStatus("Google mock 用户已创建，钱包和初始积分可用。", "ok");
+          log("connect_user", json);
+        } catch (error) {
+          setStatus(error.message, "error");
+          log("connect_user_error", { message: error.message });
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      async function ensureUser() {
+        if (!state.user) {
+          await connectUser();
+        }
+        if (!state.user) {
+          throw new Error("还没有可用用户。");
+        }
+      }
+
+      async function runRecommendation() {
+        setBusy(true);
+        setStatus("正在请求付费 LLM 推荐，最多等待 45 秒...");
+        const startedAt = performance.now();
+        try {
+          await ensureUser();
+          const json = await fetchJson("/api/recommendations/llm", {
+            method: "POST",
+            timeoutMs: 45000,
+            body: {
+              userId: state.user.platformUserId,
+              query: els.query.value,
+              priorities: ["self-host", "audited", "fast-start"],
+              riskTolerance: "low",
+              limit: 3
+            }
+          });
+          const elapsedMs = Math.round(performance.now() - startedAt);
+          state.creditAccount = json.creditAccount;
+          refreshUser();
+          renderRecommendation(json, elapsedMs);
+          log("paid_recommendation", { elapsedMs, ...json });
+        } catch (error) {
+          setStatus(error.message, "error");
+          setSummary("推荐请求失败。", "error");
+          log("paid_recommendation_error", { message: error.message });
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      async function runThreeTimes() {
+        for (let index = 0; index < 3; index += 1) {
+          await runRecommendation();
+        }
+      }
+
+      async function ensureDeveloper(agentId = "dify") {
+        if (state.developer) {
+          return state.developer;
+        }
+
+        const runId = Date.now().toString(36);
+        const developerResponse = await fetchJson("/api/developers", {
+          method: "POST",
+          body: {
+            displayName: `Dify Labs Demo ${runId}`,
+            walletAddress: "0x3333333333333333333333333333333333333333",
+            supportContact: "support@example.com",
+            trustStatus: "verified",
+            trustScore: 82
+          }
+        });
+        state.developer = developerResponse.developer;
+        await fetchJson(`/api/developers/${state.developer.developerId}/agents`, {
+          method: "POST",
+          body: { agentId }
+        });
+        log("developer_linked", { developer: state.developer, agentId });
+        return state.developer;
+      }
+
+      async function createPaidOrder(agentId = "dify", amount = "20.00") {
+        await ensureUser();
+        const runId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+        const orderResponse = await fetchJson("/api/orders", {
+          method: "POST",
+          body: {
+            userId: state.user.platformUserId,
+            agentId,
+            amount,
+            currency: "CREDITS"
+          }
+        });
+        const paymentResponse = await fetchJson("/api/payments/mock-callback", {
+          method: "POST",
+          body: {
+            orderId: orderResponse.order.orderId,
+            paymentProvider: "stripe-mock",
+            providerPaymentId: `pay-${runId}`,
+            idempotencyKey: `idem-${runId}`,
+            paidAmount: amount
+          }
+        });
+        return {
+          order: paymentResponse.order,
+          bridge: paymentResponse.bridge,
+          idempotentReplay: paymentResponse.idempotentReplay
+        };
+      }
+
+      async function createGatewayLeaseOrder(agentId = "dify") {
+        const developer = await ensureDeveloper(agentId);
+        const paid = await createPaidOrder(agentId);
+        const orderState = await fetchJson(`/api/orders/${paid.order.orderId}`);
+        const settlementResponse = await fetchJson(`/api/settlements/orders/${paid.order.orderId}`);
+        const summaryResponse = await fetchJson(`/api/settlements/developers/${developer.developerId}/summary`);
+        const reputationResponse = await fetchJson(`/api/reputation/agents/${agentId}`);
+
+        const data = {
+          order: orderState.order,
+          bridge: paid.bridge,
+          settlement: settlementResponse.settlement,
+          summary: summaryResponse.summary,
+          reputation: reputationResponse.reputation
+        };
+        state.lastOrder = data.order;
+        state.lastAccessBridge = data.bridge;
+        state.lastSettlement = data.settlement;
+        state.lastSettlementSummary = data.summary;
+        return data;
+      }
+
+      async function runAccessFlow() {
+        setBusy(true);
+        els.accessResult.className = "status";
+        els.accessResult.textContent = "正在创建开发者、订单、支付回调并签发 Gateway lease...";
+        try {
+          const data = await createGatewayLeaseOrder("dify");
+          renderAccessFlow(data);
+          log("access_bridge_flow", data);
+        } catch (error) {
+          els.accessResult.className = "status error";
+          els.accessResult.textContent = error.message;
+          log("access_bridge_flow_error", { message: error.message });
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      async function runReviewFlow() {
+        setBusy(true);
+        els.reviewResult.className = "status";
+        els.reviewResult.textContent = "正在检查 Gateway lease 并提交使用后评分...";
+        try {
+          let accessData = null;
+          const hasReusableOrder =
+            state.lastOrder &&
+            state.lastAccessBridge?.status === "pending_chain_grant" &&
+            state.lastReview?.orderId !== state.lastOrder.orderId;
+          if (hasReusableOrder) {
+            accessData = {
+              order: state.lastOrder,
+              bridge: state.lastAccessBridge,
+              settlement: state.lastSettlement,
+              summary: state.lastSettlementSummary
+            };
+          } else {
+            accessData = await createGatewayLeaseOrder("dify");
+            renderAccessFlow(accessData);
+          }
+
+          const reviewResponse = await fetchJson("/api/reviews", {
+            method: "POST",
+            body: {
+              orderId: accessData.order.orderId,
+              userId: accessData.order.userId,
+              overallRating: 5,
+              dimensionRatings: {
+                security: 2,
+                taskExecution: 2,
+                cognitive: 2,
+                environment: 1,
+                engineering: 2,
+                compliance: 2
+              },
+              capabilityMatched: true,
+              safetyIncidentReported: false,
+              commentText: "Demo user confirms Dify matched the self-hosted RAG workflow and API integration promise."
+            }
+          });
+          const summaryResponse = await fetchJson("/api/reviews/agents/dify/summary");
+          const reputationResponse = await fetchJson("/api/reputation/agents/dify");
+
+          state.lastReview = reviewResponse.review;
+          renderReviewFlow({
+            review: reviewResponse.review,
+            summary: summaryResponse.summary,
+            reputation: reputationResponse.reputation
+          });
+          renderSettlement({
+            settlement: accessData.settlement || state.lastSettlement,
+            summary: accessData.summary || state.lastSettlementSummary || { payableAmount: "-" },
+            reputation: reputationResponse.reputation
+          });
+          log("usage_review_flow", {
+            review: reviewResponse.review,
+            summary: summaryResponse.summary,
+            reputation: reputationResponse.reputation
+          });
+        } catch (error) {
+          els.reviewResult.className = "status error";
+          els.reviewResult.textContent = error.message;
+          log("usage_review_flow_error", { message: error.message });
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      async function runWalletFlow() {
+        setBusy(true);
+        els.walletResult.className = "status";
+        els.walletResult.textContent = "正在创建可导出钱包并迁移到外部地址...";
+        try {
+          if (!state.user || state.user.custodyMode !== "backend_custodied_exportable") {
+            await connectUser();
+          }
+          const exportReady = await fetchJson(`/api/web2/users/${state.user.platformUserId}/wallet/export/request`, {
+            method: "POST",
+            body: {
+              freshGoogleAuth: true,
+              secondFactorVerified: true
+            }
+          });
+          const completed = await fetchJson(`/api/web2/users/${state.user.platformUserId}/wallet/export/complete`, {
+            method: "POST"
+          });
+          const targetWalletAddress = buildDemoWalletAddress();
+          const migrated = await fetchJson(`/api/web2/users/${state.user.platformUserId}/wallet/migrate`, {
+            method: "POST",
+            body: {
+              targetWalletAddress,
+              ownershipProofVerified: true
+            }
+          });
+          state.user = migrated.user;
+          refreshUser();
+          renderWalletFlow({
+            exportReady,
+            completed,
+            migrated
+          });
+          log("wallet_export_migration", { exportReady, completed, migrated });
+        } catch (error) {
+          els.walletResult.className = "status error";
+          els.walletResult.textContent = error.message;
+          log("wallet_export_migration_error", { message: error.message });
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      async function runRefundFlow() {
+        setBusy(true);
+        els.refundResult.className = "status";
+        els.refundResult.textContent = "正在创建两笔订单并对比退款规则...";
+        try {
+          await ensureDeveloper("dify");
+          const securityOrder = await createPaidOrder("dify");
+          const securityRefundCreated = await fetchJson("/api/refunds", {
+            method: "POST",
+            body: {
+              orderId: securityOrder.order.orderId,
+              category: "security_incident"
+            }
+          });
+          await fetchJson(`/api/refunds/${securityRefundCreated.refund.refundId}/review`, {
+            method: "POST",
+            body: { reviewerId: "ops-demo" }
+          });
+          const securityResolved = await fetchJson(`/api/refunds/${securityRefundCreated.refund.refundId}/resolve`, {
+            method: "POST",
+            body: {
+              outcome: "approved",
+              reviewNote: "Confirmed severe security incident in demo.",
+              refundAmount: "20.00"
+            }
+          });
+          const securityOrderState = await fetchJson(`/api/orders/${securityOrder.order.orderId}`);
+          const securitySettlement = await fetchJson(`/api/settlements/orders/${securityOrder.order.orderId}`);
+
+          const designOrder = await createPaidOrder("dify");
+          const designRefundCreated = await fetchJson("/api/refunds", {
+            method: "POST",
+            body: {
+              orderId: designOrder.order.orderId,
+              category: "design_mismatch"
+            }
+          });
+          await fetchJson(`/api/refunds/${designRefundCreated.refund.refundId}/review`, {
+            method: "POST",
+            body: { reviewerId: "ops-demo" }
+          });
+          const designResolved = await fetchJson(`/api/refunds/${designRefundCreated.refund.refundId}/resolve`, {
+            method: "POST",
+            body: {
+              outcome: "rejected",
+              reviewNote: "Agent works as described; request is outside published design.",
+              operatorReviewFinding: "Design mismatch is not treated as a severe platform incident."
+            }
+          });
+          const designOrderState = await fetchJson(`/api/orders/${designOrder.order.orderId}`);
+
+          renderRefundFlow({
+            security: {
+              refund: securityResolved.refund,
+              order: securityOrderState.order,
+              settlement: securitySettlement.settlement
+            },
+            design: {
+              refund: designResolved.refund,
+              order: designOrderState.order
+            }
+          });
+          log("refund_policy_flow", {
+            security: {
+              refund: securityResolved.refund,
+              order: securityOrderState.order,
+              settlement: securitySettlement.settlement
+            },
+            design: {
+              refund: designResolved.refund,
+              order: designOrderState.order
+            }
+          });
+        } catch (error) {
+          els.refundResult.className = "status error";
+          els.refundResult.textContent = error.message;
+          log("refund_policy_flow_error", { message: error.message });
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      async function runFullFlow() {
+        setBusy(true);
+        setStatus("正在跑完整 C 线流程：health -> user -> LLM -> access -> review -> wallet -> refund...");
+        try {
+          await checkHealth();
+          await connectUser();
+          await runRecommendation();
+          await runAccessFlow();
+          await runReviewFlow();
+          await runWalletFlow();
+          await runRefundFlow();
+          setStatus("完整 C 线流程已跑完。", "ok");
+          log("full_c_line_flow_done", {
+            user: state.user,
+            creditAccount: state.creditAccount,
+            developer: state.developer,
+            lastOrder: state.lastOrder,
+            lastAccessBridge: state.lastAccessBridge,
+            lastSettlement: state.lastSettlement,
+            lastSettlementSummary: state.lastSettlementSummary,
+            lastReview: state.lastReview
+          });
+        } catch (error) {
+          setStatus(error.message, "error");
+          log("full_c_line_flow_error", { message: error.message });
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      function renderRecommendation(response, elapsedMs) {
+        const kind = response.fallbackUsed ? "warn" : "ok";
+        const chargedText = response.charged ? `已扣 ${response.costCredits} 积分` : "未扣积分";
+        const fallbackText = response.fallbackUsed ? ` fallback: ${response.fallbackReason || "yes"}` : "";
+        setStatus(`推荐返回，耗时 ${elapsedMs}ms，${chargedText}。`, kind);
+        setSummary(
+          `engine=${response.engine}, charged=${response.charged}, balance=${response.creditAccount.balance}.${fallbackText}`,
+          kind
+        );
+
+        const results = response.recommendation?.results ?? [];
+        els.results.innerHTML = results
+          .map((item, index) => {
+            const reasons = (item.reasons || [])
+              .map((reason) => `<p>${escapeHtml(reason.zh || reason.en || "")}</p>`)
+              .join("");
+            const tradeoffs = (item.tradeoffs || [])
+              .map((tradeoff) => `<p class="muted">取舍：${escapeHtml(tradeoff.zh || tradeoff.en || "")}</p>`)
+              .join("");
+            return `
+              <article class="card">
+                <h3>#${index + 1} ${escapeHtml(item.agentId)} · score ${Math.round(item.score)}</h3>
+                <div class="metrics">
+                  <div class="metric"><span>Fit</span><strong>${numberText(item.fitScore)}</strong></div>
+                  <div class="metric"><span>Trust</span><strong>${numberText(item.trustScore)}</strong></div>
+                  <div class="metric"><span>Risk</span><strong>${numberText(item.riskScore)}</strong></div>
+                </div>
+                <div class="row">
+                  <span class="pill">${escapeHtml(item.confidence || "no-confidence")}</span>
+                  <span class="pill">${escapeHtml(item.recommendationType || "no-type")}</span>
+                </div>
+                ${reasons}
+                ${tradeoffs}
+                <p class="muted">evidence: ${escapeHtml((item.evidenceUsed || []).join(", "))}</p>
+                <p class="muted">missing: ${escapeHtml((item.missingEvidence || []).join(", "))}</p>
+              </article>
+            `;
+          })
+          .join("");
+      }
+
+      function renderAccessFlow(data) {
+        els.accessResult.className = "status ok";
+        els.accessResult.innerHTML = `
+          <strong>Gateway lease 已签发</strong>
+          <div class="kv">
+            <span>order</span><code>${escapeHtml(data.order.orderId)}</code>
+            <span>order status</span><code>${escapeHtml(data.order.status)}</code>
+            <span>bridge</span><code>${escapeHtml(data.bridge.bridgeId)}</code>
+            <span>bridge status</span><code>${escapeHtml(data.bridge.status)}</code>
+            <span>grant fn</span><code>${escapeHtml(data.bridge.expectedGrantFunction || "-")}</code>
+            <span>lease expires</span><code>${escapeHtml(data.bridge.gatewayLeaseExpiresAt || "-")}</code>
+          </div>
+        `;
+        renderSettlement(data);
+      }
+
+      function renderSettlement(data) {
+        const subjectId = data.reputation.subjectId || data.reputation.agentId || "-";
+        els.settlementResult.className = "status ok";
+        els.settlementResult.innerHTML = `
+          <strong>结算与声誉已生成</strong>
+          <div class="kv">
+            <span>settlement</span><code>${escapeHtml(data.settlement.settlementId)}</code>
+            <span>status</span><code>${escapeHtml(data.settlement.status)}</code>
+            <span>platform fee</span><code>${escapeHtml(data.settlement.platformFeeAmount)}</code>
+            <span>developer share</span><code>${escapeHtml(data.settlement.developerShareAmount)}</code>
+            <span>holdback</span><code>${escapeHtml(data.settlement.holdbackAmount)}</code>
+            <span>payable</span><code>${escapeHtml(data.summary.payableAmount)}</code>
+            <span>reputation</span><code>${escapeHtml(data.reputation.source)} · ${escapeHtml(subjectId)} · score ${escapeHtml(data.reputation.score)}</code>
+          </div>
+        `;
+      }
+
+      function renderReviewFlow(data) {
+        const ratios = data.summary.dimensionGoodRatios || {};
+        els.reviewResult.className = "status ok";
+        els.reviewResult.innerHTML = `
+          <strong>使用后评分已提交</strong>
+          <div class="kv">
+            <span>review</span><code>${escapeHtml(data.review.reviewId)}</code>
+            <span>order</span><code>${escapeHtml(data.review.orderId)}</code>
+            <span>overall</span><code>${escapeHtml(data.review.overallRating)} / 5</code>
+            <span>comment hash</span><code>${escapeHtml(data.review.commentHash)}</code>
+            <span>review count</span><code>${escapeHtml(data.summary.reviewCount)}</code>
+            <span>platform rating</span><code>${escapeHtml(data.summary.platformRating)}</code>
+            <span>security good</span><code>${escapeHtml(ratios.security ?? 0)}</code>
+            <span>task good</span><code>${escapeHtml(ratios.taskExecution ?? 0)}</code>
+            <span>reputation score</span><code>${escapeHtml(data.reputation.score)}</code>
+          </div>
+        `;
+      }
+
+      function renderWalletFlow(data) {
+        els.walletResult.className = "status ok";
+        els.walletResult.innerHTML = `
+          <strong>钱包导出与迁移完成</strong>
+          <div class="kv">
+            <span>export status</span><code>${escapeHtml(data.completed.user.exportStatus)}</code>
+            <span>receipt</span><code>${escapeHtml(data.exportReady.exportReceipt.receiptId)}</code>
+            <span>private key</span><code>${data.exportReady.exportReceipt.privateKeyMaterial === null ? "not returned" : "unexpected"}</code>
+            <span>custody</span><code>${escapeHtml(data.migrated.user.custodyMode)}</code>
+            <span>new wallet</span><code>${escapeHtml(data.migrated.user.walletAddress)}</code>
+          </div>
+        `;
+      }
+
+      function renderRefundFlow(data) {
+        els.refundResult.className = "status ok";
+        els.refundResult.innerHTML = `
+          <strong>退款规则对比完成</strong>
+          <div class="kv">
+            <span>安全事件</span><code>${escapeHtml(data.security.refund.eligibility)} / ${escapeHtml(data.security.refund.status)}</code>
+            <span>安全订单</span><code>${escapeHtml(data.security.order.status)}</code>
+            <span>安全结算</span><code>${escapeHtml(data.security.settlement.status)}</code>
+            <span>设计不匹配</span><code>${escapeHtml(data.design.refund.eligibility)} / ${escapeHtml(data.design.refund.status)}</code>
+            <span>设计订单</span><code>${escapeHtml(data.design.order.status)}</code>
+          </div>
+        `;
+      }
+
+      function numberText(value) {
+        return typeof value === "number" ? Math.round(value) : "-";
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function buildDemoWalletAddress() {
+        const random = `${Date.now().toString(16)}${Math.random().toString(16).slice(2)}`;
+        return `0x${random.padEnd(40, "2").slice(0, 40)}`;
+      }
+
+      els.healthBtn.addEventListener("click", checkHealth);
+      els.connectBtn.addEventListener("click", connectUser);
+      els.recommendBtn.addEventListener("click", runRecommendation);
+      els.run3Btn.addEventListener("click", runThreeTimes);
+      els.accessFlowBtn.addEventListener("click", runAccessFlow);
+      els.fullFlowBtn.addEventListener("click", runFullFlow);
+      els.reviewFlowBtn.addEventListener("click", runReviewFlow);
+      els.walletFlowBtn.addEventListener("click", runWalletFlow);
+      els.refundFlowBtn.addEventListener("click", runRefundFlow);
+
+      checkHealth();
+    </script>
+  </body>
+</html>

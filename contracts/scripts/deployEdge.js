@@ -5,8 +5,8 @@ const { ethers, utils } = require("ethers");
 
 const ARTIFACT_PATH = path.join(__dirname, "..", "artifacts", "AgentAuditRegistry.json");
 const DEFAULT_NETWORK_NAME = "polygon-edge-test";
-const DEFAULT_SERVICE_FEE_WEI = ethers.utils.parseEther("0.01");
-const DEFAULT_MINIMUM_BOND_WEI = ethers.utils.parseEther("1");
+const DEFAULT_SERVICE_FEE_WEI = ethers.constants.Zero;
+const DEFAULT_MINIMUM_BOND_WEI = ethers.constants.One;
 
 function loadArtifact() {
   return JSON.parse(fs.readFileSync(ARTIFACT_PATH, "utf8"));

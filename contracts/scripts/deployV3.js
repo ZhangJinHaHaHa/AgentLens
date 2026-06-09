@@ -20,8 +20,8 @@ function readV3DeploymentConfig(env) {
     deployerPrivateKey,
     networkName: env.EDGE_NETWORK_NAME || "polygon-edge-test",
     initialOperator: env.EDGE_INITIAL_OPERATOR || "",
-    serviceFeeWei: env.EDGE_INITIAL_SERVICE_FEE_WEI || "10000000000000000",
-    minimumBondWei: env.EDGE_INITIAL_MINIMUM_BOND_WEI || "1000000000000000000"
+    serviceFeeWei: env.EDGE_INITIAL_SERVICE_FEE_WEI || "0",
+    minimumBondWei: env.EDGE_INITIAL_MINIMUM_BOND_WEI || "1"
   };
 }
 

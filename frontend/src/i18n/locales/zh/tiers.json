@@ -1,0 +1,35 @@
+{
+  "labels": {
+    "tier0": "Tier 0 · 仅收录",
+    "tier1": "Tier 1 · 已观察",
+    "tier2": "Tier 2 · 已验证",
+    "tier3": "Tier 3 · 高度验证"
+  },
+  "shortLabels": {
+    "tier0": "T0 收录",
+    "tier1": "T1 观察",
+    "tier2": "T2 验证",
+    "tier3": "T3 高验证"
+  },
+  "descriptions": {
+    "tier0": "我们仅收录了基础事实，尚未自己跑过、也没有第三方证据。",
+    "tier1": "我们或社区有过明确观察，给出最近一次的事实更新。",
+    "tier2": "存在审计回执或发布者声明等可验证证据。",
+    "tier3": "完整的链上证据：审计、attestation 与信誉信号都齐全。"
+  },
+  "reasons": {
+    "hasObservation": "存在最近一次的外部观察记录",
+    "hasAuditPassed": "最新一次审计通过",
+    "hasAttestationHash": "记录中存在 attestation hash",
+    "hasReportHash": "记录中存在审计报告 hash",
+    "hasReputation": "信誉评分达到阈值",
+    "noEvidence": "目前仅有基础内容字段"
+  },
+  "evidence": {
+    "observedAt": "最近观察日期",
+    "auditPassed": "审计结果",
+    "reportHash": "审计报告 hash",
+    "attestationHash": "Attestation hash",
+    "reputation": "信誉评分"
+  }
+}

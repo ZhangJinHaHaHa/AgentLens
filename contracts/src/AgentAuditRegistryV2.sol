@@ -125,6 +125,8 @@ contract AgentAuditRegistryV2 {
     );
     event OperatorUpdated(address indexed previousOperator, address indexed newOperator);
     event PricingUpdated(uint256 serviceFee, uint256 minimumBond);
+    event ServiceFeesWithdrawn(address indexed to, uint256 amount);
+    event BondReleased(uint256 indexed tokenId, address indexed developer, uint256 amount);
 
     // New V2 events
     event AppealFiled(uint256 indexed tokenId, uint64 indexed auditId, uint64 appealId);
@@ -159,6 +161,28 @@ contract AgentAuditRegistryV2 {
         serviceFee = newServiceFee;
         minimumBond = newMinimumBond;
         emit PricingUpdated(newServiceFee, newMinimumBond);
+    }
+
+    function withdrawServiceFees(address payable to, uint256 amount) external onlyOwner {
+        require(to != address(0), "INVALID_RECIPIENT");
+        require(amount <= accruedServiceFees, "INSUFFICIENT_FEES");
+
+        accruedServiceFees -= amount;
+        _sendValue(to, amount);
+
+        emit ServiceFeesWithdrawn(to, amount);
+    }
+
+    function releaseBond(uint256 tokenId, uint256 amount) external onlyOperator {
+        require(_exists(tokenId), "TOKEN_NOT_FOUND");
+
+        AgentProfile storage profile = _profiles[tokenId];
+        require(amount <= profile.totalBond, "INSUFFICIENT_BOND");
+
+        profile.totalBond -= amount;
+        _sendValue(payable(profile.developer), amount);
+
+        emit BondReleased(tokenId, profile.developer, amount);
     }
 
     function balanceOf(address account) external view returns (uint256) {
@@ -584,5 +608,10 @@ contract AgentAuditRegistryV2 {
         uint256 index = uint256(appealId - 1);
         require(index < _appealRecords[tokenId].length, "APPEAL_NOT_FOUND");
         record = _appealRecords[tokenId][index];
+    }
+
+    function _sendValue(address payable to, uint256 amount) internal {
+        (bool ok, ) = to.call{value: amount}("");
+        require(ok, "TRANSFER_FAILED");
     }
 }

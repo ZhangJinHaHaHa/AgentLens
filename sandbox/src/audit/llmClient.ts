@@ -280,6 +280,8 @@ export function createLlmClient(
       return createMockClient(config.questionCount);
     case "openai":
       return createOpenAiClient(config, fetchImpl);
+    case "minimax":
+      return createOpenAiClient(config, fetchImpl);
     case "anthropic":
       return createAnthropicClient(config, fetchImpl);
     default:

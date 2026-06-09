@@ -1,0 +1,1 @@
+{"agent_name":"Zhipu-GLM-Agent","image":"agent-shenji/test-agent:zhipu","allowed_hosts":["open.bigmodel.cn","example.com"],"allowed_rpc_endpoints":["http://polygon-edge-external:8545"]}

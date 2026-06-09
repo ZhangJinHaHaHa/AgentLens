@@ -1,0 +1,30 @@
+{
+  "title": "审计报告",
+  "subtitle": "先读用户摘要，再按需展开技术证据。",
+  "back": "返回 Agent 详情页",
+  "summary": {
+    "title": "用户摘要",
+    "score": "审计分数",
+    "primaryRisk": "主要风险",
+    "safetyBoundary": "安全边界",
+    "nextStep": "建议下一步",
+    "verdict": {
+      "passed": "通过",
+      "failed": "失败",
+      "pending": "待审计",
+      "slashed": "已惩罚",
+      "compensated": "已补偿",
+      "unknown": "未知"
+    },
+    "hash": {
+      "verified": "报告哈希已校验",
+      "unavailable": "仅链上摘要",
+      "mismatch": "报告哈希不一致"
+    }
+  },
+  "technical": {
+    "title": "技术证据",
+    "reportBody": "报告正文",
+    "unavailable": "详细报告暂不可用。"
+  }
+}

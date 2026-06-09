@@ -1,8 +1,8 @@
 {
-  "name": "agentlens-zk",
+  "name": "agent-shenji-zk",
   "version": "0.1.0",
   "private": true,
-  "description": "ZK circuits and tooling for AgentLens audit verification",
+  "description": "ZK circuits and tooling for Agent Shenji audit verification",
   "scripts": {
     "compile": "bash scripts/compile-circuits.sh",
     "clean": "rm -rf build"

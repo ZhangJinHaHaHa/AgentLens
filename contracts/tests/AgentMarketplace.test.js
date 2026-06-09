@@ -38,6 +38,16 @@ describe("AgentMarketplace", function () {
 
     const hasAccess = await contract.hasAccess(1, buyer1.address);
     assert.strictEqual(hasAccess, true);
+
+    const count = await contract.getAccessCount(1);
+    assert.strictEqual(count.toNumber(), 1);
+
+    const record = await contract.getAccessRecord(1, 0);
+    assert.strictEqual(record.tokenId.toNumber(), 1);
+    assert.strictEqual(record.buyer, buyer1.address);
+    assert.strictEqual(record.isRental, true);
+    assert.strictEqual(record.amountPaid.toString(), ethers.utils.parseEther("0.05").toString());
+    assert.ok(record.expiresAt.toNumber() > 0);
   });
 
   it("allows permanent purchase", async function () {
@@ -57,7 +67,7 @@ describe("AgentMarketplace", function () {
     assert.strictEqual(hasAccess, true);
   });
 
-  it("rejects insufficient payment for rental", async function () {
+  it("rejects non-exact payment for rental", async function () {
     const { contract, operator, buyer1 } = await deployMarketplace();
 
     await (await contract.connect(operator).setPrice(
@@ -72,8 +82,37 @@ describe("AgentMarketplace", function () {
       });
       assert.fail("Should revert");
     } catch (error) {
-      assert.ok(error.message.includes("INSUFFICIENT_PAYMENT"));
+      assert.ok(error.message.includes("INVALID_PAYMENT"));
     }
+
+    try {
+      await contract.connect(buyer1).rentAgent(1, 5, {
+        value: ethers.utils.parseEther("0.06")
+      });
+      assert.fail("Should revert");
+    } catch (error) {
+      assert.ok(error.message.includes("INVALID_PAYMENT"));
+    }
+  });
+
+  it("allows owner to withdraw collected marketplace payments", async function () {
+    const { contract, owner, operator, buyer1, buyer2 } = await deployMarketplace();
+
+    await (await contract.connect(operator).setPrice(
+      1,
+      ethers.utils.parseEther("0.01"),
+      ethers.utils.parseEther("1")
+    )).wait();
+
+    await (await contract.connect(buyer1).rentAgent(1, 5, {
+      value: ethers.utils.parseEther("0.05")
+    })).wait();
+
+    const before = await ethers.provider.getBalance(buyer2.address);
+    await (await contract.connect(owner).withdrawPayments(buyer2.address, ethers.utils.parseEther("0.05"))).wait();
+    const after = await ethers.provider.getBalance(buyer2.address);
+
+    assert.strictEqual(after.sub(before).toString(), ethers.utils.parseEther("0.05").toString());
   });
 
   it("prevents double purchase", async function () {

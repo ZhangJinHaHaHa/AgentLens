@@ -72,6 +72,8 @@ contract ZkAuditVerifier {
     // tokenId => number of verified audit proofs
     mapping(uint256 => uint256) public auditProofCount;
 
+    mapping(bytes32 => bool) private _usedProofHashes;
+
     // --- Modifiers ---
 
     modifier onlyOwner() {
@@ -108,7 +110,9 @@ contract ZkAuditVerifier {
      * @param dimensionalScores The 6 claimed dimensional scores [0-100]
      * @param overallScore The claimed weighted overall score [0-100]
      * @param inputCommitment Poseidon hash binding the proof to private inputs
-     * @param proof The Groth16 proof (a, b, c points)
+     * @param a Groth16 proof point A
+     * @param b Groth16 proof point B
+     * @param c Groth16 proof point C
      */
     function verifyAuditScore(
         uint256 tokenId,
@@ -121,6 +125,8 @@ contract ZkAuditVerifier {
         uint256[2] calldata c
     ) external returns (bool) {
         require(auditScoreVerifierContract != address(0), "VERIFIER_NOT_SET");
+        bytes32 proofHash = _proofHash(a, b, c);
+        require(!_usedProofHashes[proofHash], "PROOF_REPLAYED");
 
         // Build public inputs array matching circuit: [dim0..5, overall, commitment]
         uint256[8] memory pubInputs;
@@ -140,8 +146,7 @@ contract ZkAuditVerifier {
 
         require(valid, "INVALID_PROOF");
 
-        // Store the verified proof
-        bytes32 proofHash = keccak256(abi.encodePacked(a[0], a[1], b[0][0], b[0][1], c[0], c[1]));
+        _usedProofHashes[proofHash] = true;
 
         auditScoreProofs[tokenId][auditId] = AuditScoreProof({
             tokenId: tokenId,
@@ -168,7 +173,9 @@ contract ZkAuditVerifier {
      * @param tokenId The agent's NFT token ID
      * @param fingerprintHash The public fingerprint hash
      * @param developerHash The developer ownership hash
-     * @param proof The Groth16 proof (a, b, c points)
+     * @param a Groth16 proof point A
+     * @param b Groth16 proof point B
+     * @param c Groth16 proof point C
      */
     function verifyFingerprint(
         uint256 tokenId,
@@ -179,9 +186,11 @@ contract ZkAuditVerifier {
         uint256[2] calldata c
     ) external returns (bool) {
         require(fingerprintVerifierContract != address(0), "VERIFIER_NOT_SET");
+        bytes32 proofHash = _proofHash(a, b, c);
+        require(!_usedProofHashes[proofHash], "PROOF_REPLAYED");
 
         // Public inputs: [fingerprintHash, tokenId, developerHash]
-        uint256[3] memory pubInputs;
+        uint256[8] memory pubInputs;
         pubInputs[0] = fingerprintHash;
         pubInputs[1] = tokenId;
         pubInputs[2] = developerHash;
@@ -195,7 +204,7 @@ contract ZkAuditVerifier {
 
         require(valid, "INVALID_PROOF");
 
-        bytes32 proofHash = keccak256(abi.encodePacked(a[0], a[1], b[0][0], b[0][1], c[0], c[1]));
+        _usedProofHashes[proofHash] = true;
 
         fingerprintProofs[tokenId] = AgentFingerprintProof({
             tokenId: tokenId,
@@ -237,7 +246,19 @@ contract ZkAuditVerifier {
         return fingerprintProofs[tokenId].verified;
     }
 
+    function isProofHashUsed(bytes32 proofHash) external view returns (bool) {
+        return _usedProofHashes[proofHash];
+    }
+
     // --- Internal: Generic Groth16 Verifier Call ---
+
+    function _proofHash(
+        uint256[2] calldata a,
+        uint256[2][2] calldata b,
+        uint256[2] calldata c
+    ) internal pure returns (bytes32) {
+        return keccak256(abi.encode(a, b, c));
+    }
 
     function _callGroth16Verifier(
         address verifier,

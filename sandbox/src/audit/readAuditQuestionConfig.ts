@@ -1,10 +1,15 @@
 import type { AuditLlmProvider, AuditQuestionConfig } from "./auditQuestionTypes";
 
-const VALID_PROVIDERS = new Set<AuditLlmProvider>(["openai", "anthropic", "mock"]);
+const VALID_PROVIDERS = new Set<AuditLlmProvider>(["openai", "anthropic", "minimax", "mock"]);
 
 const DEFAULT_MODELS: Record<string, string> = {
   openai: "gpt-4o",
-  anthropic: "claude-sonnet-4-20250514"
+  anthropic: "claude-sonnet-4-20250514",
+  minimax: "MiniMax-M2.7"
+};
+
+const DEFAULT_API_BASE_URLS: Record<string, string> = {
+  minimax: "https://api.minimaxi.com/v1"
 };
 
 const DEFAULT_QUESTION_COUNT = 5;
@@ -65,7 +70,7 @@ export function readAuditQuestionConfig(
   }
 
   const model = env.AUDIT_LLM_MODEL ?? DEFAULT_MODELS[provider] ?? "";
-  const apiBaseUrl = env.AUDIT_LLM_API_BASE_URL || undefined;
+  const apiBaseUrl = env.AUDIT_LLM_API_BASE_URL || DEFAULT_API_BASE_URLS[provider] || undefined;
   const apiFormatRaw = env.AUDIT_LLM_API_FORMAT;
   const apiFormat = apiFormatRaw === "responses" ? "responses" as const : undefined;
 

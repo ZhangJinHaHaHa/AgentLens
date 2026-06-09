@@ -40,6 +40,16 @@ infra/polygon-edge-external/.env
 
 # Markdown docs
 *.md
+!README.md
+!README_CN.md
+!CLA.md
+!CODE_OF_CONDUCT.md
+!CONTRIBUTING.md
+!SECURITY.md
+!docs/server-sandbox-private-chain-plan.md
+!docs/bug-audit-2026-06-10.md
+!docs/agent-integration-guide.md
+!docs/verification-methods.md
 
 # Codex tool memory
 .omx/

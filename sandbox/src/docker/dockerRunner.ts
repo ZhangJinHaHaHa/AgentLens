@@ -141,7 +141,7 @@ export async function startContainer(
 
   const networkName = options.networkName;
   const containerName = networkName
-    ? `agentlens-audit-${randomUUID().slice(0, 8)}`
+    ? `shenji-audit-${randomUUID().slice(0, 8)}`
     : undefined;
 
   const networkArgs: string[] = networkName

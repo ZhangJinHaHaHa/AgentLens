@@ -3,7 +3,7 @@
  */
 
 /** Supported LLM provider identifiers. */
-export type AuditLlmProvider = "openai" | "anthropic" | "mock";
+export type AuditLlmProvider = "openai" | "anthropic" | "minimax" | "mock";
 
 /** Category of audit question. */
 export type AuditQuestionCategory =

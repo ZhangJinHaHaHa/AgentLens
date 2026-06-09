@@ -17,7 +17,7 @@ function hasFlag(flag: string): boolean {
 
 function printUsage(): void {
   process.stdout.write(`
-${bold("agentlens-cdk")} — Agent developer toolkit for AgentLens audit platform
+${bold("shenji-cdk")} — Agent developer toolkit for Shenji audit platform
 
 ${bold("Commands:")}
   ${bold("init")}       ${dim("Interactive manifest creation")}
@@ -27,14 +27,14 @@ ${bold("Commands:")}
   ${bold("help")}       ${dim("Show this help")}
 
 ${bold("Examples:")}
-  agentlens-cdk init --output ./manifest.json
-  agentlens-cdk validate --manifest ./manifest.json --docker
-  agentlens-cdk register --manifest-url https://example.com/manifest.json --agent-name my-agent
-  agentlens-cdk status --token-id 1 --watch
+  shenji-cdk init --output ./manifest.json
+  shenji-cdk validate --manifest ./manifest.json --docker
+  shenji-cdk register --manifest-url https://example.com/manifest.json --agent-name my-agent
+  shenji-cdk status --token-id 1 --watch
 
 ${bold("Configuration:")}
-  Config file: ${dim("agentlens-cdk.config.json")} (in cwd)
-  Env vars:    ${dim("AGENTLENS_CDK_RPC_URL, AGENTLENS_CDK_CHAIN_ID, AGENTLENS_CDK_REGISTRY_ADDRESS, AGENTLENS_CDK_PRIVATE_KEY")}
+  Config file: ${dim("shenji-cdk.config.json")} (in cwd)
+  Env vars:    ${dim("SHENJI_CDK_RPC_URL, SHENJI_CDK_CHAIN_ID, SHENJI_CDK_REGISTRY_ADDRESS, SHENJI_CDK_PRIVATE_KEY")}
 
 `);
 }
@@ -64,7 +64,7 @@ async function main(): Promise<void> {
       const stake = getArg("--stake");
 
       if (!manifestUrl || !agentName) {
-        process.stderr.write("Usage: agentlens-cdk register --manifest-url <url> --agent-name <name> [--stake <eth>]\n");
+        process.stderr.write("Usage: shenji-cdk register --manifest-url <url> --agent-name <name> [--stake <eth>]\n");
         process.exitCode = 1;
         return;
       }
@@ -76,7 +76,7 @@ async function main(): Promise<void> {
     case "status": {
       const tokenId = getArg("--token-id");
       if (!tokenId) {
-        process.stderr.write("Usage: agentlens-cdk status --token-id <id> [--watch]\n");
+        process.stderr.write("Usage: shenji-cdk status --token-id <id> [--watch]\n");
         process.exitCode = 1;
         return;
       }

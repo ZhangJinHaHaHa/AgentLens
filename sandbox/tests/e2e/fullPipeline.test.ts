@@ -38,7 +38,7 @@ function buildTestEvent(overrides: Partial<AuditRequestedEvent> = {}): AuditRequ
 function buildTestManifest(): SandboxManifest {
   return {
     agent_name: "risk-agent",
-    image: "agentlens/test-agent:local",
+    image: "agent-shenji/test-agent:local",
     allowed_hosts: ["api.risk.com"],
     allowed_rpc_endpoints: ["https://rpc.edge.local"]
   };
@@ -492,7 +492,7 @@ test("full pipeline: manifest mismatch produces correct output without running a
     loadManifestSource: async () => ({
       manifest: {
         agent_name: "different-agent",
-        image: "agentlens/test-agent:local",
+        image: "agent-shenji/test-agent:local",
         allowed_hosts: [],
         allowed_rpc_endpoints: []
       },

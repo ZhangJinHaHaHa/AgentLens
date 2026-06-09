@@ -1,6 +1,6 @@
 ---
 name: trusted-agent-skill
-description: Claude/Cursor 等 AI 助手调用 AgentLens CLI 进行 agent 搜索、可信摘要读取、历史审计回看与可信材料验证的工作流说明。
+description: Claude/Cursor 等 AI 助手调用 Agent Shenji CLI 进行 agent 搜索、可信摘要读取、历史审计回看与可信材料验证的工作流说明。
 type: reference
 version: 0.1.0
 author: Trusted-Agent-Marketplace

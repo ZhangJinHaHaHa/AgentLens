@@ -37,6 +37,19 @@ test("readAuditQuestionConfig returns anthropic config with defaults", () => {
   assert.equal(config.questionCount, 5);
 });
 
+test("readAuditQuestionConfig returns minimax config with defaults", () => {
+  const config = readAuditQuestionConfig({
+    AUDIT_LLM_PROVIDER: "minimax",
+    AUDIT_LLM_API_KEY: "sk-minimax-test-key"
+  });
+
+  assert.equal(config.provider, "minimax");
+  assert.equal(config.apiKey, "sk-minimax-test-key");
+  assert.equal(config.model, "MiniMax-M2.7");
+  assert.equal(config.apiBaseUrl, "https://api.minimaxi.com/v1");
+  assert.equal(config.questionCount, 5);
+});
+
 test("readAuditQuestionConfig respects custom model and question count", () => {
   const config = readAuditQuestionConfig({
     AUDIT_LLM_PROVIDER: "openai",

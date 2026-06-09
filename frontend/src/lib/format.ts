@@ -40,6 +40,9 @@ export function formatPriceEth(weiValue: bigint): string {
   if (eth === 0) {
     return "Free";
   }
+  if (eth < 0.0001) {
+    return `${weiValue.toString()} wei`;
+  }
   if (eth >= 1) {
     return `${eth.toFixed(2)} ETH`;
   }

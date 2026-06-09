@@ -1,10 +1,10 @@
 {
-  "name": "agentlens-contracts",
+  "name": "agent-shenji-contracts",
   "version": "0.1.0",
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "compile": "node scripts/compile.js",
+    "compile": "node scripts/compileV2.js",
     "deploy:local": "npm run compile && HOME=$PWD/.home XDG_CONFIG_HOME=$PWD/.xdg/config XDG_DATA_HOME=$PWD/.xdg/data npx hardhat run --no-compile scripts/runDeployLocal.js --network hardhat",
     "deploy:edge": "npm run compile && node scripts/runDeployEdge.js",
     "test": "npm run compile && HOME=$PWD/.home XDG_CONFIG_HOME=$PWD/.xdg/config XDG_DATA_HOME=$PWD/.xdg/data npx hardhat test --no-compile"

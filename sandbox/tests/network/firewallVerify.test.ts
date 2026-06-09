@@ -83,7 +83,7 @@ test("verifyFirewallRules tolerates iptables output normalization differences", 
     "container-123",
     {
       agent_name: "local-test-agent",
-      image: "agentlens/test-agent:local",
+      image: "agent-shenji/test-agent:local",
       allowed_hosts: ["1.1.1.1"],
       allowed_rpc_endpoints: ["http://1.1.1.1"]
     },

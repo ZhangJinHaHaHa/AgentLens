@@ -220,3 +220,34 @@ test("createJsonRpcWriteClient throws a clear error when JSON-RPC omits result",
     /eth_getTransactionCount.*missing result/i
   );
 });
+
+test("createJsonRpcWriteClient times out when a receipt never arrives", async () => {
+  const txHash = `0x${"d".repeat(64)}`;
+  const fetchImpl = buildMockFetch(
+    [
+      { jsonrpc: "2.0", id: 1, result: TEST_NONCE_HEX },
+      { jsonrpc: "2.0", id: 1, result: TEST_GAS_LIMIT_HEX },
+      { jsonrpc: "2.0", id: 1, result: TEST_GAS_PRICE_HEX },
+      { jsonrpc: "2.0", id: 1, result: txHash },
+      { jsonrpc: "2.0", id: 1, result: null }
+    ],
+    []
+  );
+  const client = createJsonRpcWriteClient({
+    rpcUrl: "http://localhost:8545",
+    chainId: TEST_CHAIN_ID,
+    privateKey: PRIVATE_KEY,
+    pollIntervalMs: 0,
+    receiptTimeoutMs: 0,
+    fetchImpl
+  });
+
+  await assert.rejects(
+    () =>
+      client.submitTransaction({
+        to: CONTRACT_ADDRESS,
+        data: RECORD_AUDIT_RESULT_CALL_DATA
+      }),
+    /timed out after 0ms waiting for transaction/i
+  );
+});

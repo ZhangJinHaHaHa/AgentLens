@@ -1,0 +1,81 @@
+{
+  "appName": "AgentLens",
+  "tagline": "可信 AI Agent 选型平台",
+  "nav": {
+    "agents": "Agent 列表",
+    "compare": "对比",
+    "recommend": "需求推荐",
+    "publish": "发布"
+  },
+  "actions": {
+    "search": "搜索",
+    "viewDetails": "查看详情",
+    "addToCompare": "加入对比",
+    "addedToCompare": "已加入",
+    "removeFromCompare": "移除",
+    "viewOfficial": "访问官方",
+    "viewDocs": "查看文档",
+    "startCompare": "开始对比",
+    "describeNeed": "描述你的需求",
+    "clearFilters": "清空筛选",
+    "back": "返回",
+    "loadMore": "加载更多",
+    "viewAuditReport": "查看审计报告",
+    "openOnboarding": "查看起步指南"
+  },
+  "language": {
+    "label": "语言",
+    "zh": "中文",
+    "en": "English"
+  },
+  "theme": {
+    "label": "主题",
+    "light": "浅色",
+    "dark": "深色",
+    "artLabel": "背景风格",
+    "art": {
+      "swiss": "Swiss Precision",
+      "atelier": "Artisanal Professional",
+      "nocturne": "Post-Impressionist Modern",
+      "pixel": "Bit-Perfect Retro",
+      "crimson": "Crimson Trust & Parchment"
+    }
+  },
+  "wallet": {
+    "label": "钱包",
+    "connecting": "连接中"
+  },
+  "agentSource": {
+    "marketplace": "专家挂单",
+    "curated": "重点维护",
+    "listed": "已收录",
+    "native": "平台原生"
+  },
+  "risk": {
+    "low": "低风险",
+    "medium": "中风险",
+    "high": "高风险"
+  },
+  "complexity": {
+    "low": "上手简单",
+    "medium": "上手中等",
+    "high": "上手复杂"
+  },
+  "access": {
+    "api": "接口接入",
+    "saas": "网页直接用",
+    "cli": "命令行",
+    "browser_ext": "浏览器插件",
+    "local": "装在你自己设备",
+    "cloud": "在对方云端跑"
+  },
+  "status": {
+    "loading": "加载中…",
+    "empty": "暂无数据",
+    "error": "出错了"
+  },
+  "footer": {
+    "tagline": "用证据，而不是承诺，做你的 Agent 选型决策。",
+    "rights": "© {{year}} AgentLens。所有内容仅供参考。"
+  }
+}

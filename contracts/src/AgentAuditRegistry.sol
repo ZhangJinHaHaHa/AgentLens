@@ -90,6 +90,8 @@ contract AgentAuditRegistry {
     );
     event OperatorUpdated(address indexed previousOperator, address indexed newOperator);
     event PricingUpdated(uint256 serviceFee, uint256 minimumBond);
+    event ServiceFeesWithdrawn(address indexed to, uint256 amount);
+    event BondReleased(uint256 indexed tokenId, address indexed developer, uint256 amount);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "ONLY_OWNER");
@@ -119,6 +121,28 @@ contract AgentAuditRegistry {
         serviceFee = newServiceFee;
         minimumBond = newMinimumBond;
         emit PricingUpdated(newServiceFee, newMinimumBond);
+    }
+
+    function withdrawServiceFees(address payable to, uint256 amount) external onlyOwner {
+        require(to != address(0), "INVALID_RECIPIENT");
+        require(amount <= accruedServiceFees, "INSUFFICIENT_FEES");
+
+        accruedServiceFees -= amount;
+        _sendValue(to, amount);
+
+        emit ServiceFeesWithdrawn(to, amount);
+    }
+
+    function releaseBond(uint256 tokenId, uint256 amount) external onlyOperator {
+        require(_exists(tokenId), "TOKEN_NOT_FOUND");
+
+        AgentProfile storage profile = _profiles[tokenId];
+        require(amount <= profile.totalBond, "INSUFFICIENT_BOND");
+
+        profile.totalBond -= amount;
+        _sendValue(payable(profile.developer), amount);
+
+        emit BondReleased(tokenId, profile.developer, amount);
     }
 
     function balanceOf(address account) external view returns (uint256) {
@@ -345,5 +369,10 @@ contract AgentAuditRegistry {
         uint256 index = uint256(auditId - 1);
         require(index < _auditRecords[tokenId].length, "AUDIT_NOT_FOUND");
         record = _auditRecords[tokenId][index];
+    }
+
+    function _sendValue(address payable to, uint256 amount) internal {
+        (bool ok, ) = to.call{value: amount}("");
+        require(ok, "TRANSFER_FAILED");
     }
 }

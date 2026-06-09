@@ -1,0 +1,1 @@
+{"agent_name":"GPT-4o-Agent","image":"agent-shenji/test-agent:gpt","allowed_hosts":["api.jiekou.ai","api.openai.com","example.com"],"allowed_rpc_endpoints":["http://polygon-edge-external:8545"]}

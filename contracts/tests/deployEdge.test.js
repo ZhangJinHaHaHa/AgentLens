@@ -60,8 +60,8 @@ describe("edge deployment", function () {
       }),
       createFactory: () => ({
         deploy: async (initialServiceFeeWei, initialMinimumBondWei, initialOperator) => {
-          assert.equal(initialServiceFeeWei.toString(), ethers.utils.parseEther("0.01").toString());
-          assert.equal(initialMinimumBondWei.toString(), ethers.utils.parseEther("1").toString());
+          assert.equal(initialServiceFeeWei.toString(), "0");
+          assert.equal(initialMinimumBondWei.toString(), "1");
           assert.equal(initialOperator, "0x0000000000000000000000000000000000000abc");
 
           return {

@@ -1,0 +1,77 @@
+{
+  "title": "Agent 全集",
+  "subtitle": "用筛选器组合你关心的维度，找到第一个值得试的 Agent。",
+  "searchPlaceholder": "搜索 Agent 名称、简介、标签或场景",
+  "results": {
+    "count_one": "共 {{count}} 个结果",
+    "count_other": "共 {{count}} 个结果",
+    "empty": "没有匹配的 Agent。",
+    "emptyHint": "试试减少筛选条件，或换个关键词。",
+    "llmUnavailable": "LLM 解析不可用，已回退到关键词搜索。",
+    "relaxHint": "最可能卡住结果的是 {{filter}}；移除它约可恢复 {{count}} 个候选。",
+    "showAll": "查看全部 Agent"
+  },
+  "card": {
+    "intro": "简介",
+    "scenarios": "适用场景",
+    "risk": "风险",
+    "complexity": "上手",
+    "onboarding": "起步指南",
+    "seller": "背后卖家",
+    "hasOnboarding": "有",
+    "noOnboarding": "无",
+    "addToCompare": "加入对比",
+    "addedToCompare": "已加入对比"
+  },
+  "filters": {
+    "title": "筛选",
+    "scenario": "场景",
+    "tags": "标签",
+    "category": "类别",
+    "type": "Agent 类型",
+    "access": "接入方式",
+    "trustTier": "信任层级",
+    "risk": "风险等级",
+    "complexity": "上手难度",
+    "price": "价格",
+    "auditStatus": "审计状态",
+    "scoreBand": "信任评分",
+    "priceModes": {
+      "free": "免费 / 试用",
+      "paid": "付费",
+      "rentable": "平台可租",
+      "unknown": "未知"
+    },
+    "auditStatuses": {
+      "passed": "审计通过",
+      "failed": "审计失败",
+      "pending": "审计待定",
+      "no-audit": "无审计"
+    },
+    "scoreBands": {
+      "high": "高",
+      "medium": "中",
+      "low": "低",
+      "unknown": "未知"
+    },
+    "onboarding": "有起步指南",
+    "audit": "有审计报告",
+    "rentable": "支持平台租赁",
+    "clear": "清空筛选",
+    "active": "已启用",
+    "removeChip": "移除 {{label}}",
+    "chips": {
+      "query": "搜索",
+      "need": "需求",
+      "tag": "标签"
+    }
+  },
+  "sort": {
+    "label": "排序",
+    "default": "默认",
+    "newest": "新到旧",
+    "trust": "按信任层级",
+    "risk": "按风险（低到高）",
+    "complexity": "按上手难度（低到高）"
+  }
+}

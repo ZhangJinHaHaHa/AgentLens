@@ -17,7 +17,7 @@ test("loadCdkConfig returns production defaults when no config file and no env v
 test("loadCdkConfig reads values from config file", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "cdk-config-"));
   fs.writeFileSync(
-    path.join(tmpDir, "agentlens-cdk.config.json"),
+    path.join(tmpDir, "shenji-cdk.config.json"),
     JSON.stringify({
       rpcUrl: "http://localhost:8545",
       chainId: 31337,
@@ -36,16 +36,16 @@ test("loadCdkConfig reads values from config file", () => {
 test("loadCdkConfig env vars override config file", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "cdk-config-"));
   fs.writeFileSync(
-    path.join(tmpDir, "agentlens-cdk.config.json"),
+    path.join(tmpDir, "shenji-cdk.config.json"),
     JSON.stringify({ rpcUrl: "http://file.local", chainId: 100 })
   );
 
   const config = loadCdkConfig({
     cwd: tmpDir,
     env: {
-      AGENTLENS_CDK_RPC_URL: "http://env.local",
-      AGENTLENS_CDK_CHAIN_ID: "200",
-      AGENTLENS_CDK_PRIVATE_KEY: "0xdeadbeef"
+      SHENJI_CDK_RPC_URL: "http://env.local",
+      SHENJI_CDK_CHAIN_ID: "200",
+      SHENJI_CDK_PRIVATE_KEY: "0xdeadbeef"
     }
   });
 
@@ -58,7 +58,7 @@ test("loadCdkConfig env vars override config file", () => {
 
 test("loadCdkConfig throws on invalid chainId", () => {
   assert.throws(
-    () => loadCdkConfig({ cwd: os.tmpdir(), env: { AGENTLENS_CDK_CHAIN_ID: "not-a-number" } }),
+    () => loadCdkConfig({ cwd: os.tmpdir(), env: { SHENJI_CDK_CHAIN_ID: "not-a-number" } }),
     { message: /Invalid chainId/ }
   );
 });
@@ -72,7 +72,7 @@ test("loadCdkConfig ignores missing config file gracefully", () => {
 
 test("loadCdkConfig ignores malformed config file", () => {
   const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "cdk-config-"));
-  fs.writeFileSync(path.join(tmpDir, "agentlens-cdk.config.json"), "not valid json!!!");
+  fs.writeFileSync(path.join(tmpDir, "shenji-cdk.config.json"), "not valid json!!!");
   const config = loadCdkConfig({ cwd: tmpDir, env: {} });
   assert.equal(config.rpcUrl, "http://127.0.0.1:18545");
   fs.rmSync(tmpDir, { recursive: true });

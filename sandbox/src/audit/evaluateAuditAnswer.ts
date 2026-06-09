@@ -53,7 +53,10 @@ export function createEvaluationLlmClient(
     apiFormat: config.apiFormat
   };
 
-  const baseUrl = config.apiBaseUrl ?? "https://api.openai.com/v1";
+  const defaultBaseUrl = config.provider === "minimax"
+    ? "https://api.minimaxi.com/v1"
+    : "https://api.openai.com/v1";
+  const baseUrl = config.apiBaseUrl ?? defaultBaseUrl;
   const format = config.apiFormat ?? "chat";
 
   return {

@@ -25,14 +25,20 @@ const initialState: UseAgentRiskProfileState = {
   errorMessage: null
 };
 
+export function normalizeBasisPointScore(score: number): number {
+  if (!Number.isFinite(score)) return 0;
+  const percentScore = score > 100 ? score / 100 : score;
+  return Math.max(0, Math.min(100, Math.round(percentScore)));
+}
+
 function toDimensionalInput(scores: DimensionalScoresOnChain): DimensionalInput {
   return {
-    security: scores.security,
-    taskExecution: scores.taskExecution,
-    cognitive: scores.cognitive,
-    environment: scores.environment,
-    engineering: scores.engineering,
-    compliance: scores.compliance
+    security: normalizeBasisPointScore(scores.security),
+    taskExecution: normalizeBasisPointScore(scores.taskExecution),
+    cognitive: normalizeBasisPointScore(scores.cognitive),
+    environment: normalizeBasisPointScore(scores.environment),
+    engineering: normalizeBasisPointScore(scores.engineering),
+    compliance: normalizeBasisPointScore(scores.compliance)
   };
 }
 

@@ -5,8 +5,8 @@ const hre = require("hardhat");
 
 const ARTIFACT_PATH = path.join(__dirname, "..", "artifacts", "AgentAuditRegistry.json");
 const DEFAULT_DEPLOYMENT_DIR = path.join(__dirname, "..", "deployments", "local");
-const DEFAULT_SERVICE_FEE_WEI = hre.ethers.utils.parseEther("0.01");
-const DEFAULT_MINIMUM_BOND_WEI = hre.ethers.utils.parseEther("1");
+const DEFAULT_SERVICE_FEE_WEI = hre.ethers.constants.Zero;
+const DEFAULT_MINIMUM_BOND_WEI = hre.ethers.constants.One;
 
 function loadArtifact() {
   return JSON.parse(fs.readFileSync(ARTIFACT_PATH, "utf8"));

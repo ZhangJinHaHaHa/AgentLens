@@ -23,7 +23,8 @@ const CONTRACTS = [
   { name: "AgentAuditRegistryV2", file: "AgentAuditRegistryV2.sol" },
   { name: "AgentAuditRegistryV3", file: "AgentAuditRegistryV3.sol" },
   { name: "AgentMarketplace", file: "AgentMarketplace.sol" },
-  { name: "AgentReviewRegistry", file: "AgentReviewRegistry.sol" }
+  { name: "AgentReviewRegistry", file: "AgentReviewRegistry.sol" },
+  { name: "ZkAuditVerifier", file: "ZkAuditVerifier.sol" }
 ];
 
 function formatCompilerVersion(version) {

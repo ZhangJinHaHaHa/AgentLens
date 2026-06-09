@@ -91,6 +91,8 @@ export interface AgentAuditRegistryV2Client extends AgentAuditRegistryClient {
   getDimensionalScores(tokenId: bigint, auditIndex: number): Promise<DimensionalScoresOnChain>;
 }
 
+export type AgentAuditRegistryV3Client = AgentAuditRegistryV2Client;
+
 export function createAgentAuditRegistryClient(
   config: AppConfig,
   options: CreateAgentAuditRegistryClientOptions = {}
@@ -130,8 +132,25 @@ export function createAgentAuditRegistryV2Client(
   rpcUrl: string,
   chainId: number
 ): AgentAuditRegistryV2Client {
+  return createExtendedAgentAuditRegistryClient(contractAddress, rpcUrl, chainId, v2Artifact.abi as InterfaceAbi);
+}
+
+export function createAgentAuditRegistryV3Client(
+  contractAddress: string,
+  rpcUrl: string,
+  chainId: number
+): AgentAuditRegistryV3Client {
+  return createExtendedAgentAuditRegistryClient(contractAddress, rpcUrl, chainId, v3Artifact.abi as InterfaceAbi);
+}
+
+function createExtendedAgentAuditRegistryClient(
+  contractAddress: string,
+  rpcUrl: string,
+  chainId: number,
+  abi: InterfaceAbi
+): AgentAuditRegistryV2Client {
   const provider = new JsonRpcProvider(rpcUrl, chainId);
-  const contract = new Contract(contractAddress, v3Artifact.abi as InterfaceAbi, provider);
+  const contract = new Contract(contractAddress, abi, provider);
 
   return {
     getAgentProfile(tokenId) {
@@ -152,8 +171,8 @@ export function createAgentAuditRegistryV2Client(
         successfulAppeals: Number(rep.successfulAppeals),
         failedAppeals: Number(rep.failedAppeals),
         reputationDelta: Number(rep.reputationDelta),
-        currentReputationScore: Number(rep.currentReputationScore),
-        lastReputationUpdateAt: Number(rep.lastReputationUpdateAt)
+        currentReputationScore: Number(rep.currentReputationScore ?? 0),
+        lastReputationUpdateAt: Number(rep.lastReputationUpdateAt ?? 0)
       };
     },
     getAppealCount(tokenId) {

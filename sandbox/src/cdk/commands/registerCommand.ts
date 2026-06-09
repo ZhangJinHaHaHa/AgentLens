@@ -32,7 +32,7 @@ export async function runRegisterCommand(options: RegisterCommandOptions): Promi
   const config = loadCdkConfig();
 
   if (!config.privateKey) {
-    printError("AGENTLENS_CDK_PRIVATE_KEY environment variable is required for registration.");
+    printError("SHENJI_CDK_PRIVATE_KEY environment variable is required for registration.");
     process.exitCode = 1;
     return;
   }
@@ -95,5 +95,5 @@ export async function runRegisterCommand(options: RegisterCommandOptions): Promi
   printKeyValue("TX Hash", result.transactionHash);
   printKeyValue("Block", String(result.blockNumber));
   process.stdout.write("\n");
-  printInfo(`Track audit progress: ${dim("agentlens-cdk status --token-id " + String(result.tokenId))}`);
+  printInfo(`Track audit progress: ${dim("shenji-cdk status --token-id " + String(result.tokenId))}`);
 }

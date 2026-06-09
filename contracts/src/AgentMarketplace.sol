@@ -26,6 +26,7 @@ contract AgentMarketplace {
 
     event PriceSet(uint256 indexed tokenId, uint256 pricePerDay, uint256 buyPrice);
     event AccessGranted(uint256 indexed tokenId, address indexed buyer, bool isRental, uint64 expiresAt);
+    event PaymentsWithdrawn(address indexed to, uint256 amount);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "ONLY_OWNER");
@@ -61,7 +62,7 @@ contract AgentMarketplace {
         require(durationDays > 0, "INVALID_DURATION");
 
         uint256 totalCost = pricing.pricePerDay * durationDays;
-        require(msg.value >= totalCost, "INSUFFICIENT_PAYMENT");
+        require(msg.value == totalCost, "INVALID_PAYMENT");
 
         uint64 expiresAt = uint64(block.timestamp + durationDays * 1 days);
         bytes32 key = _accessKey(tokenId, msg.sender);
@@ -78,7 +79,7 @@ contract AgentMarketplace {
             tokenId: tokenId,
             buyer: msg.sender,
             expiresAt: expiresAt,
-            amountPaid: msg.value,
+            amountPaid: totalCost,
             isRental: true
         }));
 
@@ -89,7 +90,7 @@ contract AgentMarketplace {
         PricingInfo memory pricing = _pricing[tokenId];
         require(pricing.configured, "PRICING_NOT_SET");
         require(pricing.buyPrice > 0, "NOT_FOR_SALE");
-        require(msg.value >= pricing.buyPrice, "INSUFFICIENT_PAYMENT");
+        require(msg.value == pricing.buyPrice, "INVALID_PAYMENT");
 
         bytes32 key = _accessKey(tokenId, msg.sender);
         require(!_activeAccess[key], "ALREADY_PURCHASED");
@@ -100,11 +101,21 @@ contract AgentMarketplace {
             tokenId: tokenId,
             buyer: msg.sender,
             expiresAt: 0,
-            amountPaid: msg.value,
+            amountPaid: pricing.buyPrice,
             isRental: false
         }));
 
         emit AccessGranted(tokenId, msg.sender, false, 0);
+    }
+
+    function withdrawPayments(address payable to, uint256 amount) external onlyOwner {
+        require(to != address(0), "INVALID_RECIPIENT");
+        require(amount <= address(this).balance, "INSUFFICIENT_BALANCE");
+
+        (bool ok, ) = to.call{value: amount}("");
+        require(ok, "TRANSFER_FAILED");
+
+        emit PaymentsWithdrawn(to, amount);
     }
 
     function hasAccess(uint256 tokenId, address user) external view returns (bool) {
@@ -122,6 +133,11 @@ contract AgentMarketplace {
 
     function getAccessCount(uint256 tokenId) external view returns (uint256) {
         return _accessRecords[tokenId].length;
+    }
+
+    function getAccessRecord(uint256 tokenId, uint256 index) external view returns (AccessRecord memory) {
+        require(index < _accessRecords[tokenId].length, "INDEX_OUT_OF_BOUNDS");
+        return _accessRecords[tokenId][index];
     }
 
     function _accessKey(uint256 tokenId, address user) internal pure returns (bytes32) {

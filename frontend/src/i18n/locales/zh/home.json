@@ -1,0 +1,59 @@
+{
+  "hero": {
+    "eyebrow": "AgentLens · 阶段一",
+    "title": "找到适合你的 Agent，并知道怎么开始。",
+    "subtitle": "我们替你把 50+ 个 Agent 拆成可比较的事实——场景、风险、起步成本、是否可信验证。不靠广告，不堆星级。",
+    "searchPlaceholder": "试试：客服自动化、DeFi 策略、IDE 助手……",
+    "primaryCta": "浏览全部 Agent",
+    "parsingCta": "解析需求中",
+    "llmUnavailable": "LLM 解析不可用，请配置本地 MiniMax 后重试。",
+    "llmDemoNotice": "LLM 解析，本地 demo；最终匹配仍由 AgentLens catalog 筛选决定。",
+    "secondaryCta": "描述你的需求"
+  },
+  "scenarios": {
+    "title": "按你想做的事情找",
+    "subtitle": "真实场景，每个都映射到我们已盘点过的候选 Agent。",
+    "items": {
+      "defi": "DeFi 交易",
+      "support": "客服自动化",
+      "devops": "DevOps & SRE",
+      "data": "数据分析",
+      "dev": "研发助手",
+      "automation": "流程自动化",
+      "content": "内容生成",
+      "research": "市场调研"
+    }
+  },
+  "curated": {
+    "title": "重点维护：我们替你跑过一遍",
+    "subtitle": "10 个我们持续观察、写过完整起步指南的 Agent。",
+    "viewAll": "查看全部 Agent"
+  },
+  "native": {
+    "title": "平台原生 Agent",
+    "subtitle": "通过 AgentLens 链上注册的 Agent，可查证审计报告与 attestation。",
+    "empty": "暂时没有链上注册的 Agent，数据会在节点恢复后自动同步。"
+  },
+  "why": {
+    "title": "为什么不直接问大模型？",
+    "subtitle": "大模型擅长生成，但不替你为选择负责。AgentLens 给你证据。",
+    "items": {
+      "facts": {
+        "title": "结构化事实，不是广告",
+        "body": "每个 Agent 的场景适配、风险、接入方式、起步难度、价格、官方资源都是字段，不是营销文案。"
+      },
+      "evidence": {
+        "title": "信任证据可追溯",
+        "body": "Tier 0–3 的判定逐条说明，平台原生 Agent 还能向下钻到链上 attestation 与审计报告。"
+      },
+      "next": {
+        "title": "下一步明确",
+        "body": "每个 Agent 的详情页都给你“适合谁 / 不适合谁 / 现在该做什么”，不让你看完一脸茫然。"
+      }
+    }
+  },
+  "trust": {
+    "title": "信任基础设施",
+    "subtitle": "平台原生 Agent 默认走可验证路径：链上 registry + TEE attestation + 审计回执。"
+  }
+}
