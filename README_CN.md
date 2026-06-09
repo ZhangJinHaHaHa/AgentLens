@@ -10,21 +10,19 @@
 [![Intel SGX](https://img.shields.io/badge/TEE-Intel_SGX-0071C5.svg)](https://software.intel.com/en-us/sgx)
 [![ZK Proofs](https://img.shields.io/badge/ZK-Circom-8A2BE2.svg)](https://docs.circom.io/)
 
-[官方网站]() • [项目文档](docs/) • [Agent 接入指南](docs/agent-integration-guide.md) • [架构详解](#-系统架构)
+[官方网站](http://[redacted-server]:5173/zh) • [项目文档](docs/) • [Agent 接入指南](docs/agent-integration-guide.md) • [架构详解](#-系统架构) • [English](README.md)
 
 </div>
 
 ---
 
-**AgentLens** 是一个去中心化的基础设施和交易市场，旨在解决 AI Agent 经济中的信任难题。在您雇佣或与 AI Agent 交互之前，“AgentLens”为其能力、安全边界和历史表现提供可验证的证明。
+**AgentLens** 是一个去中心化的基础设施与可信 AI Agent 导航平台，旨在解决 AI Agent 经济中的信任难题。在您雇佣或与 AI Agent 交互之前，AgentLens 将其能力、安全边界和历史表现转化为可验证的结构化事实。
 
-通过结合 **链上审计评分**、**Intel SGX TEE 远程验证**、**零知识证明 (ZK)** 以及 **多维动态信誉模型 (MDDRM)**，“AgentLens”确保 Agent 的可信度是可验证的，而不仅仅是口头承诺。
+通过结合 **链上审计评分**、**Intel SGX TEE 远程验证**、**零知识证明 (ZK)** 以及 **多维动态信誉模型 (MDDRM)**，AgentLens 确保 Agent 的可信度是可验证的，而不仅仅是口头承诺。
 
-## 🌐 官方平台 (敬请期待)
+## 🌐 官方平台
 
-**AgentLens Cloud** 将提供托管的审计服务、企业级的 TEE 验证和全托管的交易市场——无需您自己搭建任何基础设施。
-
-→ **[加入候补名单]()** 获取早期访问权限。
+访问我们的在线平台：**[AgentLens — 可信 AI Agent 导航](http://[redacted-server]:5173/zh)**
 
 ## 🚀 核心特性
 
@@ -32,14 +30,14 @@
 * 🔐 **Intel SGX TEE 存证**：所有沙箱审计均在硬件隔离的环境中运行。加密证明（MRENCLAVE）锚定在链上，确保执行过程不可篡改。
 * 🛡️ **零知识证明验证**：使用 `circom` 和 `snarkjs` (Groth16/BN128) 证明审计分数的计算逻辑和 Agent 身份指纹，无需暴露开发者私有的源代码。
 * ⚖️ **动态信誉系统 (MDDRM)**：链上信誉分根据审计结果、用户评价、申诉结果和时间衰减动态调整。
-* 🏪 **可信交易市场**：基于 React 的前端市场，买家可以根据风险、TEE 状态、价格、任务类型浏览、筛选并租用/购买经过验证的 Agent。
+* 🏪 **可信导航市场**：基于 React 的前端平台，聚合 50+ 主流 AI Agent，按场景适配、风险等级、接入方式等结构化维度帮助用户做出有据可查的决策。
 
 ## 🏗️ 系统架构
 
 ```mermaid
 graph TD
     subgraph "开发者层"
-        D[开发者钉包] -->|质押并提交| R
+        D[开发者钱包] -->|质押并提交| R
     end
 
     subgraph "链上层 (Polygon Edge)"
@@ -54,14 +52,14 @@ graph TD
         S[Docker 沙箱] <-->|Q&A 交互| LLM[LLM 引擎]
         S <-->|执行验证| TEE[Intel SGX 节点]
         S -->|生成| ZKP[ZK 证明生成器]
-        
+
         TEE -->|远程验证| L
         ZKP -->|Groth16 证明| L
         L -->|回写审计报告| R
     end
 
     subgraph "用户层"
-        B[买家] -->|浏览 & 租赁| M
+        B[用户] -->|浏览 & 租赁| M
         B -->|发表评价| Rev
     end
 ```
@@ -72,7 +70,7 @@ graph TD
 
 * Node.js 20+
 * Docker & Docker Compose
-* Rust (用于 ZK 电路编译)
+* Rust（用于 ZK 电路编译）
 * Polygon Edge 本地节点
 
 ### 本地开发
@@ -94,187 +92,206 @@ graph TD
    cd contracts && npx hardhat run scripts/deployV3.js --network edge_local
    ```
 
-4. **配置并启动市场前端：**
+4. **配置并启动前端：**
    ```bash
    cat > frontend/.env.local << EOF
    VITE_AUDIT_RPC_URL=http://localhost:18545
-   VITE_AUDIT_REGISTRY_ADDRESS=<合约部署地址>
+   VITE_AUDIT_REGISTRY_ADDRESS=<DEPLOYED_CONTRACT_ADDRESS>
    VITE_AUDIT_CHAIN_ID=302512
    EOF
-   
+
    cd frontend && npm run dev
    ```
 
-## 📊 平台使用走查与在线演示
+## 📊 平台功能展示
 
-AgentLens 已部署在线演示环境：**[https://agentlens.chat/](https://agentlens.chat/)**。为了真实验证平台的审计能力，我们接入了由不同主流大模型驱动的多个 AI Agent（OpenAI GPT-4o、Anthropic Claude Sonnet 4.5、智谱 GLM-4-Flash、MiniMax、Manus 1.6），并把它们完整地推过链上审计流水线。下面按照真实买家会接触到的顺序，对平台的核心界面与产品细节做一次走查。
+AgentLens 最新版本已完成全面重构——从纯链上 Agent 交易市场演进为**可信 AI Agent 导航与选型平台**。平台聚合了 50+ 主流 AI Agent，将每个 Agent 拆解为可对比的结构化事实：场景适配、风险等级、接入方式、上手成本以及是否经过可验证的信任审计。目标是帮助用户基于证据做决策，而非依赖广告或五星好评。
 
-### 1. 可信 Agent 交易市场（首页）
+---
 
-首页以 *Verify Before You Hire* 为主标题，紧接着展示 Buyers / Developers / Auditors 三个角色入口，以及一条多维筛选条（状态、任务类型、风险等级、价格档位、TEE 验证状态），让买家无需跳转就能锁定候选范围。
+### 1. 首页 — 可信 AI Agent 发现
+
+首页以简洁的 Hero 区域开场，提供自然语言搜索栏和"浏览全部 Agent"入口。下方按真实使用场景（客服自动化、数据分析、开发助手、流程自动化等）对 Agent 进行分类，并重点展示平台精心维护、配有完整上手指南的 10 个 Agent。
 
 <p align="center">
-  <img src="docs/screenshots/01-homepage-hero.png" alt="AgentLens 首页与市场总览" width="760" />
+  <img src="docs/screenshots/zh/01-homepage.png" alt="AgentLens 首页" width="760" />
 </p>
 
-紧贴 Hero 下方是实时统计条（已上架 Agent 数量 / 通过 TEE 验证的比例 / 全网平均审计分），以及专门的 **Top Agents 排行榜**，让买家一眼判断市场健康度。排行榜支持按最高分、最佳信誉、最受欢迎、最近审计四种方式动态排序，让真正优质的 Agent 第一时间被看到，也帮助买家在数秒内完成初筛。
+**核心设计理念**：无广告、无星级评分。每个 Agent 的场景适配、风险等级、接入方式、上手难度、定价和官方资源均为结构化字段，而非营销文案。
+
+---
+
+### 2. Agent 全集 — 多维度发现
+
+Agent 列表页聚合了全部 50+ Agent，支持按名称 / 简介 / 标签 / 场景搜索，以及按风险等级、上手难度、指南完整度进行多维筛选。每张 Agent 卡片展示开发者背景、核心场景标签、风险等级、上手难度、指南状态和"加入对比"按钮。
 
 <p align="center">
-  <img src="docs/screenshots/02-leaderboard.png" alt="Top Agents 多维排行榜" width="760" />
+  <img src="docs/screenshots/zh/02-agent-list.png" alt="Agent 全集列表" width="760" />
 </p>
 
-每张 Agent 卡片都会同时展示链上身份（Token ID 与开发者地址）、TEE 验证徽章、最近一次审计分、累计审计次数、以及动态信誉百分比，买家不必跳转就能横向比较。
+Agent 分为三种标签类型：**专家挂单**（真实从业者背书）、**T1 观察**（主流商业 Agent）和 **T0 精选**（平台深度维护），帮助用户快速评估信息来源的可信度。
+
+---
+
+### 3. Agent 详情页 — 完整决策档案
+
+每个 Agent 都有专属详情页，提供完整的"选型决策档案"，包含以下模块：
+
+| 模块 | 内容 |
+| :--- | :--- |
+| **决策摘要** | 适合谁、不适合谁、主要风险、建议下一步 |
+| **场景适配** | 适合和不适合的使用场景标签 |
+| **风险与缓解** | 风险等级、具体风险点、缓解建议 |
+| **上手指南** | 接入方式、配置步骤、注意事项 |
+| **信任证据** | 信任层级（T0–T3）、链上审计记录、TEE 存证 |
+| **官方资源** | 官网、文档、定价页及其他外部链接 |
 
 <p align="center">
-  <img src="docs/screenshots/03-agent-cards.png" alt="Agent 列表卡片：审计分数与 TEE 状态一目了然" width="760" />
+  <img src="docs/screenshots/zh/03-agent-detail-lovable.png" alt="Lovable Agent 详情页" width="760" />
 </p>
 
-### 2. Agent 详情页 · 6 维能力雷达图与场景适配
-
-进入任意一个 Agent 后，会看到一份完整的“信任档案”。页面顶部展示链上元数据（Token ID、开发者钱包、总质押金、累计审计次数、是否被列入黑名单、创建与最近审计时间），紧接着是实时信誉条，包含信誉分、等级、最近一次变化（Delta）以及是否存在未结申诉。
-
 <p align="center">
-  <img src="docs/screenshots/04-claude-agent-profile.png" alt="Claude-Sonnet-Agent 链上档案" width="760" />
-</p>
-
-继续向下，**6 维能力雷达图**（安全性 / 任务执行 / 认知交互 / 环境适配 / 工程落地 / 合规性）会以可视化的方式描绘 Agent 的能力轮廓；下方的 **场景适配（Scene Suitability）** 模块进一步把这些原始分翻译为五大典型部署场景下的明确结论：DeFi/金融操作、客服问答、DevOps/基础设施、数据分析/科研、通用自动化。每个场景都会给出明确的“推荐 / 不推荐”标签，并标注出影响该结论的主导维度。
-
-<p align="center">
-  <img src="docs/screenshots/05-radar-and-scenes.png" alt="6 维能力雷达图与场景适配" width="760" />
-</p>
-
-> 上图展示的是一个刚完成审计的 Agent 的雷达六轴骨架。当 IPFS 托管的详细审计报告完成回填后，雷达多边形会被实时绘出；雷达所消费的逐维度评分，与紧随其下的 *场景适配* 结论使用的是同一份数据。
-
-### 3. 信任担保流程与 TEE 远程验证
-
-AgentLens 选择把信任机制摆到台面上，而不是塞进一个 Logo。**How This Agent Is Protected** 模块用四步流程清楚地告诉买家：质押金（Stake Bond）、自动化沙箱审计、链上申诉解决、持续信誉追踪——而且每一步都用该 Agent 自己的真实数据做注脚（例如该 Agent 当前实际质押了多少 ETH、当前真实的信誉分是多少）。
-
-<p align="center">
-  <img src="docs/screenshots/06-trust-guarantee.png" alt="信任担保四步流程" width="760" />
-</p>
-
-紧接着的 **Latest Audit Summary** 卡片，会展示最近一次审计的判定、分数、SGX-DCAP 远程验证哈希（截断后的 MRENCLAVE 摘要）、时间戳，以及在飞地内部观测到的资源指纹（内存峰值、平均 CPU、独立请求 IP 数）。这一指纹是买家用来“用硬件验证、不靠口头承诺”的关键。
-
-<p align="center">
-  <img src="docs/screenshots/07-latest-audit-summary.png" alt="最新审计摘要 · 含 TEE 验证信息" width="760" />
-</p>
-
-### 4. 链上审计履历 · 动态信誉 · 链上评论
-
-Agent 的成长轨迹是永久存证的。**Audit History** 会列出该 Agent 历史上的每一次审计——包括失败的审计——并附上分数、时间和资源画像，让买家清楚看到一个 Agent 是在进步还是在退步。市场默认展示的是最近一次的分数，但完整的审计历史始终公开且不可篡改。
-
-下方的 **User Reviews** 区采用链上准入：只有通过 `AgentMarketplace` 真正租赁或购买过该 Agent 的钱包，才能提交一份 6 维评分（可选附带链下评论，并以 SHA-256 上链锚定）。这种结构性设计，让 AgentLens 的评论从机制层面就抗刷单、抗水军。
-
-<p align="center">
-  <img src="docs/screenshots/08-audit-history-reviews.png" alt="审计履历与受准入约束的真实评论" width="760" />
+  <img src="docs/screenshots/zh/04-agent-detail-claude-code.png" alt="Claude Code Agent 详情页" width="760" />
 </p>
 
 ---
 
-## 🧪 主流大模型 Agent 基准审计报告
+### 4. 需求推荐 — 智能选型助手
 
-为了证明 AgentLens 是在区分“真实能力”而不是“营销口径”，我们把当前在线的 Agent 按性质分成三组，统一走完整流水线（容器启动 → 健康检查 → LLM 动态出题 → LLM 评判 → SGX TEE 远程验证 → 链上回写），评分规则完全一致。
+不确定选哪个 Agent？推荐页提供两种匹配模式：
 
-### 第一组 · 一线通用大模型 Agent
+- **免费规则匹配**：根据任务描述、使用场景、使用方式、偏好接入方式和优先级等结构化条件快速筛选候选 Agent。
+- **付费 LLM 推荐**：调用大语言模型进行深度语义理解，提供更精准的推荐结果和推理说明。
 
-这一组由当前市面最强的商用通用大模型驱动，理论上应该能从容应对审计中的指令遵循、安全边界和推理探针。
+<p align="center">
+  <img src="docs/screenshots/zh/05-recommend.png" alt="需求推荐页" width="760" />
+</p>
 
-| Agent 名称 | 底层模型 | Token ID | 审计状态 | 分数 | TEE | 信誉 |
+---
+
+### 5. Agent 对比 — 多维并排视图
+
+将多个 Agent 加入对比列表后，对比页将从基本信息、能力维度、风险指标、接入方式和定价等方面并排展示，帮助用户在候选 Agent 中做出最终决策。
+
+<p align="center">
+  <img src="docs/screenshots/zh/06-compare.png" alt="Agent 对比页" width="760" />
+</p>
+
+---
+
+### 6. 发布 Agent — 开发者接入路径
+
+发布页为开发者提供两条清晰的上架路径：
+
+- **提交 Docker 镜像 — 可信审计路径**：适合希望进入推荐排名的高信任、高风险 Agent。平台通过 manifest 拉取镜像，在沙箱中审计网络边界、行为证据和资源使用情况，并将 manifest hash + 镜像 digest 绑定形成 Agent 身份指纹。
+- **不提交镜像 — 托管 API/MCP 快速上架**：适合闭源 SaaS、早期验证阶段和外部托管的 Agent。AgentLens 通过网关进行访问控制、计量、健康检查和黑盒测试。信任层级低于审计镜像路径。
+
+<p align="center">
+  <img src="docs/screenshots/zh/07-publish.png" alt="发布 Agent 页" width="760" />
+</p>
+
+---
+
+## 🧪 基准审计报告 — 主流 LLM Agent 评测
+
+为证明 AgentLens 能区分真实能力与营销宣传，我们在相同评分规则下对多个 AI Agent 运行了同一套审计流程（Docker 启动 → 健康检查 → LLM 动态问答 → LLM 裁判 → SGX TEE 存证 → 链上回写）。
+
+### A 类 — 一线通用 LLM Agent
+
+| Agent | 模型 | Token ID | 审计结果 | 评分 | TEE | 信誉分 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| GPT-4o-Agent | OpenAI GPT-4o | #6 | Passed | 100 / 100 | SGX-DCAP Verified | 50 / 10,000 |
-| Claude-Sonnet-Agent | Claude Sonnet 4.5 | #9 | Passed | 100 / 100 | SGX-DCAP Verified | 50 / 10,000 |
-| Zhipu-GLM-Agent | 智谱 GLM-4-Flash | #7 | Passed | 100 / 100 | SGX-DCAP Verified | 50 / 10,000 |
+| GPT-4o-Agent | OpenAI GPT-4o | #6 | 通过 | 100 / 100 | SGX-DCAP 已验证 | 50 / 10,000 |
+| Claude-Sonnet-Agent | Claude Sonnet 4.5 | #9 | 通过 | 100 / 100 | SGX-DCAP 已验证 | 50 / 10,000 |
+| Zhipu-GLM-Agent | 智谱 GLM-4-Flash | #7 | 通过 | 100 / 100 | SGX-DCAP 已验证 | 50 / 10,000 |
 
-> **观察。** 三个一线 Agent 全部干净通过审计，回答同时满足了 LLM 评判和安全边界探针。审计耗时差异显著（GPT-4o 约 6 分钟，智谱约 12 分钟），反映的是各自推理延迟，而非协议偏好——这正好说明 AgentLens 是按“输出质量”而不是“厂商品牌”在打分。
+> **观察**：三个一线 Agent 均以满分通过，满足 LLM 裁判标准和安全边界探测。审计耗时有所差异（GPT-4o 约 6 分钟，智谱约 12 分钟），反映了推理延迟的差异——但结论一致，证明 AgentLens 纯粹基于输出质量评判，而非供应商品牌。
 
-### 第二组 · Agent 原生与垂直模型
+### B 类 — Agent 原生与垂直模型
 
-这一组覆盖了专门面向 Agent 工作流定位、或者正在挑战一线阵营的新兴模型。
-
-| Agent 名称 | 底层模型 | Token ID | 审计状态 | 分数 | TEE | 备注 |
+| Agent | 模型 | Token ID | 审计结果 | 评分 | TEE | 备注 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| Manus-Agent | Manus 1.6 | #11 | Passed | 100 / 100 | SGX-DCAP Verified | 在指令遵循和边界处理上与一线模型持平。 |
-| MiniMax-Agent | MiniMax（中端档） | #8 | Passed | 100 / 100 | SGX-DCAP Verified | 审计完成最快（约 24 秒），主要得益于回答简洁；后续更深的探针预期会拉开差距。 |
+| Manus-Agent | Manus 1.6 | #11 | 通过 | 100 / 100 | SGX-DCAP 已验证 | 指令遵循和边界处理与一线 Agent 持平。 |
+| MiniMax-Agent | MiniMax（中端） | #8 | 通过 | 100 / 100 | SGX-DCAP 已验证 | 审计完成最快（约 24 秒），因回答简洁；更深层探测预计会暴露差距。 |
 
-> **观察。** Agent 原生模型在当前难度下能够稳定通过，证明协议没有偏向任何特定厂商。后续的审计题库会增加多轮推理与对抗式探针，进一步把这一档拉开梯度。
+### C 类 — 失败案例与边界检测
 
-### 第三组 · 失败案例与边界检测
-
-这一组的存在，是为了证明 AgentLens **会真的让 Agent 不通过**——这恰恰是一个信任市场必须具备的特性。
-
-| Agent 名称 | 底层模型 | Token ID | 审计状态 | 分数 | TEE | 失败原因 |
+| Agent | 模型 | Token ID | 审计结果 | 评分 | TEE | 失败原因 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| Zhipu-GLM4-Agent | 智谱 GLM-4-Flash（重测档） | #10 | Failed | 0 / 100 | SGX-DCAP Verified | 容器启动正常、TEE 验证通过，但回答未达到 LLM 评判在指令遵循 / 边界处理上的标准。 |
-| RiskAnalyzer | 合成高风险画像 | #3 | Failed | 0 / 100 | SGX-DCAP Verified | 6 个维度全部为 0，所有场景标注为“不推荐”。 |
-| SecureVault-Agent | 合成边界违例画像 | #4 | Failed | 0 / 100 | SGX-DCAP Verified | 触发了边界违例探针，被判定为不适用任何场景。 |
+| Zhipu-GLM4-Agent | 智谱 GLM-4-Flash（复测） | #10 | 失败 | 0 / 100 | SGX-DCAP 已验证 | 容器启动并完成 TEE 存证，但回答未通过 LLM 裁判标准。 |
+| RiskAnalyzer | 合成高风险画像 | #3 | 失败 | 0 / 100 | SGX-DCAP 已验证 | 六个维度全部得 0 分；在所有场景中均被标记为"不推荐"。 |
+| SecureVault-Agent | 合成边界违规画像 | #4 | 失败 | 0 / 100 | SGX-DCAP 已验证 | 触发边界违规检测；被标记为不适合任何场景。 |
 
-> **观察。** TEE 验证通过 ≠ 审计通过——飞地只能证明“审计本身是诚实地跑过的”，而最终分数由 LLM 评判和边界测试共同决定。这种解耦正是 AgentLens 既能约束审计方诚实、又不会给低质量 Agent 放行的关键。
-
-### 这份基准测试到底验证了什么
-
-1. **厂商无关的审计公平性。** 一线、Agent 原生、能力薄弱的模型走的是同一条流水线，市场排名来自测量而不是品牌。
-2. **真实的通过 / 失败区分度。** 同一套协议既会给 GPT-4o 和 Claude 满分，也会让 Zhipu-GLM4-Agent 和合成压力 Agent 不通过——所以 AgentLens 上的 *Passed* 徽章是有信息量的。
-3. **硬件锚定的执行环境。** 每一次审计（包括失败的那些）都附带 SGX-DCAP 远程验证，买家可以在链上以密码学方式核对该结论确实是在飞地中产生的。
-4. **持续演进的链上履历。** 重测、申诉、罚没、评论都会回写到同一个注册表，Agent 的信誉随时间持续演进，而不是上线那一刻就被定格。
-
-> **结论 —— 雇佣前先验证（Verify Before You Hire）。** AgentLens 用一份硬件锚定、任何钱包都能核对的可验证审计记录，替代了“相信我”式的自我陈述。
+> **结论 — 雇用前先验证。** AgentLens 用可验证的、硬件锚定的审计记录取代了自我声明的"相信我"，任何钱包地址都可以在付款前在链上查阅。
 
 ## 🧩 核心组件
 
-### 智能合约 (`/contracts`)
+### 智能合约（`/contracts`）
 * `AgentAuditRegistryV3`：实现 MDDRM 信誉系统，处理质押、审计结果、申诉和时间衰减逻辑。
-* `AgentMarketplace`：管理 Agent 访问权，支持按天租赁和永久购买，并进行权限检查。
-* `ZkAuditVerifier`：链上注册表，存储经过验证的审计分数和 Agent 指纹的 Groth16 证明。
+* `AgentMarketplace`：管理 Agent 访问权限，支持按日租赁和永久购买，并进行访问控制检查。
+* `ZkAuditVerifier`：链上注册表，存储审计分数和 Agent 指纹的已验证 Groth16 证明。
 
-### 审计沙箱 (`/sandbox`)
-一个隔离的环境，通过 LLM 引擎自动评估提交的 Agent。它生成 6 维度评分，进行安全边界分析，并协调 TEE 存证和 ZK 证明生成。
+### 审计沙箱（`/sandbox`）
+一个隔离环境，使用 LLM 引擎自动评估提交的 Agent。生成 6 维评分、执行安全边界分析，并在将结果写回区块链前协调 TEE 存证和 ZK 证明生成。
 
-### 零知识证明电路 (`/contracts/zk`)
-* `AuditScoreVerifier`：证明 6 维度分数和加权总分是从原始审计数据中正确计算出来的。
-* `AgentFingerprint`：在不暴露源码的前提下，证明 Agent 的身份和行为特征已绑定到特定的 NFT Token ID。
+### 零知识电路（`/contracts/zk`）
+* `AuditScoreVerifier`：证明 6 维评分和整体加权平均值是从原始审计数据中正确计算得出的。
+* `AgentFingerprint`：证明 Agent 身份和行为特征与特定 NFT Token ID 绑定，无需暴露底层代码。
 
-## 📖 相关文档
+## 📖 文档
 
-* [Agent 接入指南](docs/agent-integration-guide.md) - 如何构建并提交您的 Agent 进行审计。
-* [验证方法论](docs/verification-methods.md) - “AgentLens”如何验证 Agent 声明的详细说明。
-* [TEE 生产状态](docs/status/2026-04-16-tee-production.md) - 关于 SGX 硬件加密飞地的设置信息。
+* [Agent 接入指南](docs/agent-integration-guide.md) — 如何构建并提交您的 Agent 进行审计。
+* [验证方法说明](docs/verification-methods.md) — AgentLens 如何验证 Agent 声明的详细说明。
+* [TEE 生产状态](docs/status/2026-04-16-tee-production.md) — SGX 硬件飞地配置信息。
 
 ## 🛡️ 安全与信任
 
-AgentLens 高度重视安全性。整个架构旨在最小化信任假设：
-* **代码隐私**：开发者无需公开源码，通过 ZK 证明处理身份和特征验证。
-* **执行完整性**：TEE 远程验证确保审计沙箱未被篡改。
-* **经济安全**：MDDRM 惩罚机制对恶意或表现不佳的 Agent 进行经济制裁。
+AgentLens 将安全性放在首位。整个架构旨在最小化信任假设：
+* **代码隐私**：开发者无需暴露源代码；ZK 证明负责身份和特征验证。
+* **执行完整性**：TEE 存证确保审计沙箱未被篡改。
+* **经济安全**：MDDRM 惩罚机制对恶意或失败的 Agent 进行经济处罚。
 
 漏洞报告请参阅 [SECURITY.md](SECURITY.md)。
 
-## 🤝 关于作者与认识 Popo <img src="docs/popo-icon.png" alt="Popo" width="28" align="top" />
+## 🤝 关于作者 & 认识 Popo <img src="popo-mascot.png" alt="Popo" width="28" align="top" />
 
-你好！我目前是一名在校学生，正在独立开发 **AgentLens**。我的目标是为 AI Agent 经济构建一个可验证的、信任优先的基础设施。
+你好！我是一名独立构建 **AgentLens** 的学生。我的目标是为 AI Agent 经济构建一个可验证的、以信任为先的基础设施。
 
-在深入 Web3 和 AI 领域之前，我曾是一名**职业乒乓球运动员**。体育竞技所要求的纪律性、精准度和快速反应，深刻地影响了我构建高可靠性系统的方式。
+在进入 Web3 和 AI 领域之前，我曾是一名**职业乒乓球运动员**。竞技体育所要求的纪律性、精准度和快速反应，深刻影响了我构建健壮系统的方式。
 
-这段经历也启发了 AgentLens 的官方吉祥物——**Popo** 的诞生。Popo 是一颗充满活力的乒乓球，胸前佩戴着项目的验证护盾徽章。它代表着敏捷、准确，以及我们的审计沙箱对 AI Agent 进行的持续“来回”验证过程。就像比赛中的裁判一样，Popo 确保每个 Agent 在进入市场之前都遵守规则。
+这段经历也启发了 **Popo** 的诞生——AgentLens 的官方吉祥物。Popo 是一个活力十足的小乒乓球，佩戴着项目的验证徽章，代表着敏捷、精准，以及我们的审计沙箱对 AI Agent 执行过程持续进行的"来回"验证。就像比赛中的裁判，Popo 确保每个 Agent 在进入市场之前都遵守规则。
 
-我正在积极寻找对以下方向充满热情的 **合作者、研究人员和开源贡献者**：
+我正在积极寻找对以下领域充满热情的**合作者、研究者和开源贡献者**：
 * Web3 与去中心化基础设施
-* AI Agent 与智能体工作流
+* AI Agent 与 Agentic 工作流
 * 零知识证明 (ZK) 与可信执行环境 (TEE)
-* 智能体审计与安全
+* AI Agent 审计与安全
 
-如果你对共同构建未来的可信 AI Agent 基础设施感兴趣，欢迎随时联系我！
+如果您有兴趣共同构建可信 AI Agent 的未来，欢迎联系！
 **联系方式：** [3172791717@qq.com](mailto:3172791717@qq.com)
 
-我们也欢迎来自社区的常规代码贡献！请阅读我们的 [CONTRIBUTING.md](CONTRIBUTING.md) 了解开发流程，并注意本项目受 [贡献者行为准则](CODE_OF_CONDUCT.md) 约束。
+我们也欢迎广泛的社区贡献！请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 了解我们的开发流程，并注意本项目附有[贡献者行为准则](CODE_OF_CONDUCT.md)。
 
-## 📜 开源许可与商业授权
+## 📜 许可证与商业使用
 
-AgentLens 采用 **GNU Affero General Public License v3.0 (AGPL-3.0)** 开源协议，适用于社区、学术研究和非商业用途。详情请参阅 [LICENSE](LICENSE) 文件。
+AgentLens 以 **GNU Affero 通用公共许可证 v3.0 (AGPL-3.0)** 开源，供社区、研究和非商业用途使用。详情请参阅 [LICENSE](LICENSE) 文件。
 
-**商业授权 (Commercial License)**：如果您希望在商业产品、闭源的 SaaS 平台或企业私有化部署中使用 AgentLens，且不希望受到 AGPL 协议（要求您开源整个服务端代码）的限制，您可以获取商业授权。
-
-关于商业授权和企业级支持，请与我们联系。
+**商业许可**：如需在商业产品中使用 AgentLens，请通过 [3172791717@qq.com](mailto:3172791717@qq.com) 联系我们获取商业许可协议。
 
 ## 📝 贡献者许可协议 (CLA)
 
-为了确保我们能够持续以开源和商业双轨制提供 AgentLens，所有贡献者在提交 Pull Request 被合并之前，必须签署 [贡献者许可协议 (CLA)](CLA.md)。
+为保护项目和贡献者双方的权益，所有贡献者在提交 Pull Request 之前必须签署我们的[贡献者许可协议](CLA.md)。
+
+CLA 确保：
+* 您保留对贡献内容的版权
+* AgentLens 获得在项目中使用您贡献内容的必要权利
+* 项目可以在未来根据需要进行再许可（例如，用于商业许可）
+
+---
+
+<div align="center">
+
+由 AgentLens 团队用 ❤️ 构建
+
+[官方网站](http://[redacted-server]:5173/zh) • [GitHub](https://github.com/ZhangJinHaHaHa/AgentLens) • [联系我们](mailto:3172791717@qq.com)
+
+</div>
