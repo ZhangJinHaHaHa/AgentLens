@@ -126,7 +126,7 @@ The homepage opens with a clean Hero section featuring a natural-language search
 The Agent list page aggregates all 50+ Agents with search (by name / description / tag / scenario) and multi-dimensional filtering by risk level, onboarding difficulty, and guide availability. Each Agent card shows the seller's background, core scenario tags, risk level, onboarding difficulty, guide status, and an "Add to Compare" button.
 
 <p align="center">
-  <img src="docs/screenshots/zh/02-agent-list.png" alt="Agent Catalog" width="760" />
+  <img src="docs/screenshots/en/02-agent-list.png" alt="Agent Catalog" width="760" />
 </p>
 
 Agents are categorized into three label types: **Expert Listing** (backed by real practitioners), **T1 Watch** (mainstream commercial Agents), and **T0 Curated** (deeply maintained by the platform), helping users quickly assess the credibility of each information source.
