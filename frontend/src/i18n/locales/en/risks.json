@@ -1,0 +1,7 @@
+{
+  "explainers": {
+    "low": "Overall risk is contained — standard usage doesn't require extra approval.",
+    "medium": "Mid-range risk — pilot in a bounded data/traffic scope and review periodically.",
+    "high": "High risk — combine with human review, sandboxing or isolated resource pools."
+  }
+}

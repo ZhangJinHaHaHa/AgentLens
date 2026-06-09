@@ -1,0 +1,81 @@
+{
+  "appName": "AgentLens",
+  "tagline": "Decision platform for trustworthy AI agents",
+  "nav": {
+    "agents": "Agents",
+    "compare": "Compare",
+    "recommend": "Recommend",
+    "publish": "Publish"
+  },
+  "actions": {
+    "search": "Search",
+    "viewDetails": "View details",
+    "addToCompare": "Add to compare",
+    "addedToCompare": "Added",
+    "removeFromCompare": "Remove",
+    "viewOfficial": "Open official site",
+    "viewDocs": "View docs",
+    "startCompare": "Start compare",
+    "describeNeed": "Describe what you need",
+    "clearFilters": "Clear filters",
+    "back": "Back",
+    "loadMore": "Load more",
+    "viewAuditReport": "View audit report",
+    "openOnboarding": "Open getting started"
+  },
+  "language": {
+    "label": "Language",
+    "zh": "中文",
+    "en": "English"
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "artLabel": "Background style",
+    "art": {
+      "swiss": "Swiss Precision",
+      "atelier": "Artisanal Professional",
+      "nocturne": "Post-Impressionist Modern",
+      "pixel": "Bit-Perfect Retro",
+      "crimson": "Crimson Trust & Parchment"
+    }
+  },
+  "wallet": {
+    "label": "Wallet",
+    "connecting": "Connecting"
+  },
+  "agentSource": {
+    "marketplace": "Expert",
+    "curated": "Curated",
+    "listed": "Listed",
+    "native": "Platform native"
+  },
+  "risk": {
+    "low": "Low risk",
+    "medium": "Medium risk",
+    "high": "High risk"
+  },
+  "complexity": {
+    "low": "Easy",
+    "medium": "Medium",
+    "high": "Complex"
+  },
+  "access": {
+    "api": "API / integration",
+    "saas": "Use in browser",
+    "cli": "Command line",
+    "browser_ext": "Browser extension",
+    "local": "Runs on your device",
+    "cloud": "Runs on their cloud"
+  },
+  "status": {
+    "loading": "Loading…",
+    "empty": "Nothing here yet",
+    "error": "Something went wrong"
+  },
+  "footer": {
+    "tagline": "Pick agents with evidence, not marketing.",
+    "rights": "© {{year}} AgentLens. Information provided as-is."
+  }
+}

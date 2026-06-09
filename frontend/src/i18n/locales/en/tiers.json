@@ -1,0 +1,35 @@
+{
+  "labels": {
+    "tier0": "Tier 0 · Listed",
+    "tier1": "Tier 1 · Observed",
+    "tier2": "Tier 2 · Verified",
+    "tier3": "Tier 3 · High-verified"
+  },
+  "shortLabels": {
+    "tier0": "T0 Listed",
+    "tier1": "T1 Observed",
+    "tier2": "T2 Verified",
+    "tier3": "T3 High"
+  },
+  "descriptions": {
+    "tier0": "Only the baseline facts are recorded — we haven't run the agent ourselves and there's no third-party evidence yet.",
+    "tier1": "We or the community have a recent first-hand observation worth surfacing.",
+    "tier2": "Verifiable evidence exists, such as an audit receipt or publisher attestation.",
+    "tier3": "Full chain-of-custody: audit, attestation hash and reputation signals all line up."
+  },
+  "reasons": {
+    "hasObservation": "Has a recent external observation",
+    "hasAuditPassed": "Latest audit passed",
+    "hasAttestationHash": "Audit record carries an attestation hash",
+    "hasReportHash": "Audit record carries a report hash",
+    "hasReputation": "Reputation score above threshold",
+    "noEvidence": "Only baseline content fields are available"
+  },
+  "evidence": {
+    "observedAt": "Last observed",
+    "auditPassed": "Audit result",
+    "reportHash": "Audit report hash",
+    "attestationHash": "Attestation hash",
+    "reputation": "Reputation score"
+  }
+}

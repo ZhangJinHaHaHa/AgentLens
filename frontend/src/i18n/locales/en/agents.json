@@ -1,0 +1,77 @@
+{
+  "title": "All agents",
+  "subtitle": "Combine filters across the dimensions that matter to find your first try.",
+  "searchPlaceholder": "Search by name, intro, tag or scenario",
+  "results": {
+    "count_one": "{{count}} result",
+    "count_other": "{{count}} results",
+    "empty": "No matching agents.",
+    "emptyHint": "Try removing some filters or changing the keyword.",
+    "llmUnavailable": "LLM parsing is unavailable; falling back to keyword search.",
+    "relaxHint": "{{filter}} is probably the tightest constraint; removing it would recover about {{count}} candidates.",
+    "showAll": "Show all agents"
+  },
+  "card": {
+    "intro": "Intro",
+    "scenarios": "Scenarios",
+    "risk": "Risk",
+    "complexity": "Complexity",
+    "onboarding": "Guide",
+    "seller": "Seller",
+    "hasOnboarding": "Yes",
+    "noOnboarding": "No",
+    "addToCompare": "Add to compare",
+    "addedToCompare": "Added to compare"
+  },
+  "filters": {
+    "title": "Filters",
+    "scenario": "Scenario",
+    "tags": "Tags",
+    "category": "Category",
+    "type": "Agent type",
+    "access": "Access type",
+    "trustTier": "Trust tier",
+    "risk": "Risk level",
+    "complexity": "Complexity",
+    "price": "Price",
+    "auditStatus": "Audit status",
+    "scoreBand": "Trust score",
+    "priceModes": {
+      "free": "Free / trial",
+      "paid": "Paid",
+      "rentable": "Platform rentable",
+      "unknown": "Unknown"
+    },
+    "auditStatuses": {
+      "passed": "Audit passed",
+      "failed": "Audit failed",
+      "pending": "Audit pending",
+      "no-audit": "No audit"
+    },
+    "scoreBands": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low",
+      "unknown": "Unknown"
+    },
+    "onboarding": "Has getting-started guide",
+    "audit": "Has audit report",
+    "rentable": "Rentable on platform",
+    "clear": "Clear filters",
+    "active": "Active",
+    "removeChip": "Remove {{label}}",
+    "chips": {
+      "query": "Search",
+      "need": "Need",
+      "tag": "Tag"
+    }
+  },
+  "sort": {
+    "label": "Sort",
+    "default": "Default",
+    "newest": "Newest first",
+    "trust": "By trust tier",
+    "risk": "By risk (low → high)",
+    "complexity": "By complexity (low → high)"
+  }
+}

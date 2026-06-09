@@ -1,0 +1,30 @@
+{
+  "title": "Audit report",
+  "subtitle": "Read the user summary first, then expand technical evidence if needed.",
+  "back": "Back to agent detail",
+  "summary": {
+    "title": "User summary",
+    "score": "Audit score",
+    "primaryRisk": "Primary risk",
+    "safetyBoundary": "Safety boundary",
+    "nextStep": "Next step",
+    "verdict": {
+      "passed": "Passed",
+      "failed": "Failed",
+      "pending": "Pending",
+      "slashed": "Slashed",
+      "compensated": "Compensated",
+      "unknown": "Unknown"
+    },
+    "hash": {
+      "verified": "Report hash verified",
+      "unavailable": "On-chain summary only",
+      "mismatch": "Report hash mismatch"
+    }
+  },
+  "technical": {
+    "title": "Technical evidence",
+    "reportBody": "Report body",
+    "unavailable": "Detailed report is unavailable."
+  }
+}

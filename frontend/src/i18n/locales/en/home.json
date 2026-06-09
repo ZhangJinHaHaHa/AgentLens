@@ -1,0 +1,59 @@
+{
+  "hero": {
+    "eyebrow": "AgentLens · Phase 1",
+    "title": "Pick the right agent — and know how to start.",
+    "subtitle": "We turn 50+ agents into comparable facts — scenarios, risks, getting-started cost, verifiable trust. No ads, no five-star roulette.",
+    "searchPlaceholder": "Try: support automation, DeFi strategy, IDE copilot…",
+    "primaryCta": "Browse all agents",
+    "parsingCta": "Parsing need",
+    "llmUnavailable": "LLM parsing is unavailable. Configure local MiniMax and try again.",
+    "llmDemoNotice": "LLM parsing, local demo; final matching is still decided by the AgentLens catalog filters.",
+    "secondaryCta": "Describe what you need"
+  },
+  "scenarios": {
+    "title": "Start from the job you have",
+    "subtitle": "Real scenarios mapped to candidates we've already vetted.",
+    "items": {
+      "defi": "DeFi trading",
+      "support": "Customer support",
+      "devops": "DevOps & SRE",
+      "data": "Data analysis",
+      "dev": "Developer assistant",
+      "automation": "Workflow automation",
+      "content": "Content generation",
+      "research": "Market research"
+    }
+  },
+  "curated": {
+    "title": "Curated: we ran them so you don't have to",
+    "subtitle": "Ten agents we actively observe and write full getting-started guides for.",
+    "viewAll": "Browse all agents"
+  },
+  "native": {
+    "title": "Platform-native agents",
+    "subtitle": "Agents registered on-chain through AgentLens. Audit reports and attestations are verifiable.",
+    "empty": "No on-chain registrations yet. Data will sync automatically once a node is reachable."
+  },
+  "why": {
+    "title": "Why not just ask a chatbot?",
+    "subtitle": "LLMs are great at generating — they don't take responsibility for your pick. AgentLens gives you evidence.",
+    "items": {
+      "facts": {
+        "title": "Structured facts, not pitches",
+        "body": "Scenarios, risks, access type, complexity, pricing and official links live as fields, not marketing copy."
+      },
+      "evidence": {
+        "title": "Trust evidence is traceable",
+        "body": "Tier 0–3 decisions come with reasons. For platform-native agents you can drill down to on-chain attestations and audit reports."
+      },
+      "next": {
+        "title": "There's always a next step",
+        "body": "Every detail page tells you who it fits, who it doesn't, and what to actually do next — not just a brochure."
+      }
+    }
+  },
+  "trust": {
+    "title": "Trust infrastructure",
+    "subtitle": "Platform-native agents default to a verifiable path: on-chain registry, TEE attestation and audit receipts."
+  }
+}

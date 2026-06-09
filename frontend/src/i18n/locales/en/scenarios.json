@@ -1,0 +1,18 @@
+{
+  "ids": {
+    "defi-trading": "DeFi trading",
+    "customer-support": "Customer support",
+    "devops-sre": "DevOps & SRE",
+    "data-analysis": "Data analysis",
+    "developer-assistant": "Developer assistant",
+    "workflow-automation": "Workflow automation",
+    "content-generation": "Content generation",
+    "market-research": "Market research",
+    "ide-coding": "In-IDE coding",
+    "agentic-coding": "Agentic coding",
+    "ui-prototyping": "UI prototyping",
+    "fullstack-prototyping": "Full-stack prototyping",
+    "knowledge-qa": "Knowledge Q&A",
+    "multimodal-chat": "Multimodal chat"
+  }
+}

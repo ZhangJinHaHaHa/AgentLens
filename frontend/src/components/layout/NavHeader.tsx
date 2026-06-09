@@ -9,6 +9,7 @@ import { useLocale } from "@/i18n/useLocale";
 import { truncateAddress } from "@/lib/format";
 import { useCompareSelection } from "@/hooks/useCompareSelection";
 
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -72,6 +73,7 @@ export function NavHeader(): JSX.Element {
                   : t("wallet.label")}
             </span>
           </Button>
+          <LanguageSwitcher />
           <ThemeToggle />
         </div>
       </div>
