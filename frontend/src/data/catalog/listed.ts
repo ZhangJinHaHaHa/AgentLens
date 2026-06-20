@@ -30,7 +30,7 @@ export const listedAgents: AgentCatalogEntry[] = [
     ],
     accessTypes: ["saas", "api"],
     complexity: "low",
-    hasOnboardingGuide: false,
+    hasOnboardingGuide: true,
     officialUrl: "https://github.com/features/copilot",
     docsUrl: "https://docs.github.com/copilot"
   },
@@ -59,31 +59,6 @@ export const listedAgents: AgentCatalogEntry[] = [
     hasOnboardingGuide: false,
     officialUrl: "https://windsurf.com",
     docsUrl: "https://docs.windsurf.com"
-  },
-  {
-    id: "perplexity",
-    source: "listed",
-    name: "Perplexity",
-    vendor: "Perplexity AI",
-    intro: {
-      zh: "对话式搜索与研究助手，会附带可点击的引用来源。",
-      en: "Conversational search and research assistant with inline source citations."
-    },
-    category: "Research assistant",
-    tags: ["search", "research", "rag"],
-    scenarios: [scenario("market-research"), scenario("knowledge-qa"), scenario("content-generation")],
-    unsuitableScenarios: [scenario("ide-coding")],
-    recommendedFor: [
-      { zh: "需要带引用的快速调研", en: "Quick research with traceable citations" }
-    ],
-    riskLevel: "low",
-    riskNotes: [
-      { zh: "答案质量依赖网络索引质量，重要决策仍需人核。", en: "Answer quality depends on the live index — verify critical claims yourself." }
-    ],
-    accessTypes: ["saas", "api"],
-    complexity: "low",
-    hasOnboardingGuide: false,
-    officialUrl: "https://www.perplexity.ai"
   },
   {
     id: "you-com",
@@ -134,31 +109,6 @@ export const listedAgents: AgentCatalogEntry[] = [
     officialUrl: "https://www.notion.so/product/ai"
   },
   {
-    id: "intercom-fin",
-    source: "listed",
-    name: "Intercom Fin",
-    vendor: "Intercom",
-    intro: {
-      zh: "面向客服场景的 AI agent，可以接入帮助中心数据自动答客户问题。",
-      en: "Customer-support AI agent that ingests help-centre data and answers user questions automatically."
-    },
-    category: "Support agent",
-    tags: ["support", "intercom", "knowledge"],
-    scenarios: [scenario("customer-support"), scenario("knowledge-qa")],
-    unsuitableScenarios: [scenario("ide-coding")],
-    recommendedFor: [
-      { zh: "客服量大但希望保持品牌口吻的团队", en: "Support teams with high volume that want to keep brand voice" }
-    ],
-    riskLevel: "medium",
-    riskNotes: [
-      { zh: "回答质量与帮助中心一致性强相关，需要先做内容治理。", en: "Answer quality tracks help-centre quality — invest in content governance first." }
-    ],
-    accessTypes: ["saas", "api"],
-    complexity: "medium",
-    hasOnboardingGuide: false,
-    officialUrl: "https://www.intercom.com/fin"
-  },
-  {
     id: "zapier-agents",
     source: "listed",
     name: "Zapier Agents",
@@ -180,7 +130,7 @@ export const listedAgents: AgentCatalogEntry[] = [
     ],
     accessTypes: ["saas", "api"],
     complexity: "medium",
-    hasOnboardingGuide: false,
+    hasOnboardingGuide: true,
     officialUrl: "https://zapier.com/agents"
   },
   {
@@ -205,8 +155,67 @@ export const listedAgents: AgentCatalogEntry[] = [
     ],
     accessTypes: ["local", "saas", "api"],
     complexity: "medium",
-    hasOnboardingGuide: false,
+    hasOnboardingGuide: true,
     officialUrl: "https://n8n.io"
+  },
+  {
+    id: "openclaw",
+    source: "listed",
+    name: "OpenClaw",
+    vendor: "OpenClaw / open-source community",
+    intro: {
+      zh: "中文用户常叫“龙虾”的开源个人 AI 助手网关，把 WhatsApp、Telegram、Slack 等消息入口连接到本机或服务器上的 AI 助手。",
+      en: "Open-source personal AI assistant gateway, often nicknamed 'lobster' in Chinese communities, connecting chat channels to an assistant running on your machine or server."
+    },
+    category: "Personal agent gateway",
+    tags: ["openclaw", "openclow", "龙虾", "lobster", "open-source", "self-host", "messaging", "automation"],
+    scenarios: [scenario("workflow-automation"), scenario("developer-assistant"), scenario("knowledge-qa")],
+    unsuitableScenarios: [scenario("defi-trading")],
+    recommendedFor: [
+      {
+        zh: "想把个人 Agent 常驻在 WhatsApp、Telegram、Slack 等消息入口里的进阶用户",
+        en: "Advanced users who want a persistent personal agent inside channels like WhatsApp, Telegram or Slack"
+      },
+      {
+        zh: "能自行管理模型密钥、账号权限、服务器和本地运行环境的技术用户",
+        en: "Technical users who can manage model keys, account permissions, servers and local runtime environments"
+      }
+    ],
+    riskLevel: "high",
+    riskNotes: [
+      {
+        zh: "它会桥接聊天账号、模型密钥和工具动作，配置不当可能暴露私人消息或触发非预期操作。",
+        en: "It bridges chat accounts, model keys and tool actions; misconfiguration can expose private messages or trigger unintended actions."
+      },
+      {
+        zh: "当前仅作为外部 listed Agent 收录，平台尚未完成审计或起步指南。",
+        en: "Currently listed as an external agent only; the platform has not completed an audit or onboarding guide."
+      }
+    ],
+    riskMitigation: [
+      {
+        zh: "先用低权限账号、测试频道和审批模式试跑，再逐步接入真实邮箱、日程或业务账号。",
+        en: "Start with low-privilege accounts, test channels and approval mode before connecting real email, calendar or business accounts."
+      },
+      {
+        zh: "把模型密钥、聊天凭证和插件权限分开管理，并保留运行日志便于排查。",
+        en: "Separate model keys, chat credentials and plugin permissions, and keep runtime logs for review."
+      }
+    ],
+    accessTypes: ["local", "cloud", "api"],
+    complexity: "high",
+    hasOnboardingGuide: false,
+    officialUrl: "https://openclaw.ai/",
+    docsUrl: "https://docs.openclaw.ai/",
+    pricingHint: {
+      zh: "开源自托管本体可自行部署；实际成本取决于模型 API、服务器和消息渠道配置。",
+      en: "The open-source gateway can be self-hosted; real cost depends on model APIs, hosting and channel setup."
+    },
+    latestObservedAt: "2026-06-12",
+    observationSummary: {
+      zh: "已按公开文档收录为 listed：自托管消息网关类 Agent，尚未做平台审计。",
+      en: "Listed from public documentation: a self-hosted messaging gateway agent, not yet platform-audited."
+    }
   },
   {
     id: "langgraph-platform",
@@ -284,31 +293,6 @@ export const listedAgents: AgentCatalogEntry[] = [
     officialUrl: "https://github.com/microsoft/autogen"
   },
   {
-    id: "midjourney",
-    source: "listed",
-    name: "Midjourney",
-    vendor: "Midjourney",
-    intro: {
-      zh: "高质量图像生成模型，目前主要通过 Discord / Web 入口使用。",
-      en: "High-quality image generation model accessed primarily through Discord / Web."
-    },
-    category: "Image generation",
-    tags: ["image", "design"],
-    scenarios: [scenario("content-generation"), scenario("ui-prototyping")],
-    unsuitableScenarios: [scenario("ide-coding")],
-    recommendedFor: [
-      { zh: "需要快速出风格化视觉素材的团队", en: "Teams that need stylised visual assets fast" }
-    ],
-    riskLevel: "low",
-    riskNotes: [
-      { zh: "商用前需阅读授权条款。", en: "Read the licence terms before commercial use." }
-    ],
-    accessTypes: ["saas", "browser_ext"],
-    complexity: "low",
-    hasOnboardingGuide: false,
-    officialUrl: "https://www.midjourney.com"
-  },
-  {
     id: "elevenlabs",
     source: "listed",
     name: "ElevenLabs",
@@ -330,7 +314,7 @@ export const listedAgents: AgentCatalogEntry[] = [
     ],
     accessTypes: ["saas", "api"],
     complexity: "low",
-    hasOnboardingGuide: false,
+    hasOnboardingGuide: true,
     officialUrl: "https://elevenlabs.io"
   },
   {
@@ -364,8 +348,8 @@ export const listedAgents: AgentCatalogEntry[] = [
     name: "Manus",
     vendor: "Butterfly Effect",
     intro: {
-      zh: "通用任务型 Agent，2024 末期声量较高，定位为“跑腿型 Agent”。",
-      en: "General-purpose task agent — gained traction in late 2024 as an 'errand agent'."
+      zh: "通用自主任务 Agent，强调从目标出发规划、浏览、生成文件并交付结果。",
+      en: "General-purpose autonomous task agent that plans from a goal, browses, creates files and delivers results."
     },
     category: "Generalist agent",
     tags: ["task", "research"],
@@ -430,7 +414,7 @@ export const listedAgents: AgentCatalogEntry[] = [
     ],
     accessTypes: ["saas", "api"],
     complexity: "low",
-    hasOnboardingGuide: false,
+    hasOnboardingGuide: true,
     officialUrl: "https://gemini.google.com",
     docsUrl: "https://ai.google.dev/gemini-api/docs"
   },
@@ -456,7 +440,7 @@ export const listedAgents: AgentCatalogEntry[] = [
     ],
     accessTypes: ["saas", "api"],
     complexity: "low",
-    hasOnboardingGuide: false,
+    hasOnboardingGuide: true,
     officialUrl: "https://www.microsoft.com/microsoft-copilot"
   },
   {
@@ -533,32 +517,6 @@ export const listedAgents: AgentCatalogEntry[] = [
     complexity: "medium",
     hasOnboardingGuide: false,
     officialUrl: "https://www.synthesia.io"
-  },
-  {
-    id: "dify",
-    source: "listed",
-    name: "Dify",
-    vendor: "Dify",
-    intro: {
-      zh: "开源 LLM 应用开发平台，支持 RAG、工作流和 Agent 编排，可自托管。",
-      en: "Open-source LLM app platform for RAG, workflows and agent orchestration, with self-hosting support."
-    },
-    category: "LLM app platform",
-    tags: ["open-source", "self-host", "rag", "workflow"],
-    scenarios: [scenario("workflow-automation"), scenario("knowledge-qa"), scenario("data-analysis")],
-    unsuitableScenarios: [scenario("ide-coding")],
-    recommendedFor: [
-      { zh: "希望用低代码方式搭建内部 AI 应用的工程团队", en: "Engineering teams building internal AI apps with low-code controls" }
-    ],
-    riskLevel: "medium",
-    riskNotes: [
-      { zh: "自托管时需要自行维护模型、密钥和知识库权限。", en: "Self-hosted deployments must manage models, secrets and knowledge-base permissions." }
-    ],
-    accessTypes: ["local", "cloud", "api"],
-    complexity: "medium",
-    hasOnboardingGuide: false,
-    officialUrl: "https://dify.ai",
-    docsUrl: "https://docs.dify.ai"
   },
   {
     id: "flowise",
@@ -660,5 +618,653 @@ export const listedAgents: AgentCatalogEntry[] = [
     complexity: "medium",
     hasOnboardingGuide: false,
     officialUrl: "https://sierra.ai"
+  },
+  {
+    id: "lindy",
+    source: "listed",
+    name: "Lindy",
+    vendor: "Lindy",
+    intro: {
+      zh: "面向普通团队的 AI 员工构建平台，常用于邮件、日程、CRM 更新和重复运营流程。",
+      en: "AI employee builder for everyday teams, often used for email, calendar, CRM updates and repetitive operations."
+    },
+    category: "AI employee builder",
+    tags: ["automation", "agent-builder", "operations", "sales"],
+    scenarios: [scenario("workflow-automation"), scenario("customer-support"), scenario("knowledge-qa")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "想把邮箱、日程、CRM 里的重复工作交给 AI 员工的团队", en: "Teams that want AI workers for inbox, calendar and CRM chores" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "连接邮箱和 CRM 后会触达真实客户数据，必须先限制权限和审批动作。", en: "Once connected to email and CRM it touches real customer data — limit scopes and approval actions first." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://www.lindy.ai"
+  },
+  {
+    id: "make-ai-agents",
+    source: "listed",
+    name: "Make AI Agents",
+    vendor: "Make",
+    intro: {
+      zh: "Make 自动化平台内的 AI Agent 能力，适合把 AI 决策接进已有的可视化流程。",
+      en: "AI agent capability inside Make's automation platform, useful for adding AI decisions to existing visual workflows."
+    },
+    category: "Workflow automation",
+    tags: ["automation", "make", "workflow", "no-code"],
+    scenarios: [scenario("workflow-automation"), scenario("customer-support"), scenario("data-analysis")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "已经用 Make 搭自动化、想加入 AI 判断节点的运营团队", en: "Ops teams already on Make that want AI decision steps in workflows" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "AI 节点可能触发下游副作用，上线前要加人工确认或沙盒场景。", en: "AI steps can trigger downstream side effects — add approval or sandbox scenarios before rollout." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "medium",
+    hasOnboardingGuide: false,
+    officialUrl: "https://www.make.com"
+  },
+  {
+    id: "gumloop",
+    source: "listed",
+    name: "Gumloop",
+    vendor: "Gumloop",
+    intro: {
+      zh: "面向非工程团队的 AI 自动化工作流工具，把网页、表格、文档和模型节点串起来。",
+      en: "AI automation workflow tool for non-engineering teams, connecting web, spreadsheets, docs and model nodes."
+    },
+    category: "AI workflow builder",
+    tags: ["automation", "workflow", "no-code", "research"],
+    scenarios: [scenario("workflow-automation"), scenario("market-research"), scenario("data-analysis")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "想用拖拽方式把调研、表格和文档处理自动化的团队", en: "Teams that want drag-and-drop automation for research, spreadsheets and document work" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "网页自动化和第三方账号连接需要先确认登录态、权限和速率限制。", en: "Web automation and third-party accounts require careful checks on sessions, permissions and rate limits." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://www.gumloop.com"
+  },
+  {
+    id: "salesforce-agentforce",
+    source: "listed",
+    name: "Salesforce Agentforce",
+    vendor: "Salesforce",
+    intro: {
+      zh: "Salesforce 生态内的企业 Agent 平台，面向销售、客服、营销和行业流程自动化。",
+      en: "Enterprise agent platform inside the Salesforce ecosystem for sales, support, marketing and industry workflows."
+    },
+    category: "Enterprise agent platform",
+    tags: ["salesforce", "crm", "enterprise", "support"],
+    scenarios: [scenario("customer-support"), scenario("workflow-automation"), scenario("data-analysis")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "CRM 和客户数据已经在 Salesforce 里的企业", en: "Enterprises whose CRM and customer data already live in Salesforce" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "真实业务动作依赖 Salesforce 权限模型，配置错误会放大自动化风险。", en: "Real business actions depend on Salesforce permissions; misconfiguration amplifies automation risk." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "high",
+    hasOnboardingGuide: false,
+    officialUrl: "https://www.salesforce.com/agentforce"
+  },
+  {
+    id: "genspark",
+    source: "listed",
+    name: "Genspark",
+    vendor: "Genspark",
+    intro: {
+      zh: "AI 搜索与研究助手，主打把搜索结果整理成结构化页面和任务型输出。",
+      en: "AI search and research assistant focused on turning search results into structured pages and task-oriented outputs."
+    },
+    category: "AI search",
+    tags: ["search", "research", "summaries"],
+    scenarios: [scenario("market-research"), scenario("knowledge-qa"), scenario("content-generation")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "需要快速整理资料、生成可分享研究页面的普通用户", en: "Users who need quick research packs and shareable pages" }
+    ],
+    riskLevel: "low",
+    riskNotes: [
+      { zh: "重要事实和引用仍需回到原始来源核验。", en: "Important facts and citations still need primary-source verification." }
+    ],
+    accessTypes: ["saas"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://www.genspark.ai"
+  },
+  {
+    id: "notebooklm",
+    source: "listed",
+    name: "NotebookLM",
+    vendor: "Google",
+    intro: {
+      zh: "Google 的资料笔记和问答工具，适合围绕一组文档做学习、摘要和音频概览。",
+      en: "Google's source-grounded notebook and Q&A tool for learning, summarising and generating audio over a document set."
+    },
+    category: "Knowledge assistant",
+    tags: ["google", "notebook", "knowledge", "study"],
+    scenarios: [scenario("knowledge-qa"), scenario("content-generation"), scenario("market-research")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "想把 PDF、网页和笔记变成学习问答空间的学生/研究者", en: "Students and researchers turning PDFs, webpages and notes into a study workspace" }
+    ],
+    riskLevel: "low",
+    riskNotes: [
+      { zh: "输出主要受你上传资料约束，资料不全时答案也会偏。", en: "Outputs are bounded by supplied sources; incomplete source sets skew answers." }
+    ],
+    accessTypes: ["saas"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://notebooklm.google.com"
+  },
+  {
+    id: "gamma",
+    source: "listed",
+    name: "Gamma",
+    vendor: "Gamma",
+    intro: {
+      zh: "AI 演示文稿和网页生成工具，适合把大纲快速变成可分享的 deck 或页面。",
+      en: "AI presentation and webpage generator for turning outlines into shareable decks or pages quickly."
+    },
+    category: "Presentation generation",
+    tags: ["presentation", "content", "design"],
+    scenarios: [scenario("content-generation"), scenario("ui-prototyping")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "需要快速做路演、培训或产品介绍材料的个人和小团队", en: "Individuals and small teams creating pitch, training or product decks quickly" }
+    ],
+    riskLevel: "low",
+    riskNotes: [
+      { zh: "视觉结构生成很快，但关键数据和叙事逻辑仍需人工把关。", en: "Visual structure is fast; key data and narrative logic still need human review." }
+    ],
+    accessTypes: ["saas"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://gamma.app"
+  },
+  {
+    id: "canva-magic-studio",
+    source: "listed",
+    name: "Canva Magic Studio",
+    vendor: "Canva",
+    intro: {
+      zh: "Canva 内置的一组 AI 设计和内容生成工具，适合非设计师快速做海报、社媒图和短视频素材。",
+      en: "Canva's AI design and content tools for non-designers making posters, social posts and short-form assets."
+    },
+    category: "Design assistant",
+    tags: ["design", "creative", "content", "image"],
+    scenarios: [scenario("content-generation"), scenario("ui-prototyping")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "不会专业设计软件但需要稳定出图的运营/内容团队", en: "Ops and content teams that need reliable visuals without professional design tools" }
+    ],
+    riskLevel: "low",
+    riskNotes: [
+      { zh: "模板和素材商用前要确认授权，品牌资产需统一管理。", en: "Check template/asset licences before commercial use and govern brand assets centrally." }
+    ],
+    accessTypes: ["saas"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://www.canva.com/magic"
+  },
+  {
+    id: "vellum-ai",
+    source: "listed",
+    name: "Vellum",
+    vendor: "Vellum AI",
+    intro: {
+      zh: "面向工程和产品团队的 LLM 应用开发平台，覆盖 prompt 管理、评测、工作流和部署。",
+      en: "LLM application platform for product and engineering teams covering prompt management, evals, workflows and deployment."
+    },
+    category: "LLM app platform",
+    tags: ["llmops", "evals", "workflow", "agent-builder"],
+    scenarios: [scenario("workflow-automation"), scenario("knowledge-qa"), scenario("data-analysis")],
+    unsuitableScenarios: [scenario("content-generation")],
+    recommendedFor: [
+      { zh: "想把 LLM 应用从 prompt demo 推到可观测生产系统的团队", en: "Teams moving LLM apps from prompt demos into observable production systems" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "平台能力强但需要工程团队维护评测集、版本和回滚策略。", en: "Strong platform, but teams must maintain eval sets, versions and rollback strategy." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "medium",
+    hasOnboardingGuide: false,
+    officialUrl: "https://www.vellum.ai"
+  },
+  {
+    id: "relevance-ai",
+    source: "listed",
+    name: "Relevance AI",
+    vendor: "Relevance AI",
+    intro: {
+      zh: "AI workforce / agent builder 平台，用模板和工具连接搭建销售、运营、研究类 Agent。",
+      en: "AI workforce and agent builder platform for assembling sales, operations and research agents with templates and tools."
+    },
+    category: "AI workforce builder",
+    tags: ["agent-builder", "automation", "sales", "research"],
+    scenarios: [scenario("workflow-automation"), scenario("market-research"), scenario("customer-support")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "想快速搭建多个岗位型 AI 员工的创业公司和增长团队", en: "Startups and growth teams building several role-based AI workers quickly" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "岗位型 Agent 容易接触客户和销售数据，先从低风险动作开始。", en: "Role-based agents may touch customer and sales data; start with low-risk actions." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "medium",
+    hasOnboardingGuide: false,
+    officialUrl: "https://relevanceai.com"
+  },
+  {
+    id: "stack-ai",
+    source: "listed",
+    name: "Stack AI",
+    vendor: "Stack AI",
+    intro: {
+      zh: "企业 AI Agent 和工作流构建平台，常用于把内部知识、表格、API 和审批流程串起来。",
+      en: "Enterprise AI agent and workflow builder for connecting internal knowledge, spreadsheets, APIs and approval flows."
+    },
+    category: "Enterprise agent builder",
+    tags: ["agent-builder", "enterprise", "workflow", "knowledge"],
+    scenarios: [scenario("workflow-automation"), scenario("knowledge-qa"), scenario("data-analysis")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "需要把内部流程做成可控 AI 应用的运营、销售和数据团队", en: "Ops, sales and data teams turning internal processes into controlled AI apps" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "连接企业知识库和业务 API 前，需要先确认权限、日志和审批边界。", en: "Before connecting knowledge bases and business APIs, verify permissions, logs and approval boundaries." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "medium",
+    hasOnboardingGuide: false,
+    officialUrl: "https://www.stack-ai.com"
+  },
+  {
+    id: "relay-app",
+    source: "listed",
+    name: "Relay.app",
+    vendor: "Relay.app",
+    intro: {
+      zh: "面向团队协作的自动化工具，强调人工审批、AI 步骤和 SaaS 流程编排。",
+      en: "Team automation tool focused on human approvals, AI steps and SaaS workflow orchestration."
+    },
+    category: "Workflow automation",
+    tags: ["automation", "approval", "workflow", "no-code"],
+    scenarios: [scenario("workflow-automation"), scenario("customer-support"), scenario("content-generation")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "想让 AI 参与流程但仍保留人工确认的业务团队", en: "Business teams that want AI in workflows while keeping human approval" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "适合从审批型流程开始，不建议一开始就让 AI 自动执行不可逆动作。", en: "Start with approval-driven workflows rather than irreversible autonomous actions." }
+    ],
+    accessTypes: ["saas"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://www.relay.app"
+  },
+  {
+    id: "chatbase",
+    source: "listed",
+    name: "Chatbase",
+    vendor: "Chatbase",
+    intro: {
+      zh: "把网站、文档和知识库变成客服/问答聊天机器人的工具，适合快速上线低门槛 AI 客服。",
+      en: "Tool for turning websites, docs and knowledge bases into support or Q&A chatbots."
+    },
+    category: "Support chatbot builder",
+    tags: ["chatbot", "support", "knowledge", "no-code"],
+    scenarios: [scenario("customer-support"), scenario("knowledge-qa")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "希望快速给官网、帮助中心或产品文档加问答入口的小团队", en: "Small teams adding Q&A to websites, help centers or product docs quickly" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "上线前要测试幻觉、拒答和转人工规则，避免客服口径失控。", en: "Test hallucinations, refusals and handoff rules before exposing it to customers." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://www.chatbase.co"
+  },
+  {
+    id: "dust",
+    source: "listed",
+    name: "Dust",
+    vendor: "Dust",
+    intro: {
+      zh: "企业内部 AI 助手和 Agent 平台，面向知识检索、团队工作流和公司数据连接。",
+      en: "Enterprise AI assistant and agent platform for knowledge retrieval, team workflows and company data connectors."
+    },
+    category: "Enterprise knowledge agent",
+    tags: ["enterprise", "knowledge", "workflow", "assistant"],
+    scenarios: [scenario("knowledge-qa"), scenario("workflow-automation"), scenario("market-research")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "想给不同团队配置内部 AI 助手并接入公司数据源的组织", en: "Organizations configuring internal AI assistants across teams and data sources" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "企业内部分发前必须确认数据源 ACL、敏感字段和审计日志。", en: "Before internal rollout, confirm source ACLs, sensitive fields and audit logs." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "medium",
+    hasOnboardingGuide: false,
+    officialUrl: "https://dust.tt"
+  },
+  {
+    id: "poe",
+    source: "listed",
+    name: "Poe",
+    vendor: "Quora",
+    intro: {
+      zh: "多模型聊天与 Bot 平台，普通用户可以集中试用不同模型，也可以创建轻量 Bot。",
+      en: "Multi-model chat and bot platform where users can try different models and create lightweight bots."
+    },
+    category: "Multi-model bot platform",
+    tags: ["chat", "multi-model", "bot", "consumer"],
+    scenarios: [scenario("knowledge-qa"), scenario("content-generation"), scenario("multimodal-chat")],
+    unsuitableScenarios: [scenario("workflow-automation")],
+    recommendedFor: [
+      { zh: "想低门槛比较多个模型、做轻量问答 Bot 的普通用户", en: "Consumers comparing models or creating lightweight Q&A bots with low setup" }
+    ],
+    riskLevel: "low",
+    riskNotes: [
+      { zh: "不同 Bot 的能力和来源差异很大，重要结论需要看清模型和资料来源。", en: "Bot quality and provenance vary widely; check model and source context for important conclusions." }
+    ],
+    accessTypes: ["saas"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://poe.com"
+  },
+  {
+    id: "zapier-interfaces-chatbots",
+    source: "listed",
+    name: "Zapier Interfaces & Chatbots",
+    vendor: "Zapier",
+    intro: {
+      zh: "Zapier 的表单、页面和聊天机器人能力，适合把自动化流程包装成给客户或内部团队使用的小入口。",
+      en: "Zapier's forms, pages and chatbot surfaces for packaging automations into small customer or internal tools."
+    },
+    category: "No-code AI front end",
+    tags: ["zapier", "chatbot", "automation", "no-code"],
+    scenarios: [scenario("workflow-automation"), scenario("customer-support"), scenario("knowledge-qa")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "已经用 Zapier 自动化，希望给流程加一个简单网页/聊天入口的团队", en: "Teams already using Zapier that need a simple web or chat front end for workflows" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "入口越像产品，越需要补权限、错误提示、日志和人工兜底。", en: "The more product-like the surface, the more it needs permissions, error handling, logs and fallback." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://zapier.com/interfaces"
+  },
+  {
+    id: "claude",
+    source: "listed",
+    name: "Claude",
+    vendor: "Anthropic",
+    intro: {
+      zh: "Anthropic 的通用 AI 助手与 API，适合长文分析、写作、代码理解和复杂推理任务。",
+      en: "Anthropic's general AI assistant and API for long-form analysis, writing, code understanding and complex reasoning."
+    },
+    category: "General assistant",
+    tags: ["claude", "anthropic", "general", "coding", "writing", "reasoning"],
+    scenarios: [scenario("knowledge-qa"), scenario("content-generation"), scenario("developer-assistant"), scenario("market-research")],
+    unsuitableScenarios: [scenario("defi-trading")],
+    recommendedFor: [
+      { zh: "需要稳定处理长文档、方案分析和代码解释的个人或团队", en: "Individuals or teams that need dependable long-document, planning and code-analysis work" }
+    ],
+    riskLevel: "low",
+    riskNotes: [
+      { zh: "云端助手/API 会处理用户输入，敏感资料应先脱敏并遵守企业数据策略。", en: "The hosted assistant/API processes user inputs; sanitize sensitive data and follow company data policy." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://claude.ai/",
+    docsUrl: "https://platform.claude.com/docs/en/home",
+    pricingHint: {
+      zh: "Web 端订阅与 API 用量计费并行，具体以 Anthropic 当前价格为准。",
+      en: "Web subscriptions and usage-based API pricing coexist; confirm current Anthropic pricing before rollout."
+    },
+    latestObservedAt: "2026-06-12",
+    observationSummary: {
+      zh: "已按官方文档收录为通用 AI 助手/API；平台尚未做独立审计。",
+      en: "Listed from official docs as a general AI assistant/API; no independent platform audit yet."
+    }
+  },
+  {
+    id: "deepseek",
+    source: "listed",
+    name: "DeepSeek",
+    vendor: "DeepSeek",
+    intro: {
+      zh: "面向普通用户和开发者的中文友好大模型助手与 OpenAI 兼容 API，适合问答、推理、代码和低成本模型接入。",
+      en: "Chinese-friendly assistant and OpenAI-compatible API for Q&A, reasoning, coding and cost-sensitive model integration."
+    },
+    category: "General assistant",
+    tags: ["deepseek", "深度求索", "reasoning", "coding", "openai-compatible", "china"],
+    scenarios: [scenario("knowledge-qa"), scenario("developer-assistant"), scenario("content-generation"), scenario("data-analysis")],
+    unsuitableScenarios: [scenario("defi-trading")],
+    recommendedFor: [
+      { zh: "希望低成本接入推理/代码模型，且中文需求较多的个人和开发者", en: "Users and developers with Chinese-heavy reasoning or coding needs and cost sensitivity" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "不同入口的数据策略、可用性和模型版本可能不同，企业接入前要核对隐私与稳定性要求。", en: "Data policy, availability and model versions may vary by entry point; verify privacy and stability before enterprise use." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://www.deepseek.com/en/",
+    docsUrl: "https://api-docs.deepseek.com/",
+    pricingHint: {
+      zh: "Web 端可直接试用；API 按平台当前模型价格和用量计费。",
+      en: "Web access is available; API cost depends on current model pricing and usage."
+    },
+    latestObservedAt: "2026-06-12",
+    observationSummary: {
+      zh: "已按官网和 API 文档收录为通用助手/API；平台尚未做独立审计。",
+      en: "Listed from official site and API docs as a general assistant/API; no independent platform audit yet."
+    }
+  },
+  {
+    id: "kimi",
+    source: "listed",
+    name: "Kimi",
+    vendor: "Moonshot AI",
+    intro: {
+      zh: "Moonshot AI 的中文友好长上下文助手与 API，适合文档阅读、资料整理、研究问答和长文本处理。",
+      en: "Moonshot AI's Chinese-friendly long-context assistant and API for document reading, research Q&A and long-text work."
+    },
+    category: "Long-context assistant",
+    tags: ["kimi", "moonshot", "月之暗面", "long-context", "research", "chinese"],
+    scenarios: [scenario("knowledge-qa"), scenario("market-research"), scenario("content-generation"), scenario("data-analysis")],
+    unsuitableScenarios: [scenario("defi-trading")],
+    recommendedFor: [
+      { zh: "经常读长 PDF、网页资料、会议纪要和中文研究材料的用户", en: "Users who often process long PDFs, webpages, meeting notes and Chinese research materials" }
+    ],
+    riskLevel: "low",
+    riskNotes: [
+      { zh: "长上下文并不等于事实可靠，重要结论仍需回到来源核验。", en: "Long context is not the same as factual certainty; verify important conclusions against sources." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://www.kimi.com/",
+    docsUrl: "https://platform.kimi.ai/docs",
+    pricingHint: {
+      zh: "Web 与 API 双入口；API 成本取决于模型、上下文长度和用量。",
+      en: "Web and API access; API cost depends on model, context length and usage."
+    },
+    latestObservedAt: "2026-06-12",
+    observationSummary: {
+      zh: "已按 Moonshot/Kimi 官方入口收录为长上下文助手/API；平台尚未做独立审计。",
+      en: "Listed from Moonshot/Kimi official entry points as a long-context assistant/API; no independent platform audit yet."
+    }
+  },
+  {
+    id: "qwen-agent",
+    source: "listed",
+    name: "Qwen / Qwen Agent",
+    vendor: "Alibaba Cloud",
+    intro: {
+      zh: "阿里 Qwen 系列的聊天入口、模型 API 与开源 Agent 框架，覆盖普通问答、工具调用、规划和自定义助手开发。",
+      en: "Alibaba Qwen's chat entry, model API and open-source agent framework for Q&A, tool use, planning and custom assistants."
+    },
+    category: "Model and agent framework",
+    tags: ["qwen", "通义千问", "qwen-agent", "tool-use", "open-source", "chinese", "agent-framework"],
+    scenarios: [scenario("knowledge-qa"), scenario("developer-assistant"), scenario("workflow-automation"), scenario("multimodal-chat")],
+    unsuitableScenarios: [scenario("defi-trading")],
+    recommendedFor: [
+      { zh: "想同时评估中文模型、开源权重和 Agent 开发框架的开发者", en: "Developers evaluating Chinese models, open weights and an agent framework together" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "自建 Agent 需要自行处理工具权限、日志、密钥和外部动作审批。", en: "Custom agents require your own controls for tool permissions, logs, secrets and action approvals." }
+    ],
+    accessTypes: ["saas", "api", "local"],
+    complexity: "medium",
+    hasOnboardingGuide: false,
+    officialUrl: "https://qwen.ai/",
+    docsUrl: "https://qwenlm.github.io/Qwen-Agent/en/",
+    pricingHint: {
+      zh: "聊天入口、API 与开源框架并行；实际成本取决于托管方式和模型用量。",
+      en: "Chat, API and open-source framework paths coexist; cost depends on hosting path and model usage."
+    },
+    latestObservedAt: "2026-06-12",
+    observationSummary: {
+      zh: "已按 Qwen 官方入口与 Qwen-Agent 文档收录；平台尚未做独立审计。",
+      en: "Listed from Qwen official entry and Qwen-Agent docs; no independent platform audit yet."
+    }
+  },
+  {
+    id: "coze",
+    source: "listed",
+    name: "Coze",
+    vendor: "ByteDance / Coze",
+    intro: {
+      zh: "无代码/低代码 AI Agent 应用开发平台，支持构建 Agent 并发布到 Web、API 和多种渠道。",
+      en: "No-code/low-code AI agent app platform for building agents and publishing them to web, APIs and channels."
+    },
+    category: "Agent builder",
+    tags: ["coze", "扣子", "agent-builder", "no-code", "bot", "workflow", "websdk"],
+    scenarios: [scenario("workflow-automation"), scenario("knowledge-qa"), scenario("customer-support"), scenario("content-generation")],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "想快速做一个可发布 Bot/Agent，但还不想自己写后端的个人或小团队", en: "Individuals or small teams that want to publish a bot/agent quickly without building a backend" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "发布到外部渠道前，需要确认知识库权限、用户输入留存和工具动作边界。", en: "Before publishing to channels, verify knowledge-base permissions, input retention and tool-action boundaries." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "low",
+    hasOnboardingGuide: false,
+    officialUrl: "https://www.coze.com/",
+    docsUrl: "https://www.coze.com/open/docs/guides/quickstart",
+    pricingHint: {
+      zh: "以平台当前套餐、模型调用和发布渠道计费为准。",
+      en: "Cost depends on current plans, model usage and publishing channels."
+    },
+    latestObservedAt: "2026-06-12",
+    observationSummary: {
+      zh: "已按 Coze 官网和 Quickstart 文档收录为 Agent 构建平台；平台尚未做独立审计。",
+      en: "Listed from Coze site and quickstart docs as an agent builder; no independent platform audit yet."
+    }
+  },
+  {
+    id: "browser-use",
+    source: "listed",
+    name: "Browser Use",
+    vendor: "Browser Use",
+    intro: {
+      zh: "面向 AI Agent 的浏览器自动化工具/API，让模型在真实网页上执行浏览、点击、表单和跨站任务。",
+      en: "Browser automation tool/API for AI agents, letting models browse, click, fill forms and complete web tasks."
+    },
+    category: "Browser automation",
+    tags: ["browser-use", "browser", "automation", "web-agent", "open-source", "api", "computer-use"],
+    scenarios: [scenario("workflow-automation"), scenario("market-research"), scenario("developer-assistant")],
+    unsuitableScenarios: [scenario("defi-trading")],
+    recommendedFor: [
+      { zh: "需要让 Agent 操作网页、跑网页任务或做浏览器自动化验证的开发者", en: "Developers who need agents to operate websites, run web tasks or test browser workflows" }
+    ],
+    riskLevel: "high",
+    riskNotes: [
+      { zh: "浏览器自动化可能触达登录态、表单提交、付款和账号操作，必须先限制权限并保留人工确认。", en: "Browser automation can touch sessions, forms, purchases and account actions; restrict permissions and keep human approval first." }
+    ],
+    riskMitigation: [
+      { zh: "优先使用测试账号、隔离浏览器配置和白名单域名，避免直接连接真实高价值账户。", en: "Prefer test accounts, isolated browser profiles and allowlisted domains before connecting high-value accounts." }
+    ],
+    accessTypes: ["local", "api", "cloud"],
+    complexity: "high",
+    hasOnboardingGuide: false,
+    officialUrl: "https://browser-use.com/",
+    docsUrl: "https://github.com/browser-use/browser-use",
+    pricingHint: {
+      zh: "开源本地路径与托管/API 路径并行；成本取决于部署方式、浏览器会话和模型用量。",
+      en: "Open-source local and hosted/API paths coexist; cost depends on deployment, browser sessions and model usage."
+    },
+    latestObservedAt: "2026-06-12",
+    observationSummary: {
+      zh: "已按官网和 GitHub Quickstart 收录为浏览器自动化 Agent 基础设施；平台尚未做独立审计。",
+      en: "Listed from official site and GitHub quickstart as browser automation infrastructure for agents; no independent platform audit yet."
+    }
+  },
+  {
+    id: "composio",
+    source: "listed",
+    name: "Composio",
+    vendor: "Composio",
+    intro: {
+      zh: "面向 AI Agent 的工具集成和授权平台，帮助 Agent 连接 Slack、Gmail、Notion、GitHub 等大量业务工具。",
+      en: "Tool integration and auth platform for AI agents, connecting agents to apps like Slack, Gmail, Notion and GitHub."
+    },
+    category: "Agent tool integration",
+    tags: ["composio", "toolkits", "mcp", "oauth", "integration", "agent-tools", "auth"],
+    scenarios: [scenario("workflow-automation"), scenario("developer-assistant"), scenario("customer-support"), scenario("knowledge-qa")],
+    unsuitableScenarios: [scenario("content-generation")],
+    recommendedFor: [
+      { zh: "已经有 Agent 框架，但缺少安全授权和第三方工具连接的开发者团队", en: "Developer teams that already have an agent framework but need secure auth and third-party tool connections" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "工具集成层会管理第三方授权，必须检查 OAuth 范围、撤权路径和每个工具的操作日志。", en: "The integration layer manages third-party auth; check OAuth scopes, revocation paths and per-tool action logs." }
+    ],
+    accessTypes: ["api", "cloud"],
+    complexity: "medium",
+    hasOnboardingGuide: false,
+    officialUrl: "https://composio.dev/",
+    docsUrl: "https://docs.composio.dev/",
+    pricingHint: {
+      zh: "按平台当前工具包、会话、团队和用量策略计费。",
+      en: "Cost depends on current toolkit, session, team and usage policies."
+    },
+    latestObservedAt: "2026-06-12",
+    observationSummary: {
+      zh: "已按 Composio 官网和文档收录为 Agent 工具集成层；平台尚未做独立审计。",
+      en: "Listed from Composio site and docs as an agent tool integration layer; no independent platform audit yet."
+    }
   }
 ];

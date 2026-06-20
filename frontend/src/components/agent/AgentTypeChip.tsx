@@ -1,10 +1,11 @@
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/lib/utils";
-import type { AgentSource } from "@/domain/catalog";
+import type { AgentCatalogEntry, AgentSource } from "@/domain/catalog";
 
 interface AgentTypeChipProps {
-  source: AgentSource;
+  source?: AgentSource;
+  entry?: AgentCatalogEntry;
   className?: string;
 }
 
@@ -19,14 +20,15 @@ const STYLES: Record<AgentSource, string> = {
     "border-success/40 bg-success/10 text-success-foreground/80 dark:bg-success/20 dark:text-success-foreground"
 };
 
-export function AgentTypeChip({ source, className }: AgentTypeChipProps): JSX.Element {
+export function AgentTypeChip(props: AgentTypeChipProps): JSX.Element {
   const { t } = useTranslation("common");
+  const source = props.source ?? props.entry?.source ?? "listed";
   return (
     <span
       className={cn(
         "inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide",
         STYLES[source],
-        className
+        props.className
       )}
     >
       {t(`agentSource.${source}`)}

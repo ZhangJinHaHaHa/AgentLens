@@ -13,6 +13,18 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src")
     }
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-i18n": ["i18next", "react-i18next"],
+          "vendor-ui": ["@radix-ui/react-dialog", "@radix-ui/react-popover", "@radix-ui/react-select", "@radix-ui/react-tabs", "@radix-ui/react-tooltip"],
+          "vendor-web3": ["ethers"],
+        }
+      }
+    }
+  },
   server: {
     fs: {
       allow: [searchForWorkspaceRoot(process.cwd()), path.resolve(__dirname, "../contracts")]

@@ -346,7 +346,7 @@ export function createListenerRuntime(
           region: reportStorage.cos.region
         })
     : undefined;
-  const ipfsClient = reportStorage
+  const ipfsClient = reportStorage?.ipfs
     ? (dependencies.createIpfsHttpClient ?? createIpfsHttpClient)({
         apiUrl: reportStorage.ipfs.apiUrl,
         authToken: reportStorage.ipfs.authToken,

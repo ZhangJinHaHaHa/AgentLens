@@ -1,0 +1,18 @@
+{
+  "name": "AgentLens Agent App",
+  "short_name": "AgentLens",
+  "description": "Install AgentLens as a frontend runtime shell for selecting, deploying, and using AI Agents.",
+  "start_url": "/zh/agents",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#111111",
+  "icons": [
+    {
+      "src": "/popo-mascot.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

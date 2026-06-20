@@ -96,3 +96,18 @@ test("readReportStorageConfig supports a local filesystem COS adapter for local 
     }
   });
 });
+
+test("readReportStorageConfig allows local filesystem storage before IPFS is configured", () => {
+  const config = readReportStorageConfig({
+    AUDIT_REPORT_COS_LOCAL_DIR: "/tmp/report-storage/cos",
+    AUDIT_REPORT_COS_KEY_PREFIX: "local-prefix"
+  });
+
+  assert.deepEqual(config, {
+    cos: {
+      mode: "local",
+      localDir: "/tmp/report-storage/cos",
+      keyPrefix: "local-prefix"
+    }
+  });
+});

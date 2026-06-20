@@ -6,7 +6,7 @@
     "searchPlaceholder": "试试：客服自动化、DeFi 策略、IDE 助手……",
     "primaryCta": "浏览全部 Agent",
     "parsingCta": "解析需求中",
-    "llmUnavailable": "LLM 解析不可用，请配置本地 MiniMax 后重试。",
+    "llmUnavailable": "平台解析暂时不可用，请稍后重试或先使用关键词搜索。",
     "llmDemoNotice": "LLM 解析，本地 demo；最终匹配仍由 AgentLens catalog 筛选决定。",
     "secondaryCta": "描述你的需求"
   },

@@ -2,10 +2,13 @@
   "appName": "AgentLens",
   "tagline": "Decision platform for trustworthy AI agents",
   "nav": {
+    "menu": "Menu",
     "agents": "Agents",
     "compare": "Compare",
     "recommend": "Recommend",
-    "publish": "Publish"
+    "publish": "Publish",
+    "models": "Workspace",
+    "account": "Identity"
   },
   "actions": {
     "search": "Search",
@@ -50,6 +53,14 @@
     "curated": "Curated",
     "listed": "Listed",
     "native": "Platform native"
+  },
+  "agentProductType": {
+    "marketplace_agent": "Marketplace agent",
+    "large_model_assistant": "LLM assistant",
+    "agent_platform": "Agent platform",
+    "workflow_agent": "Workflow agent",
+    "coding_agent": "Coding agent",
+    "vertical_ai_tool": "Vertical AI tool"
   },
   "risk": {
     "low": "Low risk",

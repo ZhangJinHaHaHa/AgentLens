@@ -6,7 +6,7 @@
     "searchPlaceholder": "Try: support automation, DeFi strategy, IDE copilot…",
     "primaryCta": "Browse all agents",
     "parsingCta": "Parsing need",
-    "llmUnavailable": "LLM parsing is unavailable. Configure local MiniMax and try again.",
+    "llmUnavailable": "Platform parsing is temporarily unavailable. Try again later or use keyword search first.",
     "llmDemoNotice": "LLM parsing, local demo; final matching is still decided by the AgentLens catalog filters.",
     "secondaryCta": "Describe what you need"
   },

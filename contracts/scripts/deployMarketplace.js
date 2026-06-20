@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { ethers } = require("ethers");
+const { readRegistryDeploymentConfig } = require("./deployConfig");
 
 const artifactsDir = path.join(__dirname, "..", "artifacts");
 const deploymentsDir = path.join(__dirname, "..", "deployments");
@@ -10,20 +11,13 @@ function loadArtifact(name) {
 }
 
 function readMarketplaceDeploymentConfig(env) {
-  const rpcUrl = env.EDGE_RPC_URL;
-  const chainId = env.EDGE_CHAIN_ID;
-  const deployerPrivateKey = env.EDGE_DEPLOYER_PRIVATE_KEY;
-
-  if (!rpcUrl) throw new Error("EDGE_RPC_URL is required");
-  if (!chainId) throw new Error("EDGE_CHAIN_ID is required");
-  if (!deployerPrivateKey) throw new Error("EDGE_DEPLOYER_PRIVATE_KEY is required");
-
+  const config = readRegistryDeploymentConfig(env);
   return {
-    rpcUrl,
-    chainId: Number(chainId),
-    deployerPrivateKey,
-    networkName: env.EDGE_NETWORK_NAME || "polygon-edge-test",
-    initialOperator: env.EDGE_INITIAL_OPERATOR || ""
+    rpcUrl: config.rpcUrl,
+    chainId: config.chainId,
+    deployerPrivateKey: config.deployerPrivateKey,
+    networkName: config.networkName,
+    initialOperator: config.initialOperator
   };
 }
 

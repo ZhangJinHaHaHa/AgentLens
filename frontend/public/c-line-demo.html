@@ -269,7 +269,7 @@
           <h2>1. 输入与操作</h2>
           <div>
             <label for="apiBase">Platform API Base URL</label>
-            <input id="apiBase" value="http://127.0.0.1:8790" />
+            <input id="apiBase" value="" placeholder="默认使用当前网站地址" />
           </div>
           <div>
             <label for="query">用户需求</label>
@@ -387,7 +387,7 @@
       };
 
       function apiBase() {
-        return els.apiBase.value.replace(/\/+$/, "");
+        return (els.apiBase.value.trim() || window.location.origin).replace(/\/+$/, "");
       }
 
       function setBusy(isBusy) {

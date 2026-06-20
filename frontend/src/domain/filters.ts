@@ -1,12 +1,13 @@
 import type {
   AccessType,
   AgentCatalogEntry,
+  AgentProductType,
   AgentSource,
   Complexity,
   RiskLevel,
   TrustTier
 } from "./catalog";
-import { hasAuditEvidence, isRentable } from "./catalog";
+import { getAgentProductType, hasAuditEvidence, isRentable } from "./catalog";
 import { SCENARIO_IDS } from "@/data/catalog/scenarios";
 import { computeTrustTier } from "./trustTier";
 
@@ -21,6 +22,7 @@ export interface CatalogFilters {
   scenarios: string[];
   tags: string[];
   categories: string[];
+  productTypes: AgentProductType[];
   sources: AgentSource[];
   accessTypes: AccessType[];
   trustTiers: TrustTier[];
@@ -41,6 +43,7 @@ export type FilterChipKind =
   | "scenario"
   | "tag"
   | "category"
+  | "productType"
   | "source"
   | "access"
   | "trustTier"
@@ -68,6 +71,7 @@ export interface FilterRelaxationSuggestion {
 
 export interface CatalogFacets {
   scenarioIds: string[];
+  productTypes: AgentProductType[];
   sources: AgentSource[];
   accessTypes: AccessType[];
   trustTiers: TrustTier[];
@@ -91,6 +95,7 @@ export const CATALOG_FILTER_SEARCH_PARAM_KEYS = [
   "scenario",
   "tag",
   "category",
+  "type",
   "source",
   "access",
   "tier",
@@ -111,6 +116,7 @@ export const EMPTY_FILTERS: CatalogFilters = {
   scenarios: [],
   tags: [],
   categories: [],
+  productTypes: [],
   sources: [],
   accessTypes: [],
   trustTiers: [],
@@ -132,6 +138,7 @@ export function filtersAreEmpty(filters: CatalogFilters): boolean {
     filters.scenarios.length === 0 &&
     filters.tags.length === 0 &&
     filters.categories.length === 0 &&
+    filters.productTypes.length === 0 &&
     filters.sources.length === 0 &&
     filters.accessTypes.length === 0 &&
     filters.trustTiers.length === 0 &&
@@ -149,6 +156,14 @@ export function filtersAreEmpty(filters: CatalogFilters): boolean {
 
 const RISK_ORDER: Record<RiskLevel, number> = { low: 0, medium: 1, high: 2 };
 const COMPLEXITY_ORDER: Record<Complexity, number> = { low: 0, medium: 1, high: 2 };
+const PRODUCT_TYPE_FACET_ORDER: AgentProductType[] = [
+  "marketplace_agent",
+  "large_model_assistant",
+  "agent_platform",
+  "workflow_agent",
+  "coding_agent",
+  "vertical_ai_tool"
+];
 const SOURCE_FACET_ORDER: AgentSource[] = ["marketplace", "curated", "listed", "native"];
 const ACCESS_FACET_ORDER: AccessType[] = ["api", "saas", "cli", "browser_ext", "local", "cloud"];
 const TRUST_TIER_FACET_ORDER: TrustTier[] = [3, 2, 1, 0];
@@ -161,6 +176,7 @@ const TOP_TAG_MIN_COUNT = 2;
 
 export function buildCatalogFacets(entries: readonly AgentCatalogEntry[]): CatalogFacets {
   const scenarioCounts = new Map<string, number>();
+  const productTypeCounts = new Map<AgentProductType, number>();
   const sourceCounts = new Map<AgentSource, number>();
   const accessCounts = new Map<AccessType, number>();
   const tierCounts = new Map<TrustTier, number>();
@@ -177,6 +193,7 @@ export function buildCatalogFacets(entries: readonly AgentCatalogEntry[]): Catal
   let rentable = false;
 
   for (const entry of entries) {
+    increment(productTypeCounts, getAgentProductType(entry));
     increment(sourceCounts, entry.source);
     increment(riskCounts, entry.riskLevel);
     increment(complexityCounts, entry.complexity);
@@ -203,6 +220,7 @@ export function buildCatalogFacets(entries: readonly AgentCatalogEntry[]): Catal
 
   return {
     scenarioIds: withCount(SCENARIO_IDS, scenarioCounts),
+    productTypes: withCount(PRODUCT_TYPE_FACET_ORDER, productTypeCounts),
     sources: withCount(SOURCE_FACET_ORDER, sourceCounts),
     accessTypes: withCount(ACCESS_FACET_ORDER, accessCounts),
     trustTiers: withCount(TRUST_TIER_FACET_ORDER, tierCounts),
@@ -287,6 +305,11 @@ function matchesCategories(entry: AgentCatalogEntry, categories: string[]): bool
   return categories.includes(normalizeCategory(entry.category));
 }
 
+function matchesProductType(entry: AgentCatalogEntry, productTypes: AgentProductType[]): boolean {
+  if (productTypes.length === 0) return true;
+  return productTypes.includes(getAgentProductType(entry));
+}
+
 function matchesSource(entry: AgentCatalogEntry, sources: AgentSource[]): boolean {
   if (sources.length === 0) return true;
   return sources.includes(entry.source);
@@ -353,6 +376,7 @@ export function applyFilters(
       matchesScenarios(entry, filters.scenarios) &&
       matchesTags(entry, filters.tags) &&
       matchesCategories(entry, filters.categories) &&
+      matchesProductType(entry, filters.productTypes) &&
       matchesSource(entry, filters.sources) &&
       matchesAccess(entry, filters.accessTypes) &&
       matchesTrust(entry, filters.trustTiers) &&
@@ -376,6 +400,7 @@ export function getActiveFilterChips(filters: CatalogFilters): FilterChip[] {
   chips.push(...filters.scenarios.map((value) => ({ id: `scenario:${value}`, kind: "scenario" as const, value })));
   chips.push(...filters.tags.map((value) => ({ id: `tag:${value}`, kind: "tag" as const, value })));
   chips.push(...filters.categories.map((value) => ({ id: `category:${value}`, kind: "category" as const, value })));
+  chips.push(...filters.productTypes.map((value) => ({ id: `type:${value}`, kind: "productType" as const, value })));
   chips.push(...filters.sources.map((value) => ({ id: `source:${value}`, kind: "source" as const, value })));
   chips.push(...filters.accessTypes.map((value) => ({ id: `access:${value}`, kind: "access" as const, value })));
   chips.push(...filters.trustTiers.map((value) => ({ id: `tier:${value}`, kind: "trustTier" as const, value })));
@@ -403,6 +428,8 @@ export function removeFilterChip(filters: CatalogFilters, chip: FilterChip): Cat
       return { ...filters, tags: filters.tags.filter((value) => value !== chip.value) };
     case "category":
       return { ...filters, categories: filters.categories.filter((value) => value !== chip.value) };
+    case "productType":
+      return { ...filters, productTypes: filters.productTypes.filter((value) => value !== chip.value) };
     case "source":
       return { ...filters, sources: filters.sources.filter((value) => value !== chip.value) };
     case "access":
@@ -481,6 +508,7 @@ export interface UrlFilterEncoding {
   scenarios?: string[];
   tags?: string[];
   sources?: string[];
+  productTypes?: string[];
   accessTypes?: string[];
   trustTiers?: number[];
   riskLevels?: string[];
@@ -502,6 +530,7 @@ export function filtersToSearchParams(filters: CatalogFilters): URLSearchParams 
   if (filters.scenarios.length) params.set("scenario", filters.scenarios.join(","));
   if (filters.tags.length) params.set("tag", filters.tags.join(","));
   if (filters.categories.length) params.set("category", filters.categories.join(","));
+  if (filters.productTypes.length) params.set("type", filters.productTypes.join(","));
   if (filters.sources.length) params.set("source", filters.sources.join(","));
   if (filters.accessTypes.length) params.set("access", filters.accessTypes.join(","));
   if (filters.trustTiers.length) params.set("tier", filters.trustTiers.join(","));
@@ -542,6 +571,7 @@ export function searchParamsToFilters(params: URLSearchParams): CatalogFilters {
     scenarios: splitCsv(params.get("scenario")),
     tags: splitCsv(params.get("tag")),
     categories: splitCsv(params.get("category")).map(normalizeCategory),
+    productTypes: allowValues(splitCsv(params.get("type")), PRODUCT_TYPE_FACET_ORDER),
     sources: splitCsv(params.get("source")) as AgentSource[],
     accessTypes: splitCsv(params.get("access")) as AccessType[],
     trustTiers: splitCsv(params.get("tier"))

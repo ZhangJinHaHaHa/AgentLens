@@ -2,10 +2,13 @@
   "appName": "AgentLens",
   "tagline": "可信 AI Agent 选型平台",
   "nav": {
+    "menu": "菜单",
     "agents": "Agent 列表",
     "compare": "对比",
     "recommend": "需求推荐",
-    "publish": "发布"
+    "publish": "发布",
+    "models": "平台工作区",
+    "account": "身份"
   },
   "actions": {
     "search": "搜索",
@@ -50,6 +53,14 @@
     "curated": "重点维护",
     "listed": "已收录",
     "native": "平台原生"
+  },
+  "agentProductType": {
+    "marketplace_agent": "市场托管 Agent",
+    "large_model_assistant": "大模型助手",
+    "agent_platform": "Agent 平台",
+    "workflow_agent": "工作流 Agent",
+    "coding_agent": "编程 Agent",
+    "vertical_ai_tool": "垂直 AI 工具"
   },
   "risk": {
     "low": "低风险",

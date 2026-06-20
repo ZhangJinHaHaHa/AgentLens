@@ -7,7 +7,9 @@ import { useCompareSelection } from "@/hooks/useCompareSelection";
 const FOOTER_LINKS = [
   { key: "agents", to: "/agents" },
   { key: "compare", to: "/compare" },
-  { key: "recommend", to: "/recommend" }
+  { key: "recommend", to: "/recommend" },
+  { key: "models", to: "/models" },
+  { key: "account", to: "/account" }
 ] as const;
 
 export function Footer(): JSX.Element {

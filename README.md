@@ -10,7 +10,7 @@
 [![Intel SGX](https://img.shields.io/badge/TEE-Intel_SGX-0071C5.svg)](https://software.intel.com/en-us/sgx)
 [![ZK Proofs](https://img.shields.io/badge/ZK-Circom-8A2BE2.svg)](https://docs.circom.io/)
 
-[Website](http://[redacted-server]:5173/zh) • [Documentation](docs/) • [Integration Guide](docs/agent-integration-guide.md) • [Architecture](#-architecture) • [中文文档](README_CN.md)
+[Website](http://[redacted-server]/zh) • [Documentation](docs/) • [Integration Guide](docs/agent-integration-guide.md) • [Architecture](#-architecture) • [中文文档](README_CN.md)
 
 </div>
 
@@ -22,7 +22,7 @@ By combining **On-chain Audit Scores**, **Intel SGX TEE Attestation**, **Zero-Kn
 
 ## 🌐 Official Platform
 
-Visit our live platform: **[AgentLens — Trusted AI Agent Selection](http://[redacted-server]:5173/zh)**
+Visit our live platform: **[AgentLens — Trusted AI Agent Selection](http://[redacted-server]/zh)**
 
 ## 🚀 Features
 

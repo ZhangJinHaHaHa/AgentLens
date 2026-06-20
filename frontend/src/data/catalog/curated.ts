@@ -524,5 +524,187 @@ export const curatedAgents: AgentCatalogEntry[] = [
       zh: "新增 architect 模式与 repo 索引并行处理。",
       en: "Architect mode and parallel repo indexing landed."
     }
+  },
+  {
+    id: "dify",
+    source: "curated",
+    name: "Dify",
+    vendor: "Dify",
+    intro: {
+      zh: "开源 LLM 应用开发平台，支持 RAG、工作流和 Agent 编排，可自托管。30 分钟内可以跑通第一个智能应用。",
+      en: "Open-source LLM app platform for RAG, workflows and agent orchestration with self-hosting support. First app running in 30 minutes."
+    },
+    tagline: {
+      zh: "适合想用低代码方式搭建内部 AI 应用的工程团队",
+      en: "For engineering teams building internal AI apps without heavy coding"
+    },
+    category: "LLM app platform",
+    tags: ["open-source", "self-host", "rag", "workflow"],
+    scenarios: [
+      scenario("workflow-automation"),
+      scenario("knowledge-qa"),
+      scenario("data-analysis")
+    ],
+    unsuitableScenarios: [scenario("ide-coding")],
+    recommendedFor: [
+      { zh: "希望用低代码方式搭建内部 RAG 和 Agent 应用的工程团队", en: "Engineering teams building internal RAG and agent apps with low-code controls" },
+      { zh: "有自托管要求、不想把数据推给第三方的企业", en: "Enterprises that need self-hosting and want to keep data in-house" },
+      { zh: "需要对接多个 LLM Provider 并支持快速切换的平台", en: "Platforms that need multi-LLM-provider support with easy switching" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "自托管时需要自行维护模型、密钥和知识库权限。", en: "Self-hosted deployments must manage models, secrets and knowledge-base permissions." },
+      { zh: "知识库分块策略影响 RAG 质量，默认设置需要按场景调优。", en: "Chunk strategy directly affects RAG quality — default settings need per-use-case tuning." }
+    ],
+    riskMitigation: [
+      { zh: "用 Secrets Manager 或 .env 隔离 API Key，不要硬编码在应用配置中。", en: "Use a secrets manager or .env to isolate API keys — never hardcode them in app config." },
+      { zh: "先在云端版验证流程，再迁移到自托管。", en: "Validate the workflow on cloud first, then migrate to self-hosted." }
+    ],
+    accessTypes: ["local", "cloud", "api"],
+    complexity: "medium",
+    hasOnboardingGuide: true,
+    officialUrl: "https://dify.ai",
+    docsUrl: "https://docs.dify.ai",
+    pricingHint: {
+      zh: "开源版免费自托管；云端版有免费额度，付费版按用量计费。",
+      en: "Open-source self-hosting is free; cloud tier has a free quota with usage-based paid plans."
+    },
+    pricingUrl: "https://dify.ai/pricing"
+  },
+  {
+    id: "perplexity",
+    source: "curated",
+    name: "Perplexity",
+    vendor: "Perplexity AI",
+    intro: {
+      zh: "对话式搜索与研究助手，实时联网检索并附带可点击的引用来源，是调研工作流的快速入口。",
+      en: "Conversational search and research assistant with live web retrieval and inline source citations — a fast entry point for any research workflow."
+    },
+    tagline: {
+      zh: "带引用的实时调研助手，适合市场和竞品分析",
+      en: "Real-time research with citations — built for market and competitive analysis"
+    },
+    category: "Research assistant",
+    tags: ["search", "research", "rag", "citations"],
+    scenarios: [
+      scenario("market-research"),
+      scenario("knowledge-qa"),
+      scenario("content-generation")
+    ],
+    unsuitableScenarios: [scenario("ide-coding"), scenario("defi-trading")],
+    recommendedFor: [
+      { zh: "需要快速带引用做市场或竞品调研的团队", en: "Teams that need fast, citation-backed market or competitive research" },
+      { zh: "内容团队用于找数据和佐证观点", en: "Content teams looking for data points and supporting evidence" },
+      { zh: "需要给非技术同事提供实时信息的运营岗位", en: "Operations roles that need to surface live information for non-technical colleagues" }
+    ],
+    riskLevel: "low",
+    riskNotes: [
+      { zh: "答案是二次综合，重要决策的核心数据仍需核查一手来源。", en: "Answers are synthesised summaries — verify primary sources for critical decisions." },
+      { zh: "部分检索结果是旧版本页面，注意发布日期。", en: "Some results index older page versions — check publication dates." }
+    ],
+    riskMitigation: [
+      { zh: "把 Perplexity 答案里的引用链接单独存档，后续做一手来源核验。", en: "Archive the source URLs from answers separately for later primary-source verification." },
+      { zh: "用 Academic 模式时选择高引用率来源，过滤低质量内容。", en: "In Academic mode, filter for high-citation sources to reduce low-quality content." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "low",
+    hasOnboardingGuide: true,
+    officialUrl: "https://www.perplexity.ai",
+    docsUrl: "https://docs.perplexity.ai",
+    pricingHint: {
+      zh: "免费层每日有限次，Pro 计划约 $20/月，API 按 token 计费。",
+      en: "Free tier with daily limits; Pro plan ~$20/month; API priced per token."
+    },
+    pricingUrl: "https://www.perplexity.ai/pro"
+  },
+  {
+    id: "midjourney",
+    source: "curated",
+    name: "Midjourney",
+    vendor: "Midjourney",
+    intro: {
+      zh: "高质量图像生成模型，通过 Discord Bot 和 midjourney.com Web 入口使用，风格可控性强，适合营销素材和 UI 概念图生成。",
+      en: "High-quality image generation model via Discord and web. Strong style control makes it a go-to for marketing assets and UI concept generation."
+    },
+    tagline: {
+      zh: "最成熟的风格化图像生成工具，适合快速出视觉素材",
+      en: "The most mature stylised image generator for fast visual asset creation"
+    },
+    category: "Image generation",
+    tags: ["image", "design", "creative", "marketing"],
+    scenarios: [
+      scenario("content-generation"),
+      scenario("ui-prototyping")
+    ],
+    unsuitableScenarios: [scenario("ide-coding"), scenario("data-analysis")],
+    recommendedFor: [
+      { zh: "需要快速出风格化营销素材的创意团队", en: "Creative teams that need stylised marketing assets fast" },
+      { zh: "做 UI 概念图和品牌视觉方向验证的设计师", en: "Designers exploring UI concepts and brand visual directions" },
+      { zh: "内容团队需要批量生成社媒配图", en: "Content teams generating social media images at scale" }
+    ],
+    riskLevel: "low",
+    riskNotes: [
+      { zh: "商用前需确认订阅计划的授权条款。", en: "Confirm the licence terms of your subscription plan before commercial use." },
+      { zh: "含名人、品牌 logo 等元素的生成图存在 IP 风险。", en: "Outputs referencing celebrities or brand logos carry IP risk." }
+    ],
+    riskMitigation: [
+      { zh: "Pro 计划以上可开启隐私模式，避免生成内容公开显示在社区画廊。", en: "Pro plan and above can enable Stealth mode to stop generated images appearing in the community gallery." },
+      { zh: "建立团队提示词库沉淀品牌风格词和禁用词。", en: "Maintain a shared prompt library with brand style keywords and blocked terms." }
+    ],
+    accessTypes: ["saas", "browser_ext"],
+    complexity: "low",
+    hasOnboardingGuide: true,
+    officialUrl: "https://www.midjourney.com",
+    docsUrl: "https://docs.midjourney.com",
+    pricingHint: {
+      zh: "Basic 约 $10/月，Pro $60/月（含隐私模式）。按 GPU 时长计费，高频用户建议 Standard 或 Pro。",
+      en: "Basic ~$10/month, Pro $60/month (includes Stealth mode). Billed by GPU hours — high-volume users should consider Standard or Pro."
+    },
+    pricingUrl: "https://www.midjourney.com/account"
+  },
+  {
+    id: "intercom-fin",
+    source: "curated",
+    name: "Intercom Fin",
+    vendor: "Intercom",
+    intro: {
+      zh: "基于 Intercom 平台的 AI 客服 Agent，可接入帮助中心数据自动解答客户问题，支持多渠道对话和人工升级。",
+      en: "AI support agent built on the Intercom platform that ingests help-centre content to auto-resolve customer questions across channels with human escalation."
+    },
+    tagline: {
+      zh: "适合客服量大、希望把常见问题自动化的团队",
+      en: "For high-volume support teams automating common questions without losing brand voice"
+    },
+    category: "Support agent",
+    tags: ["support", "customer-service", "intercom", "knowledge"],
+    scenarios: [
+      scenario("customer-support"),
+      scenario("knowledge-qa")
+    ],
+    unsuitableScenarios: [scenario("ide-coding"), scenario("defi-trading")],
+    recommendedFor: [
+      { zh: "客服量大但希望保持品牌口吻的成长期团队", en: "Growing support teams with high volume that want to keep brand voice consistent" },
+      { zh: "帮助中心文档质量高、希望把自动解答率提升到 60%+ 的团队", en: "Teams with high-quality help centres aiming to push auto-resolution above 60%" },
+      { zh: "已经在用 Intercom 做客服的团队（接入成本最低）", en: "Teams already using Intercom for support — lowest integration cost" }
+    ],
+    riskLevel: "medium",
+    riskNotes: [
+      { zh: "回答质量与帮助中心文章一致性强相关，需要先做内容治理。", en: "Answer quality tracks help-centre article quality — invest in content governance first." },
+      { zh: "未设置人工升级路径会导致复杂问题陷入僵局。", en: "Without an escalation path, complex issues get stuck in the bot loop." }
+    ],
+    riskMitigation: [
+      { zh: "上线前用 100 条真实对话在测试环境跑一遍，补齐知识空白。", en: "Run 100 real conversations through Fin in test mode before launch to surface knowledge gaps." },
+      { zh: "设置明确的人工转接触发词和路由规则。", en: "Configure explicit trigger phrases and routing rules for human handoff." }
+    ],
+    accessTypes: ["saas", "api"],
+    complexity: "medium",
+    hasOnboardingGuide: true,
+    officialUrl: "https://www.intercom.com/fin",
+    docsUrl: "https://www.intercom.com/help/en/articles/8205718",
+    pricingHint: {
+      zh: "按 Fin 解决的对话数收费（Resolution-based pricing），未解决的对话不计费。",
+      en: "Priced per resolved conversation (resolution-based) — unresolved conversations are not charged."
+    },
+    pricingUrl: "https://www.intercom.com/pricing"
   }
 ];

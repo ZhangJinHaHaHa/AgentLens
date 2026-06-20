@@ -28,9 +28,9 @@ export function PageHeading({
           {eyebrow}
         </span>
       ) : null}
-      <h1 className="text-display text-3xl sm:text-4xl">{title}</h1>
+      <h1 className="break-words text-display text-3xl sm:text-4xl">{title}</h1>
       {description ? (
-        <p className="max-w-2xl text-base text-muted-foreground">{description}</p>
+        <p className="max-w-2xl break-words text-base text-muted-foreground">{description}</p>
       ) : null}
     </div>
   );

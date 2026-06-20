@@ -1,28 +1,13 @@
 const fs = require("fs");
 const path = require("path");
 const { ethers } = require("ethers");
+const { readRegistryDeploymentConfig } = require("./deployConfig");
 
 const artifactPath = path.join(__dirname, "..", "artifacts", "AgentAuditRegistryV2.json");
 const deploymentsDir = path.join(__dirname, "..", "deployments");
 
 function readV2DeploymentConfig(env) {
-  const rpcUrl = env.EDGE_RPC_URL;
-  const chainId = env.EDGE_CHAIN_ID;
-  const deployerPrivateKey = env.EDGE_DEPLOYER_PRIVATE_KEY;
-
-  if (!rpcUrl) throw new Error("EDGE_RPC_URL is required");
-  if (!chainId) throw new Error("EDGE_CHAIN_ID is required");
-  if (!deployerPrivateKey) throw new Error("EDGE_DEPLOYER_PRIVATE_KEY is required");
-
-  return {
-    rpcUrl,
-    chainId: Number(chainId),
-    deployerPrivateKey,
-    networkName: env.EDGE_NETWORK_NAME || "polygon-edge-test",
-    initialOperator: env.EDGE_INITIAL_OPERATOR || "",
-    serviceFeeWei: env.EDGE_INITIAL_SERVICE_FEE_WEI || "0",
-    minimumBondWei: env.EDGE_INITIAL_MINIMUM_BOND_WEI || "1"
-  };
+  return readRegistryDeploymentConfig(env);
 }
 
 async function deployV2Registry(config, dependencies = {}) {

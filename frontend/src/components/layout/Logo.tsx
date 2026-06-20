@@ -16,7 +16,7 @@ export function Logo({ className }: LogoProps): JSX.Element {
     <Link
       to={buildPath("/")}
       className={cn(
-        "group inline-flex items-center gap-2 text-sm font-medium tracking-tight text-foreground",
+        "group inline-flex min-w-0 items-center gap-2 text-sm font-medium tracking-tight text-foreground",
         className
       )}
     >
@@ -31,7 +31,7 @@ export function Logo({ className }: LogoProps): JSX.Element {
           />
         </svg>
       </span>
-      <span className="text-base font-medium">{t("appName")}</span>
+      <span className="truncate text-base font-medium">{t("appName")}</span>
     </Link>
   );
 }

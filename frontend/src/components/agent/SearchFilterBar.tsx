@@ -96,6 +96,8 @@ export function SearchFilterBar({
         return `${t("filters.chips.tag")}: ${String(chip.value)}`;
       case "category":
         return `${t("filters.category")}: ${String(chip.value)}`;
+      case "productType":
+        return tc(`agentProductType.${String(chip.value)}`);
       case "source":
         return tc(`agentSource.${String(chip.value)}`);
       case "access":
@@ -128,7 +130,7 @@ export function SearchFilterBar({
   return (
     <div className={cn("flex flex-col gap-6", className)}>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative flex-1">
+        <div className="relative min-w-0 flex-1">
           <Search
             className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
             aria-hidden
@@ -142,12 +144,12 @@ export function SearchFilterBar({
             aria-label={tc("actions.search")}
           />
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="min-w-0 break-words text-xs text-muted-foreground [overflow-wrap:anywhere]">
             {t("results.count", { count: resultCount })}
           </span>
           <Select value={filters.sort} onValueChange={(value) => patch({ sort: value as SortKey })}>
-            <SelectTrigger className="h-9 w-[180px] text-xs">
+            <SelectTrigger className="h-9 w-full min-w-0 text-xs sm:w-[180px]">
               <SelectValue placeholder={t("sort.label")} />
             </SelectTrigger>
             <SelectContent>
@@ -162,13 +164,13 @@ export function SearchFilterBar({
       </div>
 
       {activeChips.length > 0 ? (
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <span className="min-w-0 break-words text-xs font-medium uppercase tracking-wide text-muted-foreground [overflow-wrap:anywhere]">
             {t("filters.active")}
           </span>
           {activeChips.map((chip) => (
-            <Badge key={chip.id} variant="outline" className="gap-1.5 py-1">
-              <span>{describeChip(chip)}</span>
+            <Badge key={chip.id} variant="outline" className="max-w-full gap-1.5 py-1">
+              <span className="min-w-0 break-words [overflow-wrap:anywhere]">{describeChip(chip)}</span>
               <button
                 type="button"
                 className="rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"

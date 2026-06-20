@@ -10,7 +10,7 @@
 [![Intel SGX](https://img.shields.io/badge/TEE-Intel_SGX-0071C5.svg)](https://software.intel.com/en-us/sgx)
 [![ZK Proofs](https://img.shields.io/badge/ZK-Circom-8A2BE2.svg)](https://docs.circom.io/)
 
-[官方网站](http://[redacted-server]:5173/zh) • [项目文档](docs/) • [Agent 接入指南](docs/agent-integration-guide.md) • [架构详解](#-系统架构) • [English](README.md)
+[官方网站](http://[redacted-server]/zh) • [项目文档](docs/) • [Agent 接入指南](docs/agent-integration-guide.md) • [架构详解](#-系统架构) • [English](README.md)
 
 </div>
 
@@ -22,7 +22,7 @@
 
 ## 🌐 官方平台
 
-访问我们的在线平台：**[AgentLens — 可信 AI Agent 导航](http://[redacted-server]:5173/zh)**
+访问我们的在线平台：**[AgentLens — 可信 AI Agent 导航](http://[redacted-server]/zh)**
 
 ## 🚀 核心特性
 
@@ -292,6 +292,6 @@ CLA 确保：
 
 由 AgentLens 团队用 ❤️ 构建
 
-[官方网站](http://[redacted-server]:5173/zh) • [GitHub](https://github.com/ZhangJinHaHaHa/AgentLens) • [联系我们](mailto:3172791717@qq.com)
+[官方网站](http://[redacted-server]/zh) • [GitHub](https://github.com/ZhangJinHaHaHa/AgentLens) • [联系我们](mailto:3172791717@qq.com)
 
 </div>

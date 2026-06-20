@@ -24,7 +24,7 @@ export interface ReportStorageIpfsConfig {
 
 export interface ReportStorageConfig {
   cos: ReportStorageCosConfig;
-  ipfs: ReportStorageIpfsConfig;
+  ipfs?: ReportStorageIpfsConfig;
 }
 
 function requireEnvValue(
@@ -44,25 +44,38 @@ export function readReportStorageConfig(
 ): ReportStorageConfig {
   const keyPrefix = env.AUDIT_REPORT_COS_KEY_PREFIX || "reports";
   const localDir = env.AUDIT_REPORT_COS_LOCAL_DIR;
+  const ipfsApiUrl = env.AUDIT_REPORT_IPFS_API_URL;
+  const cos: ReportStorageCosConfig = localDir
+    ? {
+        mode: "local",
+        localDir,
+        keyPrefix
+      }
+    : {
+        mode: "tencent",
+        secretId: requireEnvValue(env, "AUDIT_REPORT_COS_SECRET_ID"),
+        secretKey: requireEnvValue(env, "AUDIT_REPORT_COS_SECRET_KEY"),
+        bucket: requireEnvValue(env, "AUDIT_REPORT_COS_BUCKET"),
+        region: requireEnvValue(env, "AUDIT_REPORT_COS_REGION"),
+        keyPrefix
+      };
 
   return {
-    cos: localDir
+    cos,
+    ...(ipfsApiUrl
       ? {
-          mode: "local",
-          localDir,
-          keyPrefix
+          ipfs: {
+            apiUrl: ipfsApiUrl,
+            authToken: env.AUDIT_REPORT_IPFS_AUTH_TOKEN
+          }
         }
-      : {
-          mode: "tencent",
-          secretId: requireEnvValue(env, "AUDIT_REPORT_COS_SECRET_ID"),
-          secretKey: requireEnvValue(env, "AUDIT_REPORT_COS_SECRET_KEY"),
-          bucket: requireEnvValue(env, "AUDIT_REPORT_COS_BUCKET"),
-          region: requireEnvValue(env, "AUDIT_REPORT_COS_REGION"),
-          keyPrefix
-        },
-    ipfs: {
-      apiUrl: requireEnvValue(env, "AUDIT_REPORT_IPFS_API_URL"),
-      authToken: env.AUDIT_REPORT_IPFS_AUTH_TOKEN
-    }
+      : localDir
+        ? {}
+        : {
+            ipfs: {
+              apiUrl: requireEnvValue(env, "AUDIT_REPORT_IPFS_API_URL"),
+              authToken: env.AUDIT_REPORT_IPFS_AUTH_TOKEN
+            }
+          })
   };
 }

@@ -1,8 +1,9 @@
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Wallet } from "lucide-react";
+import { Menu, Wallet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useWallet } from "@/hooks/useWallet";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/i18n/useLocale";
@@ -17,7 +18,9 @@ const NAV_ITEMS = [
   { key: "agents", to: "/agents" },
   { key: "compare", to: "/compare" },
   { key: "recommend", to: "/recommend" },
-  { key: "publish", to: "/publish" }
+  { key: "publish", to: "/publish" },
+  { key: "models", to: "/models" },
+  { key: "account", to: "/account" }
 ] as const;
 
 export function NavHeader(): JSX.Element {
@@ -28,28 +31,45 @@ export function NavHeader(): JSX.Element {
 
   return (
     <header className="glass-nav sticky top-0 z-40 w-full border-b">
-      <div className="container-page flex h-14 items-center justify-between gap-4">
-        <div className="flex items-center gap-8">
+      <div className="container-page flex h-14 min-w-0 items-center justify-between gap-2 sm:gap-4">
+        <div className="flex min-w-0 items-center gap-3 sm:gap-8">
           <Logo />
           <nav className="hidden items-center gap-1 text-sm md:flex">
             {NAV_ITEMS.map((item) => (
-              <NavLink
+              <NavItem
                 key={item.key}
+                item={item}
                 to={buildPath(item.key === "compare" ? compareHref : item.to)}
-                className={({ isActive }) =>
-                  cn(
-                    "rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:text-foreground",
-                    isActive && "text-foreground"
-                  )
-                }
-              >
-                {t(`nav.${item.key}`)}
-                {item.key === "compare" && ids.length > 0 ? ` (${ids.length})` : ""}
-              </NavLink>
+                label={t(`nav.${item.key}`)}
+                count={item.key === "compare" ? ids.length : 0}
+              />
             ))}
           </nav>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button type="button" variant="ghost" size="icon" className="md:hidden" aria-label={t("nav.menu")}>
+                <Menu className="h-4 w-4" aria-hidden />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="left-4 right-4 top-16 w-auto max-w-none translate-x-0 translate-y-0 gap-2 p-4 md:hidden">
+              <DialogTitle className="sr-only">{t("nav.menu")}</DialogTitle>
+              <nav className="flex flex-col gap-1 text-sm">
+                {NAV_ITEMS.map((item) => (
+                  <DialogClose key={item.key} asChild>
+                    <NavItem
+                      item={item}
+                      to={buildPath(item.key === "compare" ? compareHref : item.to)}
+                      label={t(`nav.${item.key}`)}
+                      count={item.key === "compare" ? ids.length : 0}
+                      mobile
+                    />
+                  </DialogClose>
+                ))}
+              </nav>
+            </DialogContent>
+          </Dialog>
           <Button
             type="button"
             variant="secondary"
@@ -78,5 +98,33 @@ export function NavHeader(): JSX.Element {
         </div>
       </div>
     </header>
+  );
+}
+
+type NavItemDefinition = (typeof NAV_ITEMS)[number];
+
+interface NavItemProps {
+  item: NavItemDefinition;
+  to: string;
+  label: string;
+  count: number;
+  mobile?: boolean;
+}
+
+function NavItem({ item, to, label, count, mobile = false }: NavItemProps): JSX.Element {
+  return (
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        cn(
+          "rounded-md text-muted-foreground transition-colors hover:text-foreground",
+          mobile ? "px-3 py-3" : "px-3 py-1.5",
+          isActive && "bg-muted/55 text-foreground"
+        )
+      }
+    >
+      {label}
+      {item.key === "compare" && count > 0 ? ` (${count})` : ""}
+    </NavLink>
   );
 }
