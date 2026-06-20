@@ -37,8 +37,8 @@ function buildMockFetch(
   }) as typeof fetch;
 }
 
-const PRIVATE_KEY = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-const SIGNER_ADDRESS = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
+const PRIVATE_KEY = `0x${"11".repeat(32)}`;
+const SIGNER_ADDRESS = "0x19e7e376e7c213b7e7e7e46cc70a5dd086daff2a";
 const CONTRACT_ADDRESS = "0x1111111111111111111111111111111111111111";
 const TEST_CHAIN_ID = 31337;
 const TEST_NONCE_HEX = "0x7";
