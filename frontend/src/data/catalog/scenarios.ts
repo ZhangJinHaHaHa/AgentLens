@@ -16,6 +16,10 @@ const map: Record<string, I18nText> = {
   "fullstack-prototyping": { zh: "搭网站应用原型", en: "App prototypes" },
   "knowledge-qa": { zh: "查资料问答", en: "Q&A over your docs" },
   "multimodal-chat": { zh: "图文语音对话", en: "Text, image & voice chat" },
+  "security-audit": { zh: "代码安全审计", en: "Code security audit" },
+  "public-opinion": { zh: "舆情分析", en: "Public-opinion analysis" },
+  "prediction-simulation": { zh: "趋势预测与模拟", en: "Prediction & simulation" },
+  "browser-automation": { zh: "浏览器自动化", en: "Browser automation" },
   // Expert-seller (marketplace) professional domains — each backed by a
   // seller's private accumulated context rather than a generic model.
   "legal-defense": { zh: "刑事辩护", en: "Criminal defense" },

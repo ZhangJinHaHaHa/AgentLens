@@ -52,6 +52,7 @@ infra/polygon-edge-external/.env
 !docs/agent-integration-guide.md
 !docs/verification-methods.md
 !docs/status/2026-06-20-workspace-marketplace-detailed-plan.md
+!docs/status/2026-06-21-workspace-map-design.md
 !docs/status/2026-06-20-mainline-cleanup-audit.md
 !docs/status/2026-06-20-clean-mainline-migration.md
 !docs/status/2026-06-21-clean-baseline-runtime-fix.md

@@ -11,11 +11,11 @@ interface AgentTypeChipProps {
 
 const STYLES: Record<AgentSource, string> = {
   marketplace:
-    "border-primary/40 bg-primary/10 text-primary dark:bg-primary/20",
+    "border-border bg-muted text-foreground",
   curated:
-    "border-foreground/30 bg-foreground/5 text-foreground",
+    "border-border bg-background text-foreground",
   listed:
-    "border-border bg-muted text-muted-foreground",
+    "border-border bg-background text-muted-foreground",
   native:
     "border-success/40 bg-success/10 text-success-foreground/80 dark:bg-success/20 dark:text-success-foreground"
 };
