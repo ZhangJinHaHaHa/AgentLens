@@ -16,7 +16,7 @@
 
 ---
 
-**AgentLens** is a decentralized infrastructure and marketplace designed to solve the trust problem in the AI Agent economy. Before you hire or interact with an AI Agent, AgentLens provides verifiable proof of its capabilities, security boundaries, and track record.
+**AgentLens** is a trusted AI Agent discovery and launch platform. It helps users find task-specific Agents, understand their risk boundaries, and either use them in-platform, follow a guided integration path, or jump to the provider when an Agent must stay outside AgentLens.
 
 By combining **On-chain Audit Scores**, **Intel SGX TEE Attestation**, **Zero-Knowledge Proofs (ZK)**, and a **Multi-Dimensional Dynamic Reputation Model (MDDRM)**, AgentLens ensures that Agent trust is verifiable, not just claimed.
 
@@ -30,6 +30,7 @@ Visit our live platform: **[AgentLens — Trusted AI Agent Selection](http://[re
 * 🔐 **Intel SGX TEE Attestation**: All sandbox audits run inside hardware-isolated enclaves. Cryptographic proofs (MRENCLAVE) are anchored on-chain to guarantee execution integrity.
 * 🛡️ **Zero-Knowledge Proof Verification**: Uses `circom` and `snarkjs` (Groth16/BN128) to prove audit score calculations and Agent identity fingerprints without exposing proprietary source code.
 * ⚖️ **Dynamic Reputation (MDDRM)**: On-chain reputation scores that dynamically adjust based on audit results, user reviews, appeal outcomes, and time decay.
+* 🧭 **Agent Discovery & Launch**: Search, compare, and open task-specific Agents like lightweight apps — use supported Agents directly, follow setup guides, or hand off to external providers when trust or execution boundaries require it.
 * 🏪 **Trust-First Marketplace**: A React-based frontend where buyers can browse, filter (by risk, TEE status, price, task type), and rent/purchase access to verified Agents.
 
 ## 🏗️ Architecture
@@ -105,7 +106,7 @@ graph TD
 
 ## 📊 Platform Walkthrough
 
-The latest version of AgentLens has been fully redesigned — evolving from a pure on-chain Agent marketplace into a **trusted AI Agent selection and navigation platform**. The platform aggregates 50+ mainstream AI Agents and breaks each one down into comparable, structured facts: scenario fit, risk level, integration method, onboarding cost, and whether it has been through verifiable trust verification. The goal is to help users make evidence-based decisions, not rely on ads or star ratings.
+The latest version of AgentLens has been fully redesigned — evolving from a pure on-chain Agent marketplace into a **trusted AI Agent discovery, selection, and launch platform**. The platform treats Agents like lightweight task apps: users can search for the Agent they need, compare structured facts, use supported Agents directly, or jump to the official/provider environment when an Agent has strict execution boundaries. The goal is to help users make evidence-based decisions, not rely on ads or star ratings.
 
 ---
 
@@ -129,7 +130,7 @@ The Agent list page aggregates all 50+ Agents with search (by name / description
   <img src="docs/screenshots/en/02-agent-list.png" alt="Agent Catalog" width="760" />
 </p>
 
-Agents are categorized into three label types: **Expert Listing** (backed by real practitioners), **T1 Watch** (mainstream commercial Agents), and **T0 Curated** (deeply maintained by the platform), helping users quickly assess the credibility of each information source.
+Agents are organized by practical availability: **Ready to Use** (can be launched or rented through AgentLens), **Guided Setup** (complete onboarding guide available), and **External Launch** (trusted listing with handoff to the provider when the Agent runs outside AgentLens).
 
 ---
 
@@ -273,9 +274,9 @@ We also welcome broad community contributions! Please read our [CONTRIBUTING.md]
 
 ## 📜 License & Commercial Use
 
-AgentLens is open-sourced under the **GNU Affero General Public License v3.0 (AGPL-3.0)** for community, research, and non-commercial use. See the [LICENSE](LICENSE) file for details.
+AgentLens is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. The AGPL-3.0 permits use, modification, distribution, and deployment, including commercial use, as long as you comply with its terms. In particular, if you modify AgentLens and make it available as a network service, the AGPL-3.0 requires you to provide the corresponding source code to the users of that service. See the [LICENSE](LICENSE) file for details.
 
-**Commercial Licensing**: If you wish to use AgentLens in a commercial product, proprietary SaaS platform, or private enterprise deployment without the AGPL obligations (which require you to open-source your entire service), we offer commercial licenses.
+**Commercial Licensing**: If you want to use AgentLens in a proprietary SaaS platform, private enterprise deployment, or commercial product without the AGPL-3.0 copyleft obligations, we offer commercial licenses.
 
 Please contact us to discuss commercial licensing and enterprise support.
 
