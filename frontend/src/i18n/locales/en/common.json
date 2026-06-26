@@ -62,6 +62,13 @@
     "coding_agent": "Coding agent",
     "vertical_ai_tool": "Vertical AI tool"
   },
+  "agentTaskCategory": {
+    "code_debug": "Code & debug",
+    "research": "Research",
+    "document": "Documents",
+    "automation": "Office automation",
+    "other": "Other"
+  },
   "risk": {
     "low": "Low risk",
     "medium": "Medium risk",

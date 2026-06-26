@@ -126,6 +126,7 @@ export function SearchFilterBar({
   }
 
   const activeChips = getActiveFilterChips(filters);
+  const scenarioShortcutIds = facets.scenarioIds.slice(0, 8);
 
   return (
     <div className={cn("flex flex-col gap-6", className)}>
@@ -162,6 +163,32 @@ export function SearchFilterBar({
           </Select>
         </div>
       </div>
+
+      {scenarioShortcutIds.length > 0 ? (
+        <div className="hidden min-w-0 flex-col gap-2 sm:flex">
+          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            {t("filters.quickScenarios")}
+          </span>
+          <div className="flex min-w-0 flex-wrap gap-2">
+            {scenarioShortcutIds.map((id) => {
+              const selected = filters.scenarios.includes(id);
+              return (
+                <Button
+                  key={id}
+                  type="button"
+                  variant={selected ? "secondary" : "outline"}
+                  size="sm"
+                  aria-pressed={selected}
+                  onClick={() => toggleArray("scenarios", id)}
+                  className="h-8 max-w-full min-w-0 px-3 text-xs"
+                >
+                  <span className="min-w-0 truncate">{pickText(SCENARIO_MAP[id], locale)}</span>
+                </Button>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
 
       {activeChips.length > 0 ? (
         <div className="flex min-w-0 flex-wrap items-center gap-2">

@@ -1,5 +1,3 @@
-import COS from "cos-nodejs-sdk-v5";
-
 export interface TencentCosReportStoreConfig {
   secretId: string;
   secretKey: string;
@@ -48,7 +46,7 @@ export function createTencentCosReportStore(
   const secretKey = requireConfigValue(config.secretKey, "secretKey");
   const bucket = requireConfigValue(config.bucket, "bucket");
   const region = requireConfigValue(config.region, "region");
-  const Constructor = deps?.CosConstructor ?? (COS as unknown as CosConstructor);
+  const Constructor = deps?.CosConstructor ?? loadTencentCosConstructor();
   const client = new Constructor({ SecretId: secretId, SecretKey: secretKey });
 
   return {
@@ -73,4 +71,19 @@ export function createTencentCosReportStore(
       });
     }
   };
+}
+
+function loadTencentCosConstructor(): CosConstructor {
+  try {
+    // Loaded lazily so the default production install can omit the optional
+    // Tencent COS SDK when audit reports are stored in the local report store.
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const loaded = require("cos-nodejs-sdk-v5") as { default?: unknown };
+    return (loaded.default ?? loaded) as CosConstructor;
+  } catch (error) {
+    throw new Error(
+      "Tencent COS report storage requires optional dependency cos-nodejs-sdk-v5. " +
+      "Install cos-nodejs-sdk-v5 in the sandbox service or set AUDIT_REPORT_COS_LOCAL_DIR."
+    );
+  }
 }

@@ -3,7 +3,8 @@
  * Catalog validation gate.
  *
  * Run before tsc/vite. Verifies:
- *   - every curated/listed entry has both zh + en for every I18nText
+ *   - every curated entry has both zh + en for every I18nText
+ *   - legacy listed seed agents stay physically empty
  *   - every curated entry has a matching onboarding file under data/catalog/onboarding/
  *   - scenario references resolve against the canonical scenario map
  *   - access types/risk levels/complexity values are within the allowed enums
@@ -27,6 +28,11 @@ const ONBOARDING_DIR = join(CATALOG_DIR, "onboarding");
 const ALLOWED_RISK = new Set(["low", "medium", "high"]);
 const ALLOWED_COMPLEXITY = new Set(["low", "medium", "high"]);
 const ALLOWED_ACCESS = new Set(["api", "saas", "cli", "browser_ext", "local", "cloud"]);
+const EXPECTED_PLATFORM_MARKETPLACE_IDS = [
+  "platform-deepaudit",
+  "platform-openhands",
+  "platform-browser-use"
+];
 
 /** @type {string[]} */
 const errors = [];
@@ -80,14 +86,16 @@ function extractIds(body) {
 }
 
 function extractAgentIds(body) {
-  // First-level id occurrences inside the array entries. We pick the FIRST id
-  // per entry block separated by `},` boundaries.
-  const blocks = body.split(/},\s*\{/);
   /** @type {string[]} */
   const ids = [];
-  for (const block of blocks) {
-    const m = block.match(/\bid:\s*"([a-z0-9][a-z0-9-_]*)"/);
-    if (m) ids.push(m[1]);
+  // Top-level catalog entries are formatted as two-space indented object
+  // literals inside the exported array. Nested objects such as
+  // capabilityContract.moduleNarratives also contain `id`, so avoid broad
+  // `id:` scans here.
+  const re = /^  \{\s*\n    id:\s*"([a-z0-9][a-z0-9-_]*)"/gm;
+  let m;
+  while ((m = re.exec(body)) !== null) {
+    ids.push(m[1]);
   }
   return ids;
 }
@@ -143,11 +151,23 @@ function validate() {
   if (curatedIds.length < 10) {
     fail(`curated.ts: expected at least 10 agents, found ${curatedIds.length}.`);
   }
-  if (listedIds.length < 15) {
-    fail(`listed.ts: expected at least 15 agents, found ${listedIds.length}.`);
+  if (listedIds.length !== 0) {
+    fail(
+      `listed.ts: legacy listed seed agents must stay empty; found ${listedIds.length} ids: ${listedIds.join(",")}.`
+    );
   }
-  if (marketplaceIds.length < 10) {
-    fail(`marketplace.ts: expected at least 10 agents, found ${marketplaceIds.length}.`);
+  if (marketplaceIds.length !== EXPECTED_PLATFORM_MARKETPLACE_IDS.length) {
+    fail(
+      `marketplace.ts: expected exactly ${EXPECTED_PLATFORM_MARKETPLACE_IDS.length} hosted-candidate agents, ` +
+        `found ${marketplaceIds.length}.`
+    );
+  }
+  const marketplaceIdList = marketplaceIds.join(",");
+  const expectedMarketplaceIdList = EXPECTED_PLATFORM_MARKETPLACE_IDS.join(",");
+  if (marketplaceIdList !== expectedMarketplaceIdList) {
+    fail(
+      `marketplace.ts: expected hosted-candidate ids ${expectedMarketplaceIdList}, found ${marketplaceIdList}.`
+    );
   }
 
   const allIds = new Set();

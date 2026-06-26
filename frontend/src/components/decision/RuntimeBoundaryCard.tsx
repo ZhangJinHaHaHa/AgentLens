@@ -1,8 +1,8 @@
-import { Box, CircleSlash, FileCheck2, Route, ShieldCheck, Sparkles } from "lucide-react";
+import { Box, CircleSlash, FileCheck2, Fingerprint, Route, ShieldCheck, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getRuntimeSecurity, type AgentCatalogEntry } from "@/domain/catalog";
+import { getRuntimeProtocol, getRuntimeSecurity, type AgentCatalogEntry } from "@/domain/catalog";
 import { buildAgentBuyerCardSummary } from "@/domain/agentBuyerCard";
 import { pickText } from "@/domain/i18nText";
 import { useLocale } from "@/i18n/useLocale";
@@ -16,6 +16,7 @@ export function RuntimeBoundaryCard({ entry }: RuntimeBoundaryCardProps): JSX.El
   const { t } = useTranslation("detail");
   const summary = buildAgentBuyerCardSummary(entry);
   const runtimeSecurity = getRuntimeSecurity(entry);
+  const runtimeProtocol = getRuntimeProtocol(entry);
 
   return (
     <Card>
@@ -38,6 +39,11 @@ export function RuntimeBoundaryCard({ entry }: RuntimeBoundaryCardProps): JSX.El
           icon={<Box className="h-4 w-4" aria-hidden />}
           label={t("runtimeBoundary.runtimeSecurity")}
           value={`${pickText(runtimeSecurity.label, locale)}：${pickText(runtimeSecurity.description, locale)}`}
+        />
+        <BoundaryItem
+          icon={<Fingerprint className="h-4 w-4" aria-hidden />}
+          label={t("runtimeBoundary.runtimeProtocol")}
+          value={`${pickText(runtimeProtocol.label, locale)}：${pickText(runtimeProtocol.description, locale)}`}
         />
         <BoundaryItem
           icon={<FileCheck2 className="h-4 w-4" aria-hidden />}

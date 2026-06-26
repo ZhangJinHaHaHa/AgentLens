@@ -256,36 +256,97 @@ function matchesQuery(entry: AgentCatalogEntry, query: string): boolean {
   const needle = query.trim().toLowerCase();
   if (!needle) return true;
 
-  if (entry.name.toLowerCase().includes(needle)) return true;
-  if (entry.vendor?.toLowerCase().includes(needle)) return true;
-  if (entry.intro.zh.toLowerCase().includes(needle)) return true;
-  if (entry.intro.en.toLowerCase().includes(needle)) return true;
-  if (entry.tags.some((tag) => tag.toLowerCase().includes(needle))) return true;
-  if (entry.recommendedFor.some((item) => matchesText(item.zh, needle) || matchesText(item.en, needle))) return true;
-  if (entry.riskNotes.some((item) => matchesText(item.zh, needle) || matchesText(item.en, needle))) return true;
-  if (entry.riskMitigation?.some((item) => matchesText(item.zh, needle) || matchesText(item.en, needle))) return true;
-  if (
-    entry.observationSummary &&
-    (matchesText(entry.observationSummary.zh, needle) || matchesText(entry.observationSummary.en, needle))
-  ) {
-    return true;
-  }
-  if (
-    entry.scenarios.some(
-      (s) =>
-        s.id.toLowerCase().includes(needle) ||
-        s.label.zh.toLowerCase().includes(needle) ||
-        s.label.en.toLowerCase().includes(needle)
-    )
-  ) {
-    return true;
-  }
-  if (entry.category.toLowerCase().includes(needle)) return true;
-  return false;
+  const fragments = collectSearchFragments(entry);
+  if (fragments.some((fragment) => fragment.includes(needle))) return true;
+
+  const tokens = needle.split(/[\s,;:/|，。；、]+/u).filter((token) => token.length >= 2);
+  if (tokens.length <= 1) return false;
+  return tokens.every((token) => fragments.some((fragment) => fragment.includes(token)));
 }
 
-function matchesText(value: string, needle: string): boolean {
-  return value.toLowerCase().includes(needle);
+function collectSearchFragments(entry: AgentCatalogEntry): string[] {
+  const buyerCard = entry.buyerCard;
+  const capability = entry.capabilityContract;
+  const runtimeSecurity = entry.runtimeSecurity;
+  const runtimeProtocol = entry.runtimeProtocol;
+
+  return [
+    entry.name,
+    entry.vendor ?? "",
+    entry.seller?.label.zh ?? "",
+    entry.seller?.label.en ?? "",
+    entry.seller?.contextScale.zh ?? "",
+    entry.seller?.contextScale.en ?? "",
+    entry.intro.zh,
+    entry.intro.en,
+    entry.category,
+    ...entry.tags,
+    ...(entry.tagline ? [entry.tagline.zh, entry.tagline.en] : []),
+    ...entry.recommendedFor.flatMap((item) => [item.zh, item.en]),
+    ...entry.riskNotes.flatMap((item) => [item.zh, item.en]),
+    ...(entry.riskMitigation?.flatMap((item) => [item.zh, item.en]) ?? []),
+    ...(entry.observationSummary ? [entry.observationSummary.zh, entry.observationSummary.en] : []),
+    ...(entry.pricingHint ? [entry.pricingHint.zh, entry.pricingHint.en] : []),
+    ...(buyerCard?.tasks?.flatMap((item) => [item.zh, item.en]) ?? []),
+    ...(buyerCard?.deliverable ? [buyerCard.deliverable.zh, buyerCard.deliverable.en] : []),
+    ...(buyerCard?.notFor ? [buyerCard.notFor.zh, buyerCard.notFor.en] : []),
+    ...(buyerCard?.runMode ? [buyerCard.runMode.zh, buyerCard.runMode.en] : []),
+    ...(buyerCard?.dataBoundary ? [buyerCard.dataBoundary.zh, buyerCard.dataBoundary.en] : []),
+    ...(buyerCard?.differentiation ? [buyerCard.differentiation.zh, buyerCard.differentiation.en] : []),
+    ...(runtimeSecurity ? [
+      runtimeSecurity.kind,
+      runtimeSecurity.label.zh,
+      runtimeSecurity.label.en,
+      runtimeSecurity.description.zh,
+      runtimeSecurity.description.en,
+      runtimeSecurity.evidenceLabel?.zh ?? "",
+      runtimeSecurity.evidenceLabel?.en ?? ""
+    ] : []),
+    ...(runtimeProtocol ? [
+      runtimeProtocol.custodyProtocol,
+      runtimeProtocol.vendorVerification,
+      runtimeProtocol.auditDisclosureMode,
+      runtimeProtocol.settlementMode,
+      runtimeProtocol.label.zh,
+      runtimeProtocol.label.en,
+      runtimeProtocol.description.zh,
+      runtimeProtocol.description.en,
+      runtimeProtocol.dataRetentionPolicy.zh,
+      runtimeProtocol.dataRetentionPolicy.en
+    ] : []),
+    ...(capability ? [
+      capability.mapFit,
+      capability.runtimeMode,
+      capability.mobileSupport,
+      capability.desktopSupport,
+      capability.pricingMode,
+      ...capability.inputTypes,
+      ...capability.outputTypes,
+      ...capability.requiredTools,
+      ...capability.permissionNeeds,
+      ...capability.trustSignals,
+      ...(capability.knownLimits?.flatMap((item) => [item.zh, item.en]) ?? []),
+      ...(capability.typicalTasks?.flatMap((item) => [item.zh, item.en]) ?? []),
+      ...(capability.moduleNarratives?.flatMap((item) => [
+        item.id,
+        item.status,
+        item.label.zh,
+        item.label.en,
+        item.description.zh,
+        item.description.en,
+        ...(item.caveats?.flatMap((caveat) => [caveat.zh, caveat.en]) ?? []),
+        item.privacyNote?.zh ?? "",
+        item.privacyNote?.en ?? "",
+        item.testPrompt?.zh ?? "",
+        item.testPrompt?.en ?? ""
+      ]) ?? [])
+    ] : []),
+    ...entry.scenarios.flatMap((scenarioRef) => [
+      scenarioRef.id,
+      scenarioRef.label.zh,
+      scenarioRef.label.en
+    ])
+  ].map((value) => value.toLowerCase());
 }
 
 function matchesScenarios(entry: AgentCatalogEntry, scenarios: string[]): boolean {

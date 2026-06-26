@@ -57,7 +57,7 @@ test("createListenerServiceState rejects a second lock owner for the same stateD
     const second = createListenerServiceState({ stateDir });
 
     await first.acquireLock({
-      pid: 1001,
+      pid: process.pid,
       startedAt: "2026-03-27T12:00:00.000Z"
     });
 
@@ -70,6 +70,35 @@ test("createListenerServiceState rejects a second lock owner for the same stateD
     );
 
     await first.releaseLock();
+  } finally {
+    await rm(stateDir, { recursive: true, force: true });
+  }
+});
+
+test("createListenerServiceState recovers a stale lock whose process is gone", async () => {
+  const stateDir = await mkdtemp(join(tmpdir(), "listener-service-state-"));
+
+  try {
+    const first = createListenerServiceState({ stateDir });
+    const second = createListenerServiceState({ stateDir });
+
+    await first.acquireLock({
+      pid: 999999,
+      startedAt: "2026-03-27T12:00:00.000Z"
+    });
+
+    await second.acquireLock({
+      pid: process.pid,
+      startedAt: "2026-03-27T12:01:00.000Z"
+    });
+
+    const lockContents = JSON.parse(
+      await readFile(join(stateDir, "service-lock.json"), "utf8")
+    ) as Record<string, unknown>;
+
+    assert.equal(lockContents.pid, process.pid);
+
+    await second.releaseLock();
   } finally {
     await rm(stateDir, { recursive: true, force: true });
   }

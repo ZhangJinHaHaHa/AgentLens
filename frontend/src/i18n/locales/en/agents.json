@@ -7,6 +7,7 @@
     "count_other": "{{count}} results",
     "empty": "No matching agents.",
     "emptyHint": "Try removing some filters or changing the keyword.",
+    "emptyScenarioHint": "Or start from one of these task areas.",
     "llmUnavailable": "LLM parsing is unavailable; falling back to keyword search.",
     "relaxHint": "{{filter}} is probably the tightest constraint; removing it would recover about {{count}} candidates.",
     "showAll": "Show all agents"
@@ -30,6 +31,7 @@
     "dataBoundary": "Data boundary",
     "notFor": "Not for",
     "differentiation": "Why this Agent",
+    "platformValue": "Platform value",
     "installBadges": {
       "official_mobile": "Official mobile",
       "official_desktop": "Official desktop",
@@ -46,12 +48,19 @@
     "workspaceBadges": {
       "hosted_gateway_ready": "Hosted gateway ready",
       "model_gateway_ready": "Model gateway ready",
-      "external_adapter_ready": "External adapter ready",
-      "api_adapter_possible": "API adapter possible",
-      "self_host_adapter_possible": "Self-host adapter possible",
+      "external_adapter_ready": "Workflow / tools connected",
+      "platform_candidate_preparing": "Platform hosting in progress",
+      "api_adapter_possible": "API adapter possible / backend not connected",
+      "self_host_adapter_possible": "Self-host adapter possible / backend not connected",
       "official_only": "Official only",
       "replacement_only": "Needs platform substitute",
       "manual_review": "To confirm"
+    },
+    "workspaceValue": {
+      "model_gateway_ready": "Unified credits · run records · same workspace switching",
+      "external_adapter_ready": "Unified trigger · run records · platform credit billing",
+      "api_adapter_possible": "Once connected, AgentLens can bill credits, keep run records, and trigger it from the same workspace",
+      "self_host_adapter_possible": "Once self-hosting is connected, AgentLens can trigger, meter, and record it"
     },
     "seller": "Seller",
     "hasOnboarding": "Yes",
@@ -61,6 +70,7 @@
   },
   "filters": {
     "title": "Filters",
+    "quickScenarios": "Find by task",
     "scenario": "Scenario",
     "tags": "Tags",
     "category": "Category",

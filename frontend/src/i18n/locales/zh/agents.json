@@ -7,6 +7,7 @@
     "count_other": "共 {{count}} 个结果",
     "empty": "没有匹配的 Agent。",
     "emptyHint": "试试减少筛选条件，或换个关键词。",
+    "emptyScenarioHint": "也可以先按这些任务方向看看。",
     "llmUnavailable": "LLM 解析不可用，已回退到关键词搜索。",
     "relaxHint": "最可能卡住结果的是 {{filter}}；移除它约可恢复 {{count}} 个候选。",
     "showAll": "查看全部 Agent"
@@ -30,6 +31,7 @@
     "dataBoundary": "数据边界",
     "notFor": "不适合",
     "differentiation": "差异价值",
+    "platformValue": "平台价值",
     "installBadges": {
       "official_mobile": "官方手机端",
       "official_desktop": "官方电脑端",
@@ -46,12 +48,19 @@
     "workspaceBadges": {
       "hosted_gateway_ready": "托管网关可用",
       "model_gateway_ready": "模型网关可用",
-      "external_adapter_ready": "外部适配器可用",
-      "api_adapter_possible": "可接 API 适配器",
-      "self_host_adapter_possible": "可接自托管适配器",
+      "external_adapter_ready": "工作流 / 工具：已接通",
+      "platform_candidate_preparing": "平台托管准备中",
+      "api_adapter_possible": "可接 API 适配器 / 后端未连接",
+      "self_host_adapter_possible": "可接自托管适配器 / 后端未连接",
       "official_only": "仅官方可用",
       "replacement_only": "需平台替代",
       "manual_review": "待确认"
+    },
+    "workspaceValue": {
+      "model_gateway_ready": "统一积分结算 · 运行记录 · 同一工作区切换",
+      "external_adapter_ready": "统一触发入口 · 运行记录 · 平台积分结算",
+      "api_adapter_possible": "接通后可统一积分、留运行记录，并在同一个工作区触发",
+      "self_host_adapter_possible": "接通自托管服务后，可统一触发、计费和留痕"
     },
     "seller": "背后卖家",
     "hasOnboarding": "有",
@@ -61,6 +70,7 @@
   },
   "filters": {
     "title": "筛选",
+    "quickScenarios": "按任务找",
     "scenario": "场景",
     "tags": "标签",
     "category": "类别",

@@ -476,10 +476,10 @@
 
       async function connectUser() {
         setBusy(true);
-        setStatus("正在创建 Google mock 用户...");
+        setStatus("正在开通 Beta 平台账户...");
         try {
           const runId = Date.now().toString(36);
-          const json = await fetchJson("/api/web2/google/mock", {
+          const json = await fetchJson("/api/web2/beta-account", {
             method: "POST",
             body: {
               googleSubject: `c-line-demo-${runId}`,
@@ -583,11 +583,11 @@
             currency: "CREDITS"
           }
         });
-        const paymentResponse = await fetchJson("/api/payments/mock-callback", {
+        const paymentResponse = await fetchJson("/api/payments/beta-credit-grant", {
           method: "POST",
           body: {
             orderId: orderResponse.order.orderId,
-            paymentProvider: "stripe-mock",
+            paymentProvider: "beta-credit-ledger",
             providerPaymentId: `pay-${runId}`,
             idempotencyKey: `idem-${runId}`,
             paidAmount: amount

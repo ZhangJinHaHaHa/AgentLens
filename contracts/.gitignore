@@ -4,6 +4,7 @@ artifacts/*
 !artifacts/AgentAuditRegistryV3.json
 !artifacts/AgentMarketplace.json
 !artifacts/AgentReviewRegistry.json
+!artifacts/ZkAuditVerifier.json
 cache/
 deployments/
 .home/

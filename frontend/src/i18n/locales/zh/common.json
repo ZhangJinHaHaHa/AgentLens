@@ -62,6 +62,13 @@
     "coding_agent": "编程 Agent",
     "vertical_ai_tool": "垂直 AI 工具"
   },
+  "agentTaskCategory": {
+    "code_debug": "写代码 & 调试",
+    "research": "查资料 & 调研",
+    "document": "处理文档",
+    "automation": "自动化办公",
+    "other": "其他"
+  },
   "risk": {
     "low": "低风险",
     "medium": "中风险",

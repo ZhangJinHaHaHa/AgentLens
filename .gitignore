@@ -37,6 +37,7 @@ frontend/vite.config.js
 # Infra local secrets
 infra/polygon-edge-local/.env
 infra/polygon-edge-external/.env
+infra/production/scripts/regression-*/
 
 # Markdown docs
 *.md
@@ -46,18 +47,12 @@ infra/polygon-edge-external/.env
 !CODE_OF_CONDUCT.md
 !CONTRIBUTING.md
 !SECURITY.md
-!agentlens_task_knowledge_graph.md
 !docs/server-sandbox-private-chain-plan.md
 !docs/bug-audit-2026-06-10.md
 !docs/agent-integration-guide.md
 !docs/verification-methods.md
-!docs/status/2026-06-20-workspace-marketplace-detailed-plan.md
-!docs/status/2026-06-21-workspace-map-design.md
-!docs/status/2026-06-20-mainline-cleanup-audit.md
-!docs/status/2026-06-20-clean-mainline-migration.md
-!docs/status/2026-06-21-clean-baseline-runtime-fix.md
-!docs/status/2026-06-21-codebase-hardening-audit.md
 
 # Codex tool memory
+.messages/
 .omx/
 .gstack/

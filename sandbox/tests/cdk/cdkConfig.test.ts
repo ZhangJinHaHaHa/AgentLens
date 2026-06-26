@@ -6,7 +6,7 @@ import path from "node:path";
 
 import { loadCdkConfig } from "../../src/cdk/cdkConfig";
 
-test("loadCdkConfig returns production defaults when no config file and no env vars", () => {
+test("loadCdkConfig returns safe local defaults when no config file and no env vars", () => {
   const config = loadCdkConfig({ cwd: os.tmpdir(), env: {} });
   assert.equal(config.rpcUrl, "http://127.0.0.1:18545");
   assert.equal(config.chainId, 302612);

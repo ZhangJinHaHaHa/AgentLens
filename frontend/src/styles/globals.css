@@ -246,7 +246,10 @@
 }
 
 @layer base {
-  * {
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
     @apply border-border;
   }
 
@@ -307,7 +310,28 @@
 
 @layer components {
   .container-page {
-    @apply mx-auto w-full max-w-6xl px-4 sm:px-8;
+    @apply mx-auto box-border w-full max-w-6xl min-w-0 px-4 sm:px-8;
+  }
+
+  .workspace-app-shell {
+    height: 100vh;
+    min-height: 100vh;
+  }
+
+  .workspace-route-shell {
+    height: calc(100vh - 3.5rem);
+    min-height: 0;
+  }
+
+  @supports (height: 100dvh) {
+    .workspace-app-shell {
+      height: 100dvh;
+      min-height: 100dvh;
+    }
+
+    .workspace-route-shell {
+      height: calc(100dvh - 3.5rem);
+    }
   }
 
   .text-display {
@@ -516,7 +540,7 @@
   /* ========== Stitch art-direction surfaces and controls ========== */
 
   .surface-card {
-    @apply min-w-0 rounded-[var(--radius)] border text-card-foreground transition-all duration-300;
+    @apply min-w-0 max-w-full rounded-[var(--radius)] border text-card-foreground transition-all duration-300;
     background: var(--glass-bg);
     border-color: var(--glass-border);
     box-shadow: var(--glass-shadow);
@@ -525,14 +549,14 @@
   }
 
   .surface-card-interactive {
-    @apply surface-card hover:-translate-y-1;
+    @apply surface-card hover:-translate-y-0.5;
   }
 
   .surface-card-interactive:hover {
     border-color: hsl(var(--primary) / 0.42);
     box-shadow:
       var(--glass-shadow),
-      0 18px 42px hsl(var(--primary) / 0.18);
+      0 12px 30px hsl(var(--primary) / 0.12);
   }
 
   .glass-nav {

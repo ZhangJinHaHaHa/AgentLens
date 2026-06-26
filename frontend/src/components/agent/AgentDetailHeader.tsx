@@ -1,4 +1,4 @@
-import { ArrowUpRight, Download, Plus } from "lucide-react";
+import { ArrowUpRight, Check, Download, PlayCircle, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -16,6 +16,7 @@ import { computeTrustTier } from "@/domain/trustTier";
 interface AgentDetailHeaderProps {
   entry: AgentCatalogEntry;
   onInstallClick?: () => void;
+  primaryAction?: "install" | "use";
 }
 
 const RISK_PILL: Record<RiskLevel, string> = {
@@ -24,7 +25,7 @@ const RISK_PILL: Record<RiskLevel, string> = {
   high: "border-danger/40 bg-danger/10 text-danger-foreground/80"
 };
 
-export function AgentDetailHeader({ entry, onInstallClick }: AgentDetailHeaderProps): JSX.Element {
+export function AgentDetailHeader({ entry, onInstallClick, primaryAction = "install" }: AgentDetailHeaderProps): JSX.Element {
   const { buildPath, locale } = useLocale();
   const { t } = useTranslation("detail");
   const { t: tc } = useTranslation("common");
@@ -69,8 +70,12 @@ export function AgentDetailHeader({ entry, onInstallClick }: AgentDetailHeaderPr
             variant="secondary"
             onClick={onInstallClick}
           >
-            <Download className="h-3.5 w-3.5" aria-hidden />
-            {t("header.installAgent")}
+            {primaryAction === "use" ? (
+              <PlayCircle className="h-3.5 w-3.5" aria-hidden />
+            ) : (
+              <Download className="h-3.5 w-3.5" aria-hidden />
+            )}
+            {t(primaryAction === "use" ? "header.useAgent" : "header.installAgent")}
           </Button>
           <Button
             size="sm"
@@ -78,7 +83,11 @@ export function AgentDetailHeader({ entry, onInstallClick }: AgentDetailHeaderPr
             onClick={(e) => { e.preventDefault(); isCompared ? removeId(entry.id) : addId(entry.id); }}
             disabled={!isCompared && ids.length >= 4}
           >
-            <Plus className={cn("h-3.5 w-3.5", isCompared && "rotate-45")} aria-hidden />
+            {isCompared ? (
+              <Check className="h-3.5 w-3.5 text-success" aria-hidden />
+            ) : (
+              <Plus className="h-3.5 w-3.5" aria-hidden />
+            )}
             {isCompared ? t("header.addedToCompare") : t("header.addToCompare")}
           </Button>
           {entry.officialUrl ? (

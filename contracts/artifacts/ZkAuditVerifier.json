@@ -1,0 +1,1230 @@
+{
+  "contractName": "ZkAuditVerifier",
+  "sourceName": "src/ZkAuditVerifier.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "fingerprintHash",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "developerHash",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "proofHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "AgentFingerprintProofVerified",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "auditId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "overallScore",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "inputCommitment",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "proofHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "AuditScoreProofVerified",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "oldVerifier",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newVerifier",
+          "type": "address"
+        }
+      ],
+      "name": "AuditScoreVerifierUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "oldVerifier",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newVerifier",
+          "type": "address"
+        }
+      ],
+      "name": "FingerprintVerifierUpdated",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "auditProofCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "auditScoreProofs",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "auditId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "overallScore",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "inputCommitment",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "verified",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "verifiedAt",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "proofHash",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "auditScoreVerifierContract",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "fingerprintProofs",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "fingerprintHash",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "developerHash",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "verified",
+          "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "verifiedAt",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "proofHash",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "fingerprintVerifierContract",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "auditId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAuditScoreProof",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "auditId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256[6]",
+              "name": "dimensionalScores",
+              "type": "uint256[6]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "overallScore",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "inputCommitment",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "verified",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "verifiedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "proofHash",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct ZkAuditVerifier.AuditScoreProof",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getFingerprintProof",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fingerprintHash",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "developerHash",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "verified",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "verifiedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "proofHash",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct ZkAuditVerifier.AgentFingerprintProof",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "auditId",
+          "type": "uint256"
+        }
+      ],
+      "name": "isAuditScoreVerified",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "isFingerprintVerified",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "proofHash",
+          "type": "bytes32"
+        }
+      ],
+      "name": "isProofHashUsed",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_verifier",
+          "type": "address"
+        }
+      ],
+      "name": "setAuditScoreVerifier",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_verifier",
+          "type": "address"
+        }
+      ],
+      "name": "setFingerprintVerifier",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "auditId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256[6]",
+          "name": "dimensionalScores",
+          "type": "uint256[6]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "overallScore",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "inputCommitment",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256[2]",
+          "name": "a",
+          "type": "uint256[2]"
+        },
+        {
+          "internalType": "uint256[2][2]",
+          "name": "b",
+          "type": "uint256[2][2]"
+        },
+        {
+          "internalType": "uint256[2]",
+          "name": "c",
+          "type": "uint256[2]"
+        }
+      ],
+      "name": "verifyAuditScore",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "fingerprintHash",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "developerHash",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256[2]",
+          "name": "a",
+          "type": "uint256[2]"
+        },
+        {
+          "internalType": "uint256[2][2]",
+          "name": "b",
+          "type": "uint256[2][2]"
+        },
+        {
+          "internalType": "uint256[2]",
+          "name": "c",
+          "type": "uint256[2]"
+        }
+      ],
+      "name": "verifyFingerprint",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x6080806040523461002857600080546001600160a01b03191633179055610ea6908161002e8239f35b600080fdfe608080604052600436101561001357600080fd5b60003560e01c90816328155d36146108fc575080632a35bffb146108d357806338881c1a1461072b57806347685a59146106b25780634c677cac1461063a57806358f048fc146105d25780638da5cb5b146105a95780639e0574f414610302578063a0a585c2146102d1578063a5ee022d146102a8578063c13689741461027c578063d1a65e0814610204578063d852cbac14610138578063e442eb03146100fd5763fa10508a146100c457600080fd5b346100f85760203660031901126100f8576004356000526004602052602060ff600360406000200154166040519015158152f35b600080fd5b346100f85761010b36610a72565b906000526003602052604060002090600052602052602060ff600a60406000200154166040519015158152f35b346100f85760203660031901126100f857600060a060405161015981610abb565b8281528260208201528260408201528260608201528260808201520152600435600052600460205260c0604060002060405161019481610abb565b81549182825260018101546020830190815260028201546040840190815260ff6003840154169160608501921515835260a06005600486015495608088019687520154950194855260405195865251602086015251604085015251151560608401525160808301525160a0820152f35b346100f85760203660031901126100f8576004356001600160a01b03818116918290036100f85761023a81600054163314610bf5565b600254826bffffffffffffffffffffffff60a01b821617600255167fa2e167c100d5aa655d3e23b7acd738161de2963f310c3f27fd22f08583d8f05a600080a3005b346100f85760203660031901126100f85760043560005260056020526020604060002054604051908152f35b346100f85760003660031901126100f8576001546040516001600160a01b039091168152602090f35b346100f85760203660031901126100f8576004356000526006602052602060ff604060002054166040519015158152f35b346100f8576102403660031901126100f85736610104116100f85736610184116100f85736610204116100f85736610244116100f8576001546001600160a01b031661034f811515610b16565b604051602081016040610144823761036960608301610c57565b604061020460e08401376101009182815261038381610ad7565b519020918260005260066020526103a260ff6040600020541615610b55565b604051916103af83610a88565b36833760005b6006811061058d57506103e2916103dd916101043560c08301526101243560e0830152610db9565b610bb9565b8060005260066020526040600020600160ff1982541617905560405161040781610a88565b600435815260243560208201526040519061042182610abb565b6044825b610104821061057d57505060408101918252610104356060820152610124356080820152600160a08201524260c08201528260e08201526004356000526003602052604060002060243560005260205260406000209181518355602082015160018401555160005b6006811061056657505060e0816060600c9301516008850155608081015160098501556104cf60a08201511515600a86019060ff801983541691151516179055565b60c0810151600b850155015191015560043560005260056020526040600020805490600182018092116105505755604080516101043581526101243560208201529081019190915260243590600435907f309dcf7a98ef4244121ef5800e5bb60cdbe9d8e5708b287b3cb01b13dfaf0a7a90606090a3602060405160018152f35b634e487b7160e01b600052601160045260246000fd5b60019060208351930192600282870101550161048d565b8135815260209182019101610425565b8060019160051b604401356105a28286610b92565b52016103b5565b346100f85760003660031901126100f8576000546040516001600160a01b039091168152602090f35b346100f85760203660031901126100f857600435600052600460205260c06040600020805490600181015490600281015460ff6003830154169060056004840154930154936040519586526020860152604085015215156060840152608083015260a0820152f35b346100f85760203660031901126100f8576004356001600160a01b03818116918290036100f85761067081600054163314610bf5565b600154826bffffffffffffffffffffffff60a01b821617600155167f18dd95623b4ca3e8c48c6ff2b59eb4d023bb6fda61961525e36c5b70373ae8f6600080a3005b346100f8576106c036610a72565b90600052600360205260406000209060005260205260e060406000208054906001810154906008810154600982015460ff600a8401541691600c600b850154940154946040519687526020870152604086015260608501521515608084015260a083015260c0820152f35b346100f8576101603660031901126100f8576044356004356024353660a4116100f857610124923684116100f85736610164116100f8576002547f2e6dc0c44dd408899cdf622fb236a2e859cb30ed155d549f3fb4279c872bfbc592906108c7906001600160a01b03166107a0811515610b16565b6108196103dd60405160209960408b83019181606484376107c360608501610c2d565b60e0840137610100918281526107d881610ad7565b519020938460005260068b526107f660ff6040600020541615610b55565b6040519161080383610a88565b368337868252898b830152876040830152610c82565b80600052600687526040600020600160ff1982541617905560405161083d81610abb565b868152600587896108a0818501888152604086018a81526060870191600183526004608089019542875260a08a01978b895260005252604060002097518855516001880155516002870155511515600386019060ff801983541691151516179055565b51600484015551910155604051938493846040919493926060820195825260208201520152565b0390a260405160018152f35b346100f85760003660031901126100f8576002546040516001600160a01b039091168152602090f35b346100f85761090a36610a72565b9061091483610a88565b60008352600060e0602094828682015260405161093081610abb565b60c036823760408201528260608201528260808201528260a08201528260c082015201526000526003825260406000209060005281526040600020906040519061097982610a88565b825482526001926001810154918084019283526040519081866002850191836000915b60068310610a5e5750505050506109b282610abb565b604085019182526008830154606086019081526009840154916080870192835260ff600a860154169360a088019415158552600c600b8701549660c08a0197885201549660e089019788526040519851895251828901525190604088016000905b60068210610a4b57505050506101a0965051610100860152516101208501525115156101408401525161016083015251610180820152f35b8351815292820192908a01908201610a13565b84548152938301939183019185910161099c565b60409060031901126100f8576004359060243590565b610100810190811067ffffffffffffffff821117610aa557604052565b634e487b7160e01b600052604160045260246000fd5b60c0810190811067ffffffffffffffff821117610aa557604052565b610120810190811067ffffffffffffffff821117610aa557604052565b90601f8019910116810190811067ffffffffffffffff821117610aa557604052565b15610b1d57565b60405162461bcd60e51b815260206004820152601060248201526f159154925192515497d393d517d4d15560821b6044820152606490fd5b15610b5c57565b60405162461bcd60e51b815260206004820152600e60248201526d141493d3d197d49154131056515160921b6044820152606490fd5b906008811015610ba35760051b0190565b634e487b7160e01b600052603260045260246000fd5b15610bc057565b60405162461bcd60e51b815260206004820152600d60248201526c24a72b20a624a22fa82927a7a360991b6044820152606490fd5b15610bfc57565b60405162461bcd60e51b81526020600482015260096024820152682727aa2fa7aba722a960b91b6044820152606490fd5b60a46000915b60028310610c4057505050565b600190604081818581943701920192019190610c33565b6101846000915b60028310610c6b57505050565b600190604081818581943701920192019190610c5e565b9060408051606081019267ffffffffffffffff9382811085821117610aa5578352606036833760005b60038110610d9e575050815190602094858301916308a3cff560e11b83528460646024860137610cdd60648501610c2d565b610124858160e487013784016000905b8860038310610d8a575050505061016483526101a083019183831086841117610aa5576000938493865251915afa903d15610d80573d928311610aa5575191610d3f601f8201601f1916850184610af4565b82523d60008484013e5b158015610d76575b610d6f5781818051810103126100f857015180151581036100f85790565b5050600090565b5081815110610d51565b5060609150610d49565b806001928551815201930191019091610ced565b80610dab60019284610b92565b518160051b85015201610cab565b9060405160209283820192636490cd3d60e11b845260406101446024850137610de460648401610c57565b6102049060408260e4860137600061012485015b8760088310610e5c5750505050825261024082019067ffffffffffffffff9383831085841117610aa557600093849360405251915afa3d15610e53573d918211610aa55760405191610d3f601f8201601f1916850184610af4565b60609150610d49565b806001928551815201930191019091610df856fea2646970667358221220b378bdd7e6dcb796c057c1db6f9f069fdf09e09b3b5e3351392dba3102f8809764736f6c63430008180033",
+  "deployedBytecode": "0x608080604052600436101561001357600080fd5b60003560e01c90816328155d36146108fc575080632a35bffb146108d357806338881c1a1461072b57806347685a59146106b25780634c677cac1461063a57806358f048fc146105d25780638da5cb5b146105a95780639e0574f414610302578063a0a585c2146102d1578063a5ee022d146102a8578063c13689741461027c578063d1a65e0814610204578063d852cbac14610138578063e442eb03146100fd5763fa10508a146100c457600080fd5b346100f85760203660031901126100f8576004356000526004602052602060ff600360406000200154166040519015158152f35b600080fd5b346100f85761010b36610a72565b906000526003602052604060002090600052602052602060ff600a60406000200154166040519015158152f35b346100f85760203660031901126100f857600060a060405161015981610abb565b8281528260208201528260408201528260608201528260808201520152600435600052600460205260c0604060002060405161019481610abb565b81549182825260018101546020830190815260028201546040840190815260ff6003840154169160608501921515835260a06005600486015495608088019687520154950194855260405195865251602086015251604085015251151560608401525160808301525160a0820152f35b346100f85760203660031901126100f8576004356001600160a01b03818116918290036100f85761023a81600054163314610bf5565b600254826bffffffffffffffffffffffff60a01b821617600255167fa2e167c100d5aa655d3e23b7acd738161de2963f310c3f27fd22f08583d8f05a600080a3005b346100f85760203660031901126100f85760043560005260056020526020604060002054604051908152f35b346100f85760003660031901126100f8576001546040516001600160a01b039091168152602090f35b346100f85760203660031901126100f8576004356000526006602052602060ff604060002054166040519015158152f35b346100f8576102403660031901126100f85736610104116100f85736610184116100f85736610204116100f85736610244116100f8576001546001600160a01b031661034f811515610b16565b604051602081016040610144823761036960608301610c57565b604061020460e08401376101009182815261038381610ad7565b519020918260005260066020526103a260ff6040600020541615610b55565b604051916103af83610a88565b36833760005b6006811061058d57506103e2916103dd916101043560c08301526101243560e0830152610db9565b610bb9565b8060005260066020526040600020600160ff1982541617905560405161040781610a88565b600435815260243560208201526040519061042182610abb565b6044825b610104821061057d57505060408101918252610104356060820152610124356080820152600160a08201524260c08201528260e08201526004356000526003602052604060002060243560005260205260406000209181518355602082015160018401555160005b6006811061056657505060e0816060600c9301516008850155608081015160098501556104cf60a08201511515600a86019060ff801983541691151516179055565b60c0810151600b850155015191015560043560005260056020526040600020805490600182018092116105505755604080516101043581526101243560208201529081019190915260243590600435907f309dcf7a98ef4244121ef5800e5bb60cdbe9d8e5708b287b3cb01b13dfaf0a7a90606090a3602060405160018152f35b634e487b7160e01b600052601160045260246000fd5b60019060208351930192600282870101550161048d565b8135815260209182019101610425565b8060019160051b604401356105a28286610b92565b52016103b5565b346100f85760003660031901126100f8576000546040516001600160a01b039091168152602090f35b346100f85760203660031901126100f857600435600052600460205260c06040600020805490600181015490600281015460ff6003830154169060056004840154930154936040519586526020860152604085015215156060840152608083015260a0820152f35b346100f85760203660031901126100f8576004356001600160a01b03818116918290036100f85761067081600054163314610bf5565b600154826bffffffffffffffffffffffff60a01b821617600155167f18dd95623b4ca3e8c48c6ff2b59eb4d023bb6fda61961525e36c5b70373ae8f6600080a3005b346100f8576106c036610a72565b90600052600360205260406000209060005260205260e060406000208054906001810154906008810154600982015460ff600a8401541691600c600b850154940154946040519687526020870152604086015260608501521515608084015260a083015260c0820152f35b346100f8576101603660031901126100f8576044356004356024353660a4116100f857610124923684116100f85736610164116100f8576002547f2e6dc0c44dd408899cdf622fb236a2e859cb30ed155d549f3fb4279c872bfbc592906108c7906001600160a01b03166107a0811515610b16565b6108196103dd60405160209960408b83019181606484376107c360608501610c2d565b60e0840137610100918281526107d881610ad7565b519020938460005260068b526107f660ff6040600020541615610b55565b6040519161080383610a88565b368337868252898b830152876040830152610c82565b80600052600687526040600020600160ff1982541617905560405161083d81610abb565b868152600587896108a0818501888152604086018a81526060870191600183526004608089019542875260a08a01978b895260005252604060002097518855516001880155516002870155511515600386019060ff801983541691151516179055565b51600484015551910155604051938493846040919493926060820195825260208201520152565b0390a260405160018152f35b346100f85760003660031901126100f8576002546040516001600160a01b039091168152602090f35b346100f85761090a36610a72565b9061091483610a88565b60008352600060e0602094828682015260405161093081610abb565b60c036823760408201528260608201528260808201528260a08201528260c082015201526000526003825260406000209060005281526040600020906040519061097982610a88565b825482526001926001810154918084019283526040519081866002850191836000915b60068310610a5e5750505050506109b282610abb565b604085019182526008830154606086019081526009840154916080870192835260ff600a860154169360a088019415158552600c600b8701549660c08a0197885201549660e089019788526040519851895251828901525190604088016000905b60068210610a4b57505050506101a0965051610100860152516101208501525115156101408401525161016083015251610180820152f35b8351815292820192908a01908201610a13565b84548152938301939183019185910161099c565b60409060031901126100f8576004359060243590565b610100810190811067ffffffffffffffff821117610aa557604052565b634e487b7160e01b600052604160045260246000fd5b60c0810190811067ffffffffffffffff821117610aa557604052565b610120810190811067ffffffffffffffff821117610aa557604052565b90601f8019910116810190811067ffffffffffffffff821117610aa557604052565b15610b1d57565b60405162461bcd60e51b815260206004820152601060248201526f159154925192515497d393d517d4d15560821b6044820152606490fd5b15610b5c57565b60405162461bcd60e51b815260206004820152600e60248201526d141493d3d197d49154131056515160921b6044820152606490fd5b906008811015610ba35760051b0190565b634e487b7160e01b600052603260045260246000fd5b15610bc057565b60405162461bcd60e51b815260206004820152600d60248201526c24a72b20a624a22fa82927a7a360991b6044820152606490fd5b15610bfc57565b60405162461bcd60e51b81526020600482015260096024820152682727aa2fa7aba722a960b91b6044820152606490fd5b60a46000915b60028310610c4057505050565b600190604081818581943701920192019190610c33565b6101846000915b60028310610c6b57505050565b600190604081818581943701920192019190610c5e565b9060408051606081019267ffffffffffffffff9382811085821117610aa5578352606036833760005b60038110610d9e575050815190602094858301916308a3cff560e11b83528460646024860137610cdd60648501610c2d565b610124858160e487013784016000905b8860038310610d8a575050505061016483526101a083019183831086841117610aa5576000938493865251915afa903d15610d80573d928311610aa5575191610d3f601f8201601f1916850184610af4565b82523d60008484013e5b158015610d76575b610d6f5781818051810103126100f857015180151581036100f85790565b5050600090565b5081815110610d51565b5060609150610d49565b806001928551815201930191019091610ced565b80610dab60019284610b92565b518160051b85015201610cab565b9060405160209283820192636490cd3d60e11b845260406101446024850137610de460648401610c57565b6102049060408260e4860137600061012485015b8760088310610e5c5750505050825261024082019067ffffffffffffffff9383831085841117610aa557600093849360405251915afa3d15610e53573d918211610aa55760405191610d3f601f8201601f1916850184610af4565b60609150610d49565b806001928551815201930191019091610df856fea2646970667358221220b378bdd7e6dcb796c057c1db6f9f069fdf09e09b3b5e3351392dba3102f8809764736f6c63430008180033",
+  "compiler": {
+    "version": "0.8.24"
+  },
+  "metadata": {
+    "compiler": {
+      "version": "0.8.24+commit.e11b9ed9"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "nonpayable",
+          "type": "constructor"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "fingerprintHash",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "developerHash",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes32",
+              "name": "proofHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "AgentFingerprintProofVerified",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "auditId",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "overallScore",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "inputCommitment",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bytes32",
+              "name": "proofHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "AuditScoreProofVerified",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "oldVerifier",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newVerifier",
+              "type": "address"
+            }
+          ],
+          "name": "AuditScoreVerifierUpdated",
+          "type": "event"
+        },
+        {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "oldVerifier",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newVerifier",
+              "type": "address"
+            }
+          ],
+          "name": "FingerprintVerifierUpdated",
+          "type": "event"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "auditProofCount",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "auditScoreProofs",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "auditId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "overallScore",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "inputCommitment",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "verified",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "verifiedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "proofHash",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "auditScoreVerifierContract",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ],
+          "name": "fingerprintProofs",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fingerprintHash",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "developerHash",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "verified",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "verifiedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "proofHash",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "fingerprintVerifierContract",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "auditId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getAuditScoreProof",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "auditId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256[6]",
+                  "name": "dimensionalScores",
+                  "type": "uint256[6]"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "overallScore",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "inputCommitment",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "verified",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "verifiedAt",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "proofHash",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct ZkAuditVerifier.AuditScoreProof",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "getFingerprintProof",
+          "outputs": [
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "fingerprintHash",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "developerHash",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "verified",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "verifiedAt",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "proofHash",
+                  "type": "bytes32"
+                }
+              ],
+              "internalType": "struct ZkAuditVerifier.AgentFingerprintProof",
+              "name": "",
+              "type": "tuple"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "auditId",
+              "type": "uint256"
+            }
+          ],
+          "name": "isAuditScoreVerified",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            }
+          ],
+          "name": "isFingerprintVerified",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "proofHash",
+              "type": "bytes32"
+            }
+          ],
+          "name": "isProofHashUsed",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [],
+          "name": "owner",
+          "outputs": [
+            {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_verifier",
+              "type": "address"
+            }
+          ],
+          "name": "setAuditScoreVerifier",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "address",
+              "name": "_verifier",
+              "type": "address"
+            }
+          ],
+          "name": "setFingerprintVerifier",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "auditId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256[6]",
+              "name": "dimensionalScores",
+              "type": "uint256[6]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "overallScore",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "inputCommitment",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256[2]",
+              "name": "a",
+              "type": "uint256[2]"
+            },
+            {
+              "internalType": "uint256[2][2]",
+              "name": "b",
+              "type": "uint256[2][2]"
+            },
+            {
+              "internalType": "uint256[2]",
+              "name": "c",
+              "type": "uint256[2]"
+            }
+          ],
+          "name": "verifyAuditScore",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "fingerprintHash",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "developerHash",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256[2]",
+              "name": "a",
+              "type": "uint256[2]"
+            },
+            {
+              "internalType": "uint256[2][2]",
+              "name": "b",
+              "type": "uint256[2][2]"
+            },
+            {
+              "internalType": "uint256[2]",
+              "name": "c",
+              "type": "uint256[2]"
+            }
+          ],
+          "name": "verifyFingerprint",
+          "outputs": [
+            {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {
+          "verifyAuditScore(uint256,uint256,uint256[6],uint256,uint256,uint256[2],uint256[2][2],uint256[2])": {
+            "params": {
+              "a": "Groth16 proof point A",
+              "auditId": "The audit ID being proven",
+              "b": "Groth16 proof point B",
+              "c": "Groth16 proof point C",
+              "dimensionalScores": "The 6 claimed dimensional scores [0-100]",
+              "inputCommitment": "Poseidon hash binding the proof to private inputs",
+              "overallScore": "The claimed weighted overall score [0-100]",
+              "tokenId": "The agent's NFT token ID"
+            }
+          },
+          "verifyFingerprint(uint256,uint256,uint256,uint256[2],uint256[2][2],uint256[2])": {
+            "params": {
+              "a": "Groth16 proof point A",
+              "b": "Groth16 proof point B",
+              "c": "Groth16 proof point C",
+              "developerHash": "The developer ownership hash",
+              "fingerprintHash": "The public fingerprint hash",
+              "tokenId": "The agent's NFT token ID"
+            }
+          }
+        },
+        "title": "ZkAuditVerifier",
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {
+          "verifyAuditScore(uint256,uint256,uint256[6],uint256,uint256,uint256[2],uint256[2][2],uint256[2])": {
+            "notice": "Verify a ZK proof that audit scores were correctly computed."
+          },
+          "verifyFingerprint(uint256,uint256,uint256,uint256[2],uint256[2][2],uint256[2])": {
+            "notice": "Verify a ZK proof binding an agent identity to its NFT."
+          }
+        },
+        "notice": "Stores and verifies ZK proofs for audit score correctness and agent fingerprints. Two proof types:   1. Audit Score Proof — proves dimensional scores were correctly computed from raw data   2. Agent Fingerprint Proof — proves agent identity is bound to NFT without revealing code The Groth16 verifier contracts are auto-generated by snarkjs from the circom circuits. This contract acts as a registry that stores proof verification results on-chain.",
+        "version": 1
+      }
+    },
+    "settings": {
+      "compilationTarget": {
+        "src/ZkAuditVerifier.sol": "ZkAuditVerifier"
+      },
+      "evmVersion": "paris",
+      "libraries": {},
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "remappings": [],
+      "viaIR": true
+    },
+    "sources": {
+      "src/ZkAuditVerifier.sol": {
+        "keccak256": "0xc68c2e29ce623c074bb12e33f8882fa330b63a70a6bd7d63abd9e49fd0fbf15b",
+        "license": "MIT",
+        "urls": [
+          "bzz-raw://4e731e62622e924d57e12ba6da8b0a605575568f15d233b371f0c61e018384e1",
+          "dweb:/ipfs/QmcFLMyD1RzSPpMoTrUPR7bGH6FxDxUmTbR2rmEWyrR8gX"
+        ]
+      }
+    },
+    "version": 1
+  }
+}
