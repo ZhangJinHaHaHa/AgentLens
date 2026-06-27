@@ -682,7 +682,25 @@
     background: #ffffff;
   }
 
-  .al-site-mobile-menu {
+  .al-site-header .al-site-menu-trigger.theme-button {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.12) inset,
+      0 10px 24px rgba(0, 0, 0, 0.18);
+  }
+
+  .al-site-header .al-site-menu-trigger.theme-button svg {
+    color: currentColor;
+    opacity: 1;
+    stroke-width: 2.4;
+  }
+
+  .al-site-mobile-menu.al-site-mobile-menu {
+    display: grid;
+    max-height: calc(100dvh - 5.25rem);
+    overflow-y: auto;
     color: rgba(248, 250, 252, 0.94);
     background: rgba(14, 17, 24, 0.98);
     border-color: rgba(255, 255, 255, 0.12);
@@ -696,6 +714,7 @@
   .al-site-mobile-menu .al-site-nav-link {
     width: 100%;
     justify-content: space-between;
+    color: rgba(248, 250, 252, 0.84);
     background: rgba(255, 255, 255, 0.055);
     border-color: rgba(255, 255, 255, 0.08);
   }
@@ -707,7 +726,8 @@
   }
 
   .al-site-mobile-menu > button {
-    color: rgba(255, 255, 255, 0.68);
+    color: rgba(255, 255, 255, 0.74);
+    background: rgba(255, 255, 255, 0.06);
   }
 
   .al-site-mobile-menu > button:hover {
@@ -1849,6 +1869,53 @@
   100% { transform: translateX(0); }
 }
 
+.login-page {
+  position: relative;
+  width: 100vw;
+  min-height: 100dvh;
+  height: 100vh;
+  overflow: hidden;
+  background: #000000;
+}
+
+.login-panel-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7.5rem 1.25rem 2rem;
+  pointer-events: none;
+}
+
+.login-card {
+  display: flex;
+  width: min(360px, calc(100vw - 2.5rem));
+  max-height: calc(100dvh - 9.5rem);
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-sizing: border-box;
+  padding: 32px 36px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(10, 10, 10, 0.82);
+  box-shadow:
+    0 32px 80px rgba(0, 0, 0, 0.7),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+  pointer-events: auto;
+  scrollbar-width: none;
+  backdrop-filter: blur(28px) saturate(1.2);
+  -webkit-backdrop-filter: blur(28px) saturate(1.2);
+}
+
+.login-card::-webkit-scrollbar {
+  display: none;
+}
+
 .login-input {
   width: 100%;
   height: 44px;
@@ -1868,6 +1935,143 @@
 }
 .login-input::placeholder {
   color: rgba(255,255,255,0.25);
+}
+
+@media (max-width: 640px) {
+  .login-logo-mark {
+    top: 18px !important;
+    left: 18px !important;
+    gap: 10px !important;
+    transform: scale(0.86);
+    transform-origin: left top;
+  }
+
+  .login-logo-icon,
+  .login-logo-svg {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .login-logo-title {
+    font-size: 15px !important;
+    letter-spacing: 0.11em !important;
+  }
+
+  .login-logo-subtitle {
+    font-size: 8px !important;
+    letter-spacing: 0.18em !important;
+  }
+
+  .login-language-toggle {
+    top: 18px !important;
+    right: 16px !important;
+    padding: 3px !important;
+    background: rgba(10, 10, 10, 0.42) !important;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24) !important;
+  }
+
+  .login-language-button {
+    min-width: 38px !important;
+    height: 28px !important;
+  }
+
+  .login-marquee-backdrop {
+    justify-content: flex-start !important;
+    gap: 3.35rem;
+    padding: 8.75rem 0 0 !important;
+    opacity: 0.54;
+  }
+
+  .login-center-mark {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
+  .login-polyhedron,
+  .login-center-title {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
+  .login-center-stack {
+    gap: 12px !important;
+    transform: scale(0.72);
+    transform-origin: top center;
+  }
+
+  .login-panel-stage {
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 1rem calc(1rem + env(safe-area-inset-bottom));
+  }
+
+  .login-card {
+    width: min(364px, calc(100vw - 2rem));
+    max-height: min(60dvh, 420px);
+    margin-bottom: clamp(84px, 12dvh, 132px);
+    gap: 12px;
+    padding: 18px 18px 16px;
+    border-radius: 22px;
+    background:
+      linear-gradient(180deg, rgba(21, 23, 28, 0.76), rgba(5, 6, 10, 0.9));
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.68),
+      0 1px 0 rgba(255, 255, 255, 0.08) inset;
+    backdrop-filter: blur(24px) saturate(1.18);
+    -webkit-backdrop-filter: blur(24px) saturate(1.18);
+  }
+
+  .login-card::before {
+    content: "";
+    width: 38px;
+    height: 4px;
+    margin: 0 auto 2px;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  .login-card h1 {
+    font-size: 18px !important;
+  }
+
+  .login-card p {
+    font-size: 12px !important;
+  }
+
+  .login-input {
+    height: 40px;
+    border-radius: 8px;
+    padding: 0 12px;
+  }
+
+  .login-trust-footer {
+    display: none !important;
+  }
+}
+
+@media (max-width: 640px) and (max-height: 740px) {
+  .login-panel-stage {
+    padding-bottom: 0.75rem;
+  }
+
+  .login-logo-mark {
+    top: 14px !important;
+  }
+
+  .login-language-toggle {
+    top: 14px !important;
+  }
+
+  .login-card {
+    max-height: 64dvh;
+    margin-bottom: clamp(32px, 7dvh, 72px);
+    gap: 12px;
+    padding-top: 16px;
+    padding-bottom: 14px;
+  }
 }
 
 @keyframes login-cube-logo-breathe {

@@ -49,7 +49,13 @@ export function NavHeader(): JSX.Element {
         <div className="flex shrink-0 items-center gap-1">
           <Dialog>
             <DialogTrigger asChild>
-              <Button type="button" variant="ghost" size="icon" className="md:hidden" aria-label={t("nav.menu")}>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="al-site-menu-trigger md:hidden"
+                aria-label={t("nav.menu")}
+              >
                 <Menu className="h-4 w-4" aria-hidden />
               </Button>
             </DialogTrigger>
