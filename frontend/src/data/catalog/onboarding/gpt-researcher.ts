@@ -4,63 +4,63 @@ export const guide: OnboardingGuide = {
   agentId: "gpt-researcher",
   prerequisites: [
     {
-      zh: "AgentLens 需要先配置 GPT Researcher 托管适配器；未配置时卡片只展示为待接入。",
-      en: "AgentLens needs a hosted GPT Researcher adapter first; before that, the card remains pending."
+      zh: "AgentLens 需要先配置数据侦查托管适配器；未配置时卡片只展示为待接入。",
+      en: "AgentLens needs a hosted Data Scout adapter first; before that, the card remains pending."
     },
     {
-      zh: "首版适合公开网页调研，不适合需要登录、付费墙或私有数据库的任务。",
-      en: "The first version fits public web research, not login-only, paywalled, or private-database tasks."
+      zh: "首版适合查公开政务、统计年鉴、预算决算和财政拨款数据，不适合登录、付费墙、私有数据库或自动提交申请表。",
+      en: "The first version fits public government, yearbook, budget, final-account, and funding data; it does not log in, cross paywalls, access private databases, or submit request forms."
     }
   ],
   firstStep: {
-    zh: "在平台工作区打开 Deep Research，输入一个具体调研问题，例如“调研中国跨境电商卖家 2026 年最关心的三个 AI 工具场景，并给出来源”。",
-    en: "Open Deep Research in the workspace and enter a concrete research question, for example: “Research the top three AI tool scenarios for Chinese cross-border e-commerce sellers in 2026 and cite sources.”"
+    zh: "在平台工作区打开数据侦查员，输入一个具体找数问题，例如“帮我找 2023 年北京市体育局对体育场馆建设的财政拨款数据”。",
+    en: "Open Data Scout in the workspace and enter a concrete data-finding question, for example: “Find 2023 Beijing Sports Bureau public funding data for sports venue construction.”"
   },
   steps: [
     {
-      title: { zh: "把问题写成可调研任务", en: "Turn the request into a research task" },
+      title: { zh: "把问题写成可找数任务", en: "Turn the request into a data-finding task" },
       body: {
-        zh: "尽量说明行业、地区、时间范围、输出格式和判断标准。问题越具体，搜索和来源筛选越稳定。",
-        en: "Specify industry, region, time range, output format, and judging criteria. The more concrete the request, the steadier the search and source review."
+        zh: "尽量说明地区、部门、年份、领域和你要的口径，比如“财政拨款”“部门决算”“统计年鉴”。问题越具体，官方来源检索越稳定。",
+        en: "Specify region, department, year, field, and measurement such as funding, final account, or statistical yearbook. The more concrete the request, the steadier official-source retrieval becomes."
       }
     },
     {
-      title: { zh: "检查来源和不确定性", en: "Review sources and uncertainty" },
+      title: { zh: "先看数字和来源", en: "Review the number and source first" },
       body: {
-        zh: "报告返回后先看引用来源、发布时间和是否有互相矛盾的信息；重要结论不要只看摘要。",
-        en: "After the report returns, review cited sources, publication dates, and conflicting evidence. Do not rely only on the summary for important conclusions."
+        zh: "结果返回后先看是否有具体数字、是否来自 gov.cn、stats.gov.cn、地方政府或部门预算决算页面；不要只看摘要。",
+        en: "After the result returns, first check whether it contains a concrete number and whether the source is gov.cn, stats.gov.cn, a local government site, or a department budget/final-account page."
       }
     },
     {
-      title: { zh: "用追问把报告变成行动项", en: "Use follow-ups to turn the report into actions" },
+      title: { zh: "找不到就转核验路径", en: "Turn missing data into a verification path" },
       body: {
-        zh: "继续追问“哪些证据最强”“我应该优先做哪三件事”“哪些地方需要人工核验”，把调研结果转成下一步清单。",
-        en: "Ask follow-ups like “Which evidence is strongest?”, “What are the top three actions?”, and “What needs human verification?” to turn research into next steps."
+        zh: "如果公开页没有具体数字，让它列出已查过的官方入口和下一步建议，例如通过政府信息公开申请获取。",
+        en: "If public pages do not contain a concrete number, ask it to list checked official entry points and next steps such as filing a public-information request."
       }
     }
   ],
   officialDocs: [
     {
-      label: { zh: "GPT Researcher GitHub", en: "GPT Researcher GitHub" },
+      label: { zh: "GPT Researcher 参考项目", en: "GPT Researcher reference project" },
       url: "https://github.com/assafelovic/gpt-researcher"
     },
     {
-      label: { zh: "GPT Researcher 文档", en: "GPT Researcher docs" },
+      label: { zh: "GPT Researcher 参考文档", en: "GPT Researcher reference docs" },
       url: "https://docs.gptr.dev/docs/gpt-researcher/getting-started"
     }
   ],
   platformAdvice: {
-    zh: "AgentLens 建议：把 Deep Research 当作“带来源的调研跑腿”，不是最终判断者。平台会保留调研 trace 和积分记录，方便复核和结算。",
-    en: "AgentLens advice: treat Deep Research as a sourced research runner, not the final judge. AgentLens keeps research traces and credit records for review and settlement."
+    zh: "AgentLens 建议：把数据侦查员当作“公开数据线索员”，不是最终统计口径审核者。平台会保留检索记录和积分记录，方便复核和结算。",
+    en: "AgentLens advice: treat Data Scout as a sourced data-finding assistant, not the final judge. AgentLens keeps research records and credit records for review and settlement."
   },
   commonPitfalls: [
     {
-      zh: "把模型综合后的结论当成一手证据；真正引用时仍要回到原始网页或报告。",
+      zh: "把模型综合后的结论当成一手证据；真正引用时仍要回到原始政府网页、统计年鉴或预算决算文件。",
       en: "Treating the synthesized answer as primary evidence; cite the original page or report when it matters."
     },
     {
-      zh: "问题太宽，例如“帮我调研 AI”，会导致报告泛泛而谈；要给范围和用途。",
-      en: "Asking a broad question like “research AI” produces vague reports; define scope and use case."
+      zh: "问题太宽，例如“帮我找北京体育数据”，会导致结果泛泛而谈；要给年份、部门和数据口径。",
+      en: "Asking a broad question like “find Beijing sports data” produces vague results; provide year, department, and measurement."
     }
   ]
 };

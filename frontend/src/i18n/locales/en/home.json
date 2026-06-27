@@ -10,6 +10,14 @@
     "llmDemoNotice": "LLM parsing, local demo; final matching is still decided by the AgentLens catalog filters.",
     "secondaryCta": "Describe what you need"
   },
+  "welcome": {
+    "ariaLabel": "Account welcome bar",
+    "greeting": "Welcome back",
+    "balance": "{{count}} credits",
+    "availableCredits": "Available credits: {{count}}",
+    "balancePending": "Credits loading",
+    "cta": "Use an agent"
+  },
   "scenarios": {
     "title": "Start from the job you have",
     "subtitle": "Real scenarios mapped to candidates we've already vetted.",

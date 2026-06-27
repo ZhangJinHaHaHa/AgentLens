@@ -3,12 +3,12 @@
   "tagline": "Decision platform for trustworthy AI agents",
   "nav": {
     "menu": "Menu",
-    "agents": "Agents",
+    "agents": "Agent Market",
     "compare": "Compare",
-    "recommend": "Recommend",
+    "recommend": "Find for Me",
     "publish": "Publish",
-    "models": "Workspace",
-    "account": "Identity"
+    "models": "Use Agent",
+    "account": "Account"
   },
   "actions": {
     "search": "Search",
@@ -49,7 +49,7 @@
     "connecting": "Connecting"
   },
   "agentSource": {
-    "marketplace": "Expert",
+    "marketplace": "Developer published",
     "curated": "Curated",
     "listed": "Listed",
     "native": "Platform native"

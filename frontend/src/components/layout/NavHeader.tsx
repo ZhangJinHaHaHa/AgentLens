@@ -16,10 +16,10 @@ import { ThemeToggle } from "./ThemeToggle";
 
 const NAV_ITEMS = [
   { key: "agents", to: "/agents" },
-  { key: "compare", to: "/compare" },
-  { key: "recommend", to: "/recommend" },
-  { key: "publish", to: "/publish" },
   { key: "models", to: "/models" },
+  { key: "recommend", to: "/recommend" },
+  { key: "compare", to: "/compare" },
+  { key: "publish", to: "/publish" },
   { key: "account", to: "/account" }
 ] as const;
 
@@ -30,10 +30,10 @@ export function NavHeader(): JSX.Element {
   const { ids, compareHref } = useCompareSelection();
 
   return (
-    <header className="glass-nav sticky top-0 z-40 w-full border-b">
+    <header className="al-site-header sticky top-0 z-40 w-full border-b">
       <div className="container-page flex h-14 min-w-0 items-center justify-between gap-2 sm:gap-4">
         <div className="flex min-w-0 items-center gap-3 sm:gap-8">
-          <Logo />
+          <Logo className="al-site-brand" />
           <nav className="hidden items-center gap-1 text-sm md:flex">
             {NAV_ITEMS.map((item) => (
               <NavItem
@@ -53,7 +53,7 @@ export function NavHeader(): JSX.Element {
                 <Menu className="h-4 w-4" aria-hidden />
               </Button>
             </DialogTrigger>
-            <DialogContent className="left-4 right-4 top-16 w-auto max-w-none translate-x-0 translate-y-0 gap-2 p-4 md:hidden">
+            <DialogContent className="al-site-mobile-menu left-4 right-4 top-16 w-auto max-w-none translate-x-0 translate-y-0 gap-2 p-4 md:hidden">
               <DialogTitle className="sr-only">{t("nav.menu")}</DialogTitle>
               <nav className="flex flex-col gap-1 text-sm">
                 {NAV_ITEMS.map((item) => (
@@ -117,9 +117,9 @@ function NavItem({ item, to, label, count, mobile = false }: NavItemProps): JSX.
       to={to}
       className={({ isActive }) =>
         cn(
-          "rounded-md text-muted-foreground transition-colors hover:text-foreground",
+          "al-site-nav-link rounded-md transition-colors",
           mobile ? "px-3 py-3" : "px-3 py-1.5",
-          isActive && "bg-muted/55 text-foreground"
+          isActive && "al-site-nav-link-active"
         )
       }
     >

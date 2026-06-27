@@ -32,7 +32,7 @@ export const guide: OnboardingGuide = {
       }
     },
     {
-      title: { zh: "检查来源和运行记录", en: "Check sources and run trace" },
+      title: { zh: "检查来源和运行记录", en: "Check sources and run records" },
       body: {
         zh: "结果返回后看来源、文件引用和积分记录，确认答案确实来自你上传的资料。",
         en: "After the answer returns, review sources, file references, and credit records to confirm the answer came from the uploaded material."

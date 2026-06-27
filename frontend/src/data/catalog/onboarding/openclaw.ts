@@ -40,7 +40,7 @@ export const guide: OnboardingGuide = {
   ],
   platformAdvice: {
     zh: "AgentLens 建议：OpenClaw 适合进入消息/工作流地图。平台要把渠道凭证留在服务端，并把每次发送动作留痕。",
-    en: "AgentLens advice: OpenClaw fits the messaging/workflow map. Keep channel credentials server-side and trace every send action."
+    en: "AgentLens advice: OpenClaw fits the messaging/workflow map. Keep channel credentials server-side and record every send action."
   },
   commonPitfalls: [
     { zh: "直接接生产群聊，机器人误发消息会很难补救。", en: "Connecting production groups directly makes mistaken sends hard to recover from." },

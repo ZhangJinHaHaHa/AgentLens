@@ -3,12 +3,12 @@
   "tagline": "可信 AI Agent 选型平台",
   "nav": {
     "menu": "菜单",
-    "agents": "Agent 列表",
+    "agents": "Agent 市场",
     "compare": "对比",
-    "recommend": "需求推荐",
-    "publish": "发布",
-    "models": "平台工作区",
-    "account": "身份"
+    "recommend": "帮我选",
+    "publish": "发布Agent",
+    "models": "使用 Agent",
+    "account": "我的"
   },
   "actions": {
     "search": "搜索",
@@ -49,7 +49,7 @@
     "connecting": "连接中"
   },
   "agentSource": {
-    "marketplace": "专家挂单",
+    "marketplace": "开发者发布",
     "curated": "重点维护",
     "listed": "已收录",
     "native": "平台原生"

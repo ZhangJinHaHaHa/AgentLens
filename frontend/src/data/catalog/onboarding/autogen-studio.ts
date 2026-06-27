@@ -23,7 +23,7 @@ export const guide: OnboardingGuide = {
       title: { zh: "记录每轮对话", en: "Log every round" },
       body: {
         zh: "多 Agent 对话必须保留每轮输入、输出和工具调用，否则出错很难追。",
-        en: "Multi-agent conversations must keep every input, output, and tool call or failures are hard to trace."
+        en: "Multi-agent conversations must keep every input, output, and tool call or failures are hard to review."
       }
     },
     {

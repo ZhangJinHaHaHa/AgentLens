@@ -17,7 +17,7 @@ export const curatedAgents: AgentCatalogEntry[] = [
     vendor: "Anthropic",
     intro: {
       zh: "Anthropic 官方的终端 / IDE 编码 Agent，擅长在真实仓库内做长链路改动，并保留可审计的工具调用记录。",
-      en: "Anthropic's terminal/IDE coding agent designed for long-running edits inside real repositories with auditable tool traces."
+      en: "Anthropic's terminal/IDE coding agent designed for long-running edits inside real repositories with auditable tool-call records."
     },
     tagline: {
       zh: "适合做“整段需求一次跑完”的研发助手",
@@ -36,7 +36,7 @@ export const curatedAgents: AgentCatalogEntry[] = [
     ],
     recommendedFor: [
       { zh: "希望把整段研发任务一次跑完的小型团队", en: "Small teams that want a single agent to land a feature end-to-end" },
-      { zh: "重视工具调用透明度的审慎团队", en: "Teams that value transparent tool-call traces" },
+      { zh: "重视工具调用透明度的审慎团队", en: "Teams that value transparent tool-call records" },
       { zh: "Claude 已是首选模型的工程组", en: "Engineering orgs that already standardise on Claude" }
     ],
     riskLevel: "medium",
@@ -321,7 +321,7 @@ export const curatedAgents: AgentCatalogEntry[] = [
     vendor: "DocsGPT / AgentLens",
     intro: {
       zh: "面向资料问答的开源 Agent：用户上传文档或粘贴资料后，可以直接追问、总结和提取依据，结果带来源与运行记录。",
-      en: "An open-source document Q&A Agent: upload or paste material, then ask questions, summarise, and extract evidence with sources and run traces."
+      en: "An open-source document Q&A Agent: upload or paste material, then ask questions, summarise, and extract evidence with sources and task records."
     },
     tagline: {
       zh: "把一份资料变成能追问的知识助手",
@@ -351,7 +351,7 @@ export const curatedAgents: AgentCatalogEntry[] = [
       },
       differentiation: {
         zh: "比普通聊天多了文件入口、来源留痕、积分结算和可复核的运行记录。",
-        en: "Adds file intake, source evidence, credit settlement, and reviewable run traces on top of plain chat."
+        en: "Adds file intake, source evidence, credit settlement, and reviewable run records on top of plain chat."
       }
     },
     category: "Document Q&A agent",
@@ -376,7 +376,7 @@ export const curatedAgents: AgentCatalogEntry[] = [
       { zh: "首版临时文件不等同于长期知识库，不能默认保留企业资料。", en: "First-version temporary files are not a persistent knowledge base and should not retain enterprise documents by default." }
     ],
     riskMitigation: [
-      { zh: "默认走临时文件通道，输出显示来源和运行记录。", en: "Use a temporary-file channel by default, with sources and run traces in the output." },
+      { zh: "默认走临时文件通道，输出显示来源和运行记录。", en: "Use a temporary-file channel by default, with sources and run records in the output." },
       { zh: "长期知识库、爬虫和企业权限后续再做独立授权。", en: "Long-lived knowledge bases, crawlers, and enterprise permissions need later dedicated authorization." }
     ],
     accessTypes: ["local", "cloud", "api"],
@@ -446,7 +446,7 @@ export const curatedAgents: AgentCatalogEntry[] = [
         {
           id: "audit_metering",
           status: "ready",
-          label: { zh: "积分 / 运行记录", en: "Credits / run trace" },
+          label: { zh: "积分 / 运行记录", en: "Credits / run records" },
           description: {
             zh: "文件接收、模型调用、最终回答和积分扣减会写入 Workspace Run。",
             en: "File intake, model calls, final answers, and credit charges are written into Workspace Run records."
@@ -462,7 +462,7 @@ export const curatedAgents: AgentCatalogEntry[] = [
         },
         summary: {
           zh: "演示用户在平台工作区上传资料，DocsGPT 返回摘要、依据来源和运行记录。",
-          en: "Shows a user uploading material in the workspace and receiving a summary, evidence sources, and run trace."
+          en: "Shows a user uploading material in the workspace and receiving a summary, evidence sources, and run records."
         },
         status: "planned",
         durationLabel: { zh: "约 1 分钟", en: "About 1 min" },
@@ -477,45 +477,45 @@ export const curatedAgents: AgentCatalogEntry[] = [
   {
     id: "gpt-researcher",
     source: "curated",
-    name: "深度调研助手",
-    vendor: "GPT Researcher / AgentLens",
+    name: "数据侦查员",
+    vendor: "AgentLens",
     intro: {
-      zh: "AgentLens 托管的深度调研助手，基于 GPT Researcher 开源项目：用户输入一个问题，平台自动联网搜索、筛选资料并生成带来源的研究报告。",
-      en: "A hosted deep-research assistant powered by the open-source GPT Researcher project: give it a question and AgentLens searches the web, reviews sources, and returns a cited report."
+      zh: "AgentLens 自研的找数据 Agent，优先面向政务公开、统计年鉴、部门预算决算和财政拨款等公开但难找的数据：输入问题后，它会优先查官方来源，提取数字、链接和可信度说明。",
+      en: "AgentLens' first-party data-finding Agent for public but hard-to-find data such as government disclosure, statistical yearbooks, department budgets, final accounts, and public funding records."
     },
     tagline: {
-      zh: "输入一个问题，拿到带来源的调研简报",
-      en: "Ask one question and get a sourced research brief"
+      zh: "帮你从公开政务资料里找数字和出处",
+      en: "Find numbers and sources from public government material"
     },
     buyerCard: {
       tasks: [
-        { zh: "调研一个行业机会", en: "Research an industry opportunity" },
-        { zh: "整理竞品和用户痛点", en: "Summarise competitors and user pain points" },
-        { zh: "生成带来源的简报", en: "Generate a sourced brief" }
+        { zh: "查某地区某领域财政拨款", en: "Find public funding for a region and field" },
+        { zh: "找统计年鉴或预算公开来源", en: "Find statistical yearbook or budget disclosure sources" },
+        { zh: "判断数据是否来自官方公开页", en: "Assess whether a figure comes from an official public source" }
       ],
       deliverable: {
-        zh: "带来源、结论和不确定性的研究报告。",
-        en: "A research report with sources, conclusions, and uncertainty notes."
+        zh: "直接答案、具体来源链接、可信度说明；找不到时明确给出政府信息公开申请建议。",
+        en: "Direct answer, specific source links, confidence notes, and a public-information-request suggestion when the data cannot be found."
       },
       notFor: {
-        zh: "不适合直接替代法律、投资或医疗等专业尽调。",
-        en: "Not a replacement for professional legal, investment, or medical diligence."
+        zh: "不适合登录内网、提交表单、抓取付费库或替代专业统计口径审核。",
+        en: "Not for intranet login, form submission, paywalled databases, or replacing expert statistical-method review."
       },
       runMode: {
-        zh: "平台托管运行 GPT Researcher 适配器，用户用平台积分发起调研。",
-        en: "Runs through AgentLens' hosted GPT Researcher adapter and charges platform credits."
+        zh: "平台托管运行 AgentLens 数据侦查适配器，用户用平台积分发起调研。",
+        en: "Runs through AgentLens' hosted Data Scout adapter and charges platform credits."
       },
       dataBoundary: {
-        zh: "首版只做只读网页调研，不登录账号、不提交表单、不写入外部系统。",
-        en: "First version is read-only web research: no account login, form submission, or external writes."
+        zh: "首版只读取公开可访问网页，不登录账号、不提交政府信息公开表单、不写入外部系统。",
+        en: "First version only reads publicly accessible pages: no account login, no government-information-request submission, and no external writes."
       },
       differentiation: {
-        zh: "比普通聊天多了搜索、来源整理、运行记录和统一积分结算。",
-        en: "Adds search, source review, run traces, and unified credits on top of plain chat."
+        zh: "比普通聊天多了任务拆解、证据分级、来源记录、统一积分结算和失败边界。",
+        en: "Adds task breakdown, evidence grading, source records, unified credits, and explicit failure boundaries on top of plain chat."
       }
     },
-    category: "Research assistant",
-    tags: ["research", "search", "citations", "report", "open-source", "external-adapter"],
+    category: "Public data assistant",
+    tags: ["public-data", "government-data", "budget", "statistics", "citations", "external-adapter", "政务公开", "财政拨款", "统计年鉴"],
     scenarios: [
       scenario("market-research"),
       scenario("knowledge-qa"),
@@ -526,18 +526,18 @@ export const curatedAgents: AgentCatalogEntry[] = [
       scenario("ide-coding")
     ],
     recommendedFor: [
-      { zh: "需要快速整理市场、竞品、行业资料的普通用户", en: "Users who need quick market, competitor, or industry briefs" },
-      { zh: "希望把搜索、筛选和报告留成可复核记录的团队", en: "Teams that want search, review, and reporting captured as a trace" },
-      { zh: "想在手机上发起调研任务、稍后拿报告的人", en: "People who want to start research on mobile and receive a report later" }
+      { zh: "需要找公开财政、教育、体育、医疗等领域数据的学生和研究者", en: "Students and researchers looking for public finance, education, sports, healthcare, or similar data" },
+      { zh: "需要核对数字来源是否来自官方公开页的团队", en: "Teams that need to verify whether a number comes from an official public page" },
+      { zh: "想在手机上提交找数任务、稍后拿到来源和可信度说明的人", en: "People who want to submit a data-finding task on mobile and receive sources and confidence notes later" }
     ],
     riskLevel: "medium",
     riskNotes: [
-      { zh: "联网调研会受到搜索质量、网页可访问性和来源时效影响。", en: "Web research depends on search quality, page availability, and source freshness." },
-      { zh: "报告里的结论需要复核来源，不能替代专业尽调或投资建议。", en: "Report conclusions still need source review and do not replace professional diligence or investment advice." }
+      { zh: "政务公开数据分散在统计年鉴、预算决算、部门公告和政府信息公开页面，可能没有统一入口。", en: "Government public data may be scattered across yearbooks, budgets, final accounts, department notices, and disclosure pages." },
+      { zh: "如果公开页没有给出精确数字，结果会提示未找到，而不是推断成确定答案。", en: "If public pages do not provide a precise figure, the result should say not found instead of turning an estimate into a fact." }
     ],
     riskMitigation: [
-      { zh: "报告显示来源和不确定性，平台保留搜索与生成 trace。", en: "Reports show sources and uncertainty, while AgentLens keeps search and generation traces." },
-      { zh: "先以只读网页调研运行，后续再逐步开放账号登录、文件和写入权限。", en: "Start with read-only web research, then later graduate to account login, files, and writes." }
+      { zh: "优先查 gov.cn、stats.gov.cn、地方政府站、部门预算决算和统计年鉴。", en: "Prioritises gov.cn, stats.gov.cn, local government sites, department budgets/final accounts, and statistical yearbooks." },
+      { zh: "结果固定展示直接答案、来源链接、可信度和下一步核验建议，平台保留任务记录。", en: "Results consistently show direct answers, source links, confidence notes, next checks, and AgentLens task records." }
     ],
     accessTypes: ["cloud", "api"],
     complexity: "low",
@@ -551,8 +551,8 @@ export const curatedAgents: AgentCatalogEntry[] = [
     pricingUrl: "https://docs.gptr.dev/docs/gpt-researcher/getting-started",
     latestObservedAt: "2026-06-22",
     observationSummary: {
-      zh: "第一批 external_adapter 接入对象；买家看到的是深度调研助手，技术来源为 GPT Researcher 开源项目。",
-      en: "First-batch external_adapter integration; buyers see Deep Research, technically powered by GPT Researcher."
+      zh: "第一批平台自研 external_adapter 接入对象；底层可兼容 GPT Researcher 类 runner，但买家看到和使用的是 AgentLens 数据侦查员。",
+      en: "First-batch first-party external_adapter integration; it can use GPT Researcher-style runners underneath, but buyers use AgentLens Data Scout."
     },
     capabilityContract: {
       mapFit: "main",
@@ -566,13 +566,13 @@ export const curatedAgents: AgentCatalogEntry[] = [
       pricingMode: "per-run",
       trustSignals: ["audit", "sample-output"],
       knownLimits: [
-        { zh: "当前只承诺只读网页调研；需要登录、付费墙或私有数据库的任务会被标为边界外。", en: "Currently only read-only web research is promised; login, paywalled, or private-database tasks are out of scope." },
-        { zh: "如果搜索源质量不足，报告会提示不确定性，而不是假装已经完成专业尽调。", en: "If source quality is weak, the report should state uncertainty instead of pretending to complete professional diligence." }
+        { zh: "当前只承诺只读公开网页；需要登录、付费墙、私有数据库或提交政府信息公开申请的任务会被标为边界外。", en: "Currently only read-only public webpages are promised; login, paywalls, private databases, or submitting public-information requests are out of scope." },
+        { zh: "如果公开来源没有具体数字，会明确说未找到公开数据，并建议政府信息公开申请。", en: "If public sources do not contain a concrete number, it should say the public data was not found and suggest a public-information request." }
       ],
       typicalTasks: [
-        { zh: "调研中国跨境电商卖家 2026 年最关心的三个 AI 工具场景", en: "Research the top three AI tool scenarios for Chinese cross-border e-commerce sellers in 2026" },
-        { zh: "比较三款竞品并列出证据来源", en: "Compare three competitors and list the evidence sources" },
-        { zh: "整理一个行业机会的 5 条结论和引用链接", en: "Summarise five findings and citation links for an industry opportunity" }
+        { zh: "帮我找 2023 年北京市体育局对体育场馆建设的财政拨款数据", en: "Find 2023 Beijing Sports Bureau public funding data for sports venue construction" },
+        { zh: "找某省教育经费支出的官方统计年鉴或预算决算来源", en: "Find official yearbook, budget, or final-account sources for a province's education spending" },
+        { zh: "核对一条新闻里引用的财政数字有没有官方公开来源", en: "Verify whether a budget figure cited in an article has an official public source" }
       ]
     },
     demoVideos: [
@@ -582,15 +582,15 @@ export const curatedAgents: AgentCatalogEntry[] = [
           en: "Start a sourced industry brief on mobile"
         },
         summary: {
-          zh: "演示用户在平台工作区输入调研问题，深度调研助手返回来源、结论和不确定性说明。",
-          en: "Shows a user entering a research question in the workspace and receiving sources, findings, and uncertainty notes."
+          zh: "演示用户输入政务公开找数问题，数据侦查员返回具体数字、来源链接、可信度和下一步核验建议。",
+          en: "Shows a user asking for public government data and receiving a number, source links, confidence notes, and next checks."
         },
         status: "planned",
         durationLabel: { zh: "约 1 分钟", en: "About 1 min" },
         transcript: [
-          { zh: "选择 Deep Research，输入调研问题。", en: "Choose Deep Research and enter a research question." },
-          { zh: "平台联网搜索并记录来源。", en: "AgentLens searches the web and records sources." },
-          { zh: "结果以简报形式返回，可继续追问或保存 trace。", en: "The result returns as a brief; users can follow up or save the trace." }
+          { zh: "选择数据侦查员，输入“某地区某领域拨款多少”这类问题。", en: "Choose Data Scout and enter a question such as funding for a field in a region." },
+          { zh: "平台优先查官方公开来源并记录搜索路径。", en: "AgentLens prioritises official public sources and records the search path." },
+          { zh: "结果返回数字、具体来源、可信度；找不到时说明下一步申请路径。", en: "The result returns a figure, specific sources, confidence notes, or the next request path if not found." }
         ]
       }
     ]
@@ -615,8 +615,8 @@ export const curatedAgents: AgentCatalogEntry[] = [
         { zh: "把多个页面整理成来源清单", en: "Turn several pages into a source list" }
       ],
       deliverable: {
-        zh: "公开网页摘要、来源链接、可复核的浏览 trace。",
-        en: "Public-page summaries, source links, and a reviewable browsing trace."
+        zh: "公开网页摘要、来源链接、可复核的浏览记录。",
+        en: "Public-page summaries, source links, and a reviewable browsing record."
       },
       notFor: {
         zh: "不适合登录后台、提交表单、下单付款、发布消息或上传文件。",
@@ -632,7 +632,7 @@ export const curatedAgents: AgentCatalogEntry[] = [
       },
       differentiation: {
         zh: "比普通搜索多了打开页面、读取内容、保留来源和运行记录。",
-        en: "Adds page opening, content reading, sources, and run traces on top of plain search."
+        en: "Adds page opening, content reading, sources, and run records on top of plain search."
       }
     },
     category: "Web research agent",
@@ -658,7 +658,7 @@ export const curatedAgents: AgentCatalogEntry[] = [
     ],
     riskMitigation: [
       { zh: "只读模式默认拒绝登录、提交表单、购买、上传和发消息类任务。", en: "Read-only mode rejects login, form submission, purchase, upload, and posting tasks by default." },
-      { zh: "输出保留来源链接和运行记录，方便人工复核。", en: "Outputs include source links and run traces for human review." }
+      { zh: "输出保留来源链接和运行记录，方便人工复核。", en: "Outputs include source links and run records for human review." }
     ],
     accessTypes: ["cloud", "api"],
     complexity: "low",
@@ -704,7 +704,7 @@ export const curatedAgents: AgentCatalogEntry[] = [
         },
         summary: {
           zh: "演示用户输入网页采集任务，平台读取公开页面并返回摘要、来源和运行记录。",
-          en: "Shows a user asking for web collection and receiving summaries, sources, and a trace."
+          en: "Shows a user asking for web collection and receiving summaries, sources, and run records."
         },
         status: "planned",
         durationLabel: { zh: "约 1 分钟", en: "About 1 min" },

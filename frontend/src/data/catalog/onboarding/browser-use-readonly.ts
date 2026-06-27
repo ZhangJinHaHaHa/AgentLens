@@ -51,7 +51,7 @@ export const guide: OnboardingGuide = {
   ],
   platformAdvice: {
     zh: "AgentLens 建议：把网页信息采集当作“只读网页跑腿”，不要让它代替你登录、下单或发布内容。平台会保留来源和运行记录，方便复核和结算。",
-    en: "AgentLens advice: treat Web Info Collector as a read-only web runner. Do not use it to sign in, purchase, or publish content. AgentLens keeps sources and run traces for review and settlement."
+    en: "AgentLens advice: treat Web Info Collector as a read-only web runner. Do not use it to sign in, purchase, or publish content. AgentLens keeps sources and run records for review and settlement."
   },
   commonPitfalls: [
     {
