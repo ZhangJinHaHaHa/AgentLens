@@ -28,8 +28,68 @@
   },
   "language": {
     "label": "语言",
+    "toggle": "切换到{{target}}",
     "zh": "中文",
     "en": "English"
+  },
+  "login": {
+    "scene": {
+      "subtitle": "AI · Agent · 市场"
+    },
+    "signIn": {
+      "title": "登录 AgentLens",
+      "subtitle": "用平台账户进入工作区、积分和卖家后台",
+      "passwordMode": "密码登录",
+      "codeMode": "验证码登录",
+      "codeSentNotice": "验证码已发出。本地开发环境未配置 SMTP 时，请在平台 API 日志里查看验证码。",
+      "noAccount": "还没有账号？"
+    },
+    "register": {
+      "title": "创建账号",
+      "subtitle": "填写邮箱和密码，我们发一个验证码给你",
+      "codeSentTo": "验证码已发送至 {{email}}",
+      "hasAccount": "已有账号？",
+      "terms": "注册即表示你同意我们的服务条款和隐私政策",
+      "localSmtpNotice": "本地开发环境未配置 SMTP 时，请在平台 API 日志里查看验证码。"
+    },
+    "fields": {
+      "email": "邮箱地址",
+      "password": "密码",
+      "emailCode": "邮箱验证码",
+      "newPassword": "设置密码（至少 8 位）",
+      "confirmPassword": "再输一遍密码",
+      "sixDigitCode": "6 位验证码"
+    },
+    "actions": {
+      "processing": "处理中…",
+      "sending": "发送中…",
+      "verifying": "验证中…",
+      "signIn": "登录",
+      "signInWithCode": "验证码登录",
+      "register": "注册",
+      "sendCode": "发送验证码",
+      "finishRegister": "完成注册",
+      "backToEditEmail": "← 返回修改邮箱"
+    },
+    "errors": {
+      "apiMissing": "平台 API 未配置，暂时无法登录。",
+      "emailRequired": "请填写邮箱地址",
+      "emailAndPasswordRequired": "请填写邮箱和密码",
+      "emailAndCodeRequired": "请填写邮箱和验证码",
+      "passwordRequired": "请设置密码",
+      "passwordMismatch": "两次密码不一致",
+      "passwordTooShort": "密码至少 8 位",
+      "codeRequired": "请输入验证码",
+      "passwordLoginFailed": "登录失败，请重试",
+      "codeLoginFailed": "验证码登录失败，请重试",
+      "codeSendFailed": "验证码发送失败，请重试",
+      "verifyFailed": "验证失败，请重试"
+    },
+    "trustItems": [
+      "经审核的 AI 工具",
+      "邮箱注册即可使用",
+      "全球学生可访问"
+    ]
   },
   "theme": {
     "label": "主题",

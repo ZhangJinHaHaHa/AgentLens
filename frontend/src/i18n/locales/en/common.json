@@ -28,8 +28,68 @@
   },
   "language": {
     "label": "Language",
+    "toggle": "Switch to {{target}}",
     "zh": "中文",
     "en": "English"
+  },
+  "login": {
+    "scene": {
+      "subtitle": "AI · Agent · Market"
+    },
+    "signIn": {
+      "title": "Sign in to AgentLens",
+      "subtitle": "Use one platform account for workspaces, credits, and seller tools",
+      "passwordMode": "Password",
+      "codeMode": "Email code",
+      "codeSentNotice": "The code has been sent. In local development without SMTP, check the Platform API logs for the code.",
+      "noAccount": "No account yet?"
+    },
+    "register": {
+      "title": "Create account",
+      "subtitle": "Enter your email and password. We will send you a verification code.",
+      "codeSentTo": "A code was sent to {{email}}",
+      "hasAccount": "Already have an account?",
+      "terms": "By registering, you agree to our Terms of Service and Privacy Policy.",
+      "localSmtpNotice": "In local development without SMTP, check the Platform API logs for the code."
+    },
+    "fields": {
+      "email": "Email address",
+      "password": "Password",
+      "emailCode": "Email code",
+      "newPassword": "Set password (8+ characters)",
+      "confirmPassword": "Confirm password",
+      "sixDigitCode": "6-digit code"
+    },
+    "actions": {
+      "processing": "Processing...",
+      "sending": "Sending...",
+      "verifying": "Verifying...",
+      "signIn": "Sign in",
+      "signInWithCode": "Sign in with code",
+      "register": "Register",
+      "sendCode": "Send code",
+      "finishRegister": "Finish registration",
+      "backToEditEmail": "← Back to edit email"
+    },
+    "errors": {
+      "apiMissing": "Platform API is not configured, so sign-in is temporarily unavailable.",
+      "emailRequired": "Enter your email address",
+      "emailAndPasswordRequired": "Enter your email and password",
+      "emailAndCodeRequired": "Enter your email and code",
+      "passwordRequired": "Set a password",
+      "passwordMismatch": "The two passwords do not match",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "codeRequired": "Enter the verification code",
+      "passwordLoginFailed": "Sign-in failed. Please try again.",
+      "codeLoginFailed": "Code sign-in failed. Please try again.",
+      "codeSendFailed": "Failed to send the code. Please try again.",
+      "verifyFailed": "Verification failed. Please try again."
+    },
+    "trustItems": [
+      "Reviewed AI tools",
+      "Email sign-in, ready to use",
+      "Accessible for global students"
+    ]
   },
   "theme": {
     "label": "Theme",
