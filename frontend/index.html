@@ -30,6 +30,44 @@
         }
       })();
     </script>
+    <script>
+      // Clear the old offline shell cache. Mobile in-app browsers can keep a stale
+      // service worker after deploys, which makes menus and route chunks look blank.
+      (function () {
+        if (!("serviceWorker" in navigator)) return;
+
+        window.addEventListener("load", function () {
+          navigator.serviceWorker
+            .getRegistrations()
+            .then(function (registrations) {
+              registrations.forEach(function (registration) {
+                registration.unregister();
+              });
+            })
+            .catch(function () {
+              /* ignore service worker cleanup errors */
+            });
+
+          if (!("caches" in window)) return;
+          window.caches
+            .keys()
+            .then(function (keys) {
+              return Promise.all(
+                keys
+                  .filter(function (key) {
+                    return key.indexOf("agentlens-shell-") === 0;
+                  })
+                  .map(function (key) {
+                    return window.caches.delete(key);
+                  })
+              );
+            })
+            .catch(function () {
+              /* ignore cache cleanup errors */
+            });
+        });
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

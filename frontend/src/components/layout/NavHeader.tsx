@@ -28,6 +28,18 @@ export function NavHeader(): JSX.Element {
   const { buildPath } = useLocale();
   const wallet = useWallet();
   const { ids, compareHref } = useCompareSelection();
+  const handleWalletClick = () => {
+    if (wallet.status === "connected") {
+      wallet.disconnect();
+      return;
+    }
+    void wallet.connect();
+  };
+  const walletLabel = wallet.status === "connected" && wallet.address
+    ? truncateAddress(wallet.address)
+    : wallet.status === "connecting"
+      ? t("wallet.connecting")
+      : t("wallet.label");
 
   return (
     <header className="al-site-header sticky top-0 z-40 w-full border-b">
@@ -61,6 +73,7 @@ export function NavHeader(): JSX.Element {
             </DialogTrigger>
             <DialogContent className="al-site-mobile-menu left-4 right-4 top-16 w-auto max-w-none translate-x-0 translate-y-0 gap-2 p-4 md:hidden">
               <DialogTitle className="sr-only">{t("nav.menu")}</DialogTitle>
+              <div className="al-site-mobile-menu-heading">{t("nav.menu")}</div>
               <nav className="flex flex-col gap-1 text-sm">
                 {NAV_ITEMS.map((item) => (
                   <DialogClose key={item.key} asChild>
@@ -74,33 +87,42 @@ export function NavHeader(): JSX.Element {
                   </DialogClose>
                 ))}
               </nav>
+              <div className="al-site-mobile-actions" aria-label={t("nav.menu")}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  className="al-site-wallet-button w-full justify-center"
+                  onClick={handleWalletClick}
+                  disabled={wallet.status === "connecting" || wallet.status === "unavailable"}
+                  title={wallet.errorMessage ?? undefined}
+                >
+                  <Wallet className="h-4 w-4" aria-hidden />
+                  <span>{walletLabel}</span>
+                </Button>
+                <div className="al-site-mobile-action-row">
+                  <LanguageSwitcher className="w-full justify-center" showLabel />
+                  <ThemeToggle className="al-site-mobile-theme" showLabels />
+                </div>
+              </div>
             </DialogContent>
           </Dialog>
           <Button
             type="button"
             variant="secondary"
             size="sm"
-            onClick={() => {
-              if (wallet.status === "connected") {
-                wallet.disconnect();
-                return;
-              }
-              void wallet.connect();
-            }}
+            className="al-site-wallet-button hidden md:inline-flex"
+            onClick={handleWalletClick}
             disabled={wallet.status === "connecting" || wallet.status === "unavailable"}
             title={wallet.errorMessage ?? undefined}
           >
             <Wallet className="h-4 w-4" aria-hidden />
-            <span className="hidden sm:inline">
-              {wallet.status === "connected" && wallet.address
-                ? truncateAddress(wallet.address)
-                : wallet.status === "connecting"
-                  ? t("wallet.connecting")
-                  : t("wallet.label")}
-            </span>
+            <span>{walletLabel}</span>
           </Button>
-          <LanguageSwitcher />
-          <ThemeToggle />
+          <div className="hidden items-center gap-1 md:flex">
+            <LanguageSwitcher />
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </header>

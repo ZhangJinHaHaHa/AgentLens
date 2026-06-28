@@ -22,32 +22,39 @@ const ART_THEME_SWATCHES: Record<ArtTheme, string> = {
   crimson: "bg-[linear-gradient(135deg,#fbf9f4_0%,#e1bebb_48%,#7e000e_100%)]"
 };
 
-export function ThemeToggle(): JSX.Element {
+interface ThemeToggleProps {
+  className?: string;
+  showLabels?: boolean;
+}
+
+export function ThemeToggle({ className, showLabels = false }: ThemeToggleProps): JSX.Element {
   const { theme, artTheme, toggleTheme, setArtTheme } = useTheme();
   const { t } = useTranslation("common");
 
   return (
-    <div className="flex items-center gap-1">
+    <div className={cn("flex items-center gap-1", className)}>
       {/* Light/Dark Toggle */}
       <Button
         variant="ghost"
-        size="icon"
-        className="h-9 w-9 text-muted-foreground hover:text-foreground"
+        size={showLabels ? "sm" : "icon"}
+        className={cn("h-9 text-muted-foreground hover:text-foreground", showLabels ? "w-full px-3" : "w-9")}
         aria-label={t("theme.label")}
         onClick={toggleTheme}
       >
         {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+        {showLabels ? <span className="text-xs">{t("theme.label")}</span> : null}
       </Button>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            size="icon"
-            className="h-9 w-9 text-muted-foreground hover:text-foreground"
+            size={showLabels ? "sm" : "icon"}
+            className={cn("h-9 text-muted-foreground hover:text-foreground", showLabels ? "w-full px-3" : "w-9")}
             aria-label={t("theme.artLabel")}
           >
             <Palette className="h-4 w-4" />
+            {showLabels ? <span className="text-xs">{t("theme.artLabel")}</span> : null}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

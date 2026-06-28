@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { AgentCatalogEntry } from "@/domain/catalog";
 import type { AppConfig } from "@/config/appConfig";
-import { createAgentAuditRegistryClient } from "@/lib/agentAuditRegistryClient";
 import type { AgentAuditRegistryReadContract } from "@/lib/agentAuditRegistryClient";
 import { isNonZeroHash } from "@/lib/chainEvidence";
 import { normalizeContractReadError } from "@/lib/normalizeContractReadError";
@@ -125,21 +124,23 @@ export function useNativeAgents({ config, client }: UseNativeAgentsOptions): Use
 
   const clientRef = useRef<AgentAuditRegistryReadContract | null>(null);
 
-  const resolvedClient = useMemo<AgentAuditRegistryReadContract>(() => {
-    if (client) {
-      return client;
-    }
-    if (!clientRef.current) {
-      clientRef.current = createAgentAuditRegistryClient(config);
-    }
-    return clientRef.current;
-  }, [client, config]);
-
   useEffect(() => {
     const signal = { cancelled: false };
     setState({ status: "loading", agents: [], errorMessage: null });
 
-    loadNativeAgents(resolvedClient, signal)
+    async function run() {
+      let resolvedClient = client ?? clientRef.current;
+      if (!resolvedClient) {
+        const { createAgentAuditRegistryClient } = await import("@/lib/agentAuditRegistryClient");
+        resolvedClient = createAgentAuditRegistryClient(config);
+        clientRef.current = resolvedClient;
+      }
+
+      const agents = await loadNativeAgents(resolvedClient, signal);
+      return agents;
+    }
+
+    run()
       .then((agents) => {
         if (signal.cancelled) return;
         setState({ status: "ready", agents, errorMessage: null });
@@ -156,7 +157,7 @@ export function useNativeAgents({ config, client }: UseNativeAgentsOptions): Use
     return () => {
       signal.cancelled = true;
     };
-  }, [resolvedClient]);
+  }, [client, config]);
 
   return state;
 }

@@ -711,6 +711,14 @@
     -webkit-backdrop-filter: blur(22px) saturate(1.14);
   }
 
+  .al-site-mobile-menu-heading {
+    padding: 0 0.125rem 0.375rem;
+    color: rgba(248, 250, 252, 0.98);
+    font-size: 0.85rem;
+    font-weight: 650;
+    letter-spacing: 0;
+  }
+
   .al-site-mobile-menu .al-site-nav-link {
     width: 100%;
     justify-content: space-between;
@@ -732,6 +740,56 @@
 
   .al-site-mobile-menu > button:hover {
     color: #ffffff;
+  }
+
+  .al-site-mobile-actions {
+    display: grid;
+    gap: 0.625rem;
+    margin-top: 0.375rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .al-site-mobile-action-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 0.5rem;
+  }
+
+  .al-site-mobile-action-row .theme-button {
+    min-width: 0;
+  }
+
+  .al-site-mobile-theme {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  @media (max-width: 767px) {
+    .al-site-header > .container-page {
+      height: 3.75rem;
+      padding-inline: 1rem;
+    }
+
+    .al-site-brand {
+      max-width: calc(100vw - 5.5rem);
+      min-width: 0;
+    }
+
+    .al-site-header .al-site-menu-trigger.theme-button {
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-left: auto;
+    }
+
+    .al-site-mobile-menu.al-site-mobile-menu {
+      top: 4.625rem;
+      left: 1rem;
+      right: 1rem;
+      padding: 1rem;
+      border-radius: 1rem;
+    }
   }
 
   .glass-input {
@@ -1878,6 +1936,25 @@
   background: #000000;
 }
 
+.route-loading-fallback {
+  display: grid;
+  min-height: 100dvh;
+  place-items: center;
+  color: rgba(15, 23, 42, 0.72);
+  background: hsl(var(--background));
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.route-section-loading {
+  display: grid;
+  min-height: 18rem;
+  place-items: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
 .login-panel-stage {
   position: absolute;
   inset: 0;
@@ -2009,8 +2086,8 @@
 
   .login-card {
     width: min(364px, calc(100vw - 2rem));
-    max-height: min(60dvh, 420px);
-    margin-bottom: clamp(84px, 12dvh, 132px);
+    max-height: min(56dvh, 390px);
+    margin-bottom: clamp(48px, 8dvh, 92px);
     gap: 12px;
     padding: 18px 18px 16px;
     border-radius: 22px;
