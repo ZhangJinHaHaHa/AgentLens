@@ -3,7 +3,14 @@ import { useTranslation } from "react-i18next";
 import { Menu, Wallet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog";
 import { useWallet } from "@/hooks/useWallet";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/i18n/useLocale";
@@ -73,6 +80,7 @@ export function NavHeader(): JSX.Element {
             </DialogTrigger>
             <DialogContent className="al-site-mobile-menu left-4 right-4 top-16 w-auto max-w-none translate-x-0 translate-y-0 gap-2 p-4 md:hidden">
               <DialogTitle className="sr-only">{t("nav.menu")}</DialogTitle>
+              <DialogDescription className="sr-only">{t("nav.menu")}</DialogDescription>
               <div className="al-site-mobile-menu-heading">{t("nav.menu")}</div>
               <nav className="flex flex-col gap-1 text-sm">
                 {NAV_ITEMS.map((item) => (
