@@ -2017,6 +2017,20 @@
   color: rgba(255,255,255,0.25);
 }
 
+.login-agent-icon svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.login-center-orbit {
+  z-index: 1;
+}
+
+.login-marquee-backdrop {
+  z-index: 2;
+}
+
 @media (max-width: 640px) {
   .login-logo-mark {
     top: 18px !important;
@@ -2056,6 +2070,7 @@
   }
 
   .login-marquee-backdrop {
+    z-index: 2;
     justify-content: flex-start !important;
     gap: 3.35rem;
     padding: 8.75rem 0 0 !important;
@@ -2071,21 +2086,26 @@
   .login-polyhedron {
     display: flex !important;
     visibility: visible !important;
-    opacity: 0.54 !important;
+    opacity: 0.28 !important;
   }
 
   .login-center-title {
     display: inline-flex !important;
     visibility: visible !important;
-    opacity: 0.5 !important;
+    opacity: 0.24 !important;
     font-size: 11px !important;
     letter-spacing: 0.18em !important;
   }
 
+  .login-center-orbit {
+    z-index: 1;
+    opacity: 0.18;
+  }
+
   .login-center-stack {
-    gap: 10px !important;
-    transform: translateY(-2.75rem) scale(0.52);
-    transform-origin: top center;
+    gap: 8px !important;
+    transform: translateY(-0.5rem) scale(0.36);
+    transform-origin: center;
   }
 
   .login-panel-stage {
@@ -2161,8 +2181,8 @@
   }
 
   .login-center-stack {
-    transform: translateY(-2.25rem) scale(0.42);
-    opacity: 0.76;
+    transform: translateY(-0.75rem) scale(0.3);
+    opacity: 0.72;
   }
 }
 
