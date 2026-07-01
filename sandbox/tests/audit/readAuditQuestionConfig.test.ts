@@ -16,11 +16,11 @@ test("readAuditQuestionConfig returns mock provider when AUDIT_LLM_PROVIDER is m
 test("readAuditQuestionConfig returns openai config with defaults", () => {
   const config = readAuditQuestionConfig({
     AUDIT_LLM_PROVIDER: "openai",
-    AUDIT_LLM_API_KEY: "sk-test-key"
+    AUDIT_LLM_API_KEY: "test-openai-api-key"
   });
 
   assert.equal(config.provider, "openai");
-  assert.equal(config.apiKey, "sk-test-key");
+  assert.equal(config.apiKey, "test-openai-api-key");
   assert.equal(config.model, "gpt-4o");
   assert.equal(config.questionCount, 5);
 });
@@ -28,11 +28,11 @@ test("readAuditQuestionConfig returns openai config with defaults", () => {
 test("readAuditQuestionConfig returns anthropic config with defaults", () => {
   const config = readAuditQuestionConfig({
     AUDIT_LLM_PROVIDER: "anthropic",
-    AUDIT_LLM_API_KEY: "sk-ant-test-key"
+    AUDIT_LLM_API_KEY: "test-anthropic-api-key"
   });
 
   assert.equal(config.provider, "anthropic");
-  assert.equal(config.apiKey, "sk-ant-test-key");
+  assert.equal(config.apiKey, "test-anthropic-api-key");
   assert.equal(config.model, "claude-sonnet-4-20250514");
   assert.equal(config.questionCount, 5);
 });
@@ -40,11 +40,11 @@ test("readAuditQuestionConfig returns anthropic config with defaults", () => {
 test("readAuditQuestionConfig returns minimax config with defaults", () => {
   const config = readAuditQuestionConfig({
     AUDIT_LLM_PROVIDER: "minimax",
-    AUDIT_LLM_API_KEY: "sk-minimax-test-key"
+    AUDIT_LLM_API_KEY: "test-minimax-api-key"
   });
 
   assert.equal(config.provider, "minimax");
-  assert.equal(config.apiKey, "sk-minimax-test-key");
+  assert.equal(config.apiKey, "test-minimax-api-key");
   assert.equal(config.model, "MiniMax-M2.7");
   assert.equal(config.apiBaseUrl, "https://api.minimaxi.com/v1");
   assert.equal(config.questionCount, 5);
@@ -53,7 +53,7 @@ test("readAuditQuestionConfig returns minimax config with defaults", () => {
 test("readAuditQuestionConfig respects custom model and question count", () => {
   const config = readAuditQuestionConfig({
     AUDIT_LLM_PROVIDER: "openai",
-    AUDIT_LLM_API_KEY: "sk-test-key",
+    AUDIT_LLM_API_KEY: "test-openai-api-key",
     AUDIT_LLM_MODEL: "gpt-4-turbo",
     AUDIT_QUESTION_COUNT: "10"
   });

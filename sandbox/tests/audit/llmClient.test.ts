@@ -111,7 +111,7 @@ test("openai client sends correct request format", async () => {
 
   const config: AuditQuestionConfig = {
     provider: "openai",
-    apiKey: "sk-test-key",
+    apiKey: "test-openai-api-key",
     model: "gpt-4o",
     questionCount: 2
   };
@@ -126,7 +126,7 @@ test("openai client sends correct request format", async () => {
   );
   assert.equal(
     captured[0].headers["authorization"],
-    "Bearer sk-test-key"
+    "Bearer test-openai-api-key"
   );
   assert.equal(captured[0].body.model, "gpt-4o");
   assert.ok(Array.isArray(captured[0].body.messages), "body should have messages array");
@@ -142,7 +142,7 @@ test("openai client throws on non-200 response", async () => {
 
   const config: AuditQuestionConfig = {
     provider: "openai",
-    apiKey: "sk-test-key",
+    apiKey: "test-openai-api-key",
     model: "gpt-4o",
     questionCount: 2
   };
@@ -188,7 +188,7 @@ test("minimax client uses openai-compatible chat completions", async () => {
 
   const config: AuditQuestionConfig = {
     provider: "minimax",
-    apiKey: "sk-minimax-test-key",
+    apiKey: "test-minimax-api-key",
     model: "MiniMax-M2.7",
     questionCount: 2,
     apiBaseUrl: "https://api.minimaxi.com/v1"
@@ -199,7 +199,7 @@ test("minimax client uses openai-compatible chat completions", async () => {
 
   assert.equal(captured.length, 1);
   assert.equal(captured[0].url, "https://api.minimaxi.com/v1/chat/completions");
-  assert.equal(captured[0].headers["authorization"], "Bearer sk-minimax-test-key");
+  assert.equal(captured[0].headers["authorization"], "Bearer test-minimax-api-key");
   assert.equal(captured[0].body.model, "MiniMax-M2.7");
   assert.ok(Array.isArray(captured[0].body.messages), "body should have messages array");
   assert.equal(questions.length, 2);
@@ -238,7 +238,7 @@ test("anthropic client sends correct request format", async () => {
 
   const config: AuditQuestionConfig = {
     provider: "anthropic",
-    apiKey: "sk-ant-test-key",
+    apiKey: "test-anthropic-api-key",
     model: "claude-sonnet-4-20250514",
     questionCount: 2
   };
@@ -253,7 +253,7 @@ test("anthropic client sends correct request format", async () => {
   );
   assert.equal(
     captured[0].headers["x-api-key"],
-    "sk-ant-test-key"
+    "test-anthropic-api-key"
   );
   assert.equal(captured[0].body.model, "claude-sonnet-4-20250514");
   assert.ok(Array.isArray(captured[0].body.messages), "body should have messages array");
@@ -307,7 +307,7 @@ test("openai client uses /responses endpoint and input field when apiFormat is r
 
   const config: AuditQuestionConfig = {
     provider: "openai",
-    apiKey: "sk-test-key",
+    apiKey: "test-openai-api-key",
     model: "gpt-5.4-pro",
     questionCount: 2,
     apiBaseUrl: "https://api.jiekou.ai/openai/v1",
@@ -338,7 +338,7 @@ test("openai client uses custom apiBaseUrl for chat format", async () => {
 
   const config: AuditQuestionConfig = {
     provider: "openai",
-    apiKey: "sk-test",
+    apiKey: "test-api-key",
     model: "gpt-4o",
     questionCount: 2,
     apiBaseUrl: "https://proxy.example.com/v1"
@@ -359,7 +359,7 @@ test("openai responses client throws on empty output array", async () => {
 
   const config: AuditQuestionConfig = {
     provider: "openai",
-    apiKey: "sk-test",
+    apiKey: "test-api-key",
     model: "gpt-5.4-pro",
     questionCount: 2,
     apiFormat: "responses"
@@ -396,7 +396,7 @@ test("openai client handles malformed response body", async () => {
 
   const config: AuditQuestionConfig = {
     provider: "openai",
-    apiKey: "sk-test-key",
+    apiKey: "test-openai-api-key",
     model: "gpt-4o",
     questionCount: 2
   };
@@ -418,7 +418,7 @@ test("anthropic client handles malformed response body", async () => {
 
   const config: AuditQuestionConfig = {
     provider: "anthropic",
-    apiKey: "sk-ant-test-key",
+    apiKey: "test-anthropic-api-key",
     model: "claude-sonnet-4-20250514",
     questionCount: 2
   };
