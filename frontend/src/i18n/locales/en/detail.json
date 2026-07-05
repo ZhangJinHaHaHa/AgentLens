@@ -1,0 +1,406 @@
+{
+  "header": {
+    "addToCompare": "Add to compare",
+    "addedToCompare": "Added to compare",
+    "viewOfficial": "Open official site",
+    "viewAudit": "View audit report",
+    "installAgent": "Install",
+    "useAgent": "Use",
+    "requestAudit": "Request audit"
+  },
+  "detailTabs": {
+    "overview": {
+      "label": "Summary",
+      "title": "Decide whether it is worth using",
+      "description": "Quickly see who it fits, where the risks are, and how to try it first."
+    },
+    "advisor": {
+      "label": "Usage guide",
+      "title": "Agent usage guide",
+      "description": "Enter your goal and get usage advice focused on this Agent."
+    },
+    "install": {
+      "label": "Install",
+      "useLabel": "Use",
+      "title": "One-click install and deployment status",
+      "useTitle": "Use and runtime status",
+      "description": "See whether this Agent should use official install, cloud deployment, or the AgentLens platform workspace.",
+      "useDescription": "This Agent can run through its AgentLens dedicated workspace; credits, files, permissions, and run records stay under platform control."
+    },
+    "demo": {
+      "label": "Demos",
+      "title": "See how it actually works",
+      "description": "Show how this Agent takes input, runs, and delivers output in typical use cases through short videos or demo scripts."
+    },
+    "trust": {
+      "label": "Trust audit",
+      "title": "Review trust evidence",
+      "description": "Check the trust level, audit state, and available public evidence."
+    },
+    "rental": {
+      "label": "Rental review",
+      "title": "Rental and reviews",
+      "description": "After renting, check access status and submit a real usage review."
+    },
+    "resources": {
+      "label": "Resources",
+      "title": "Official entry points and pricing docs",
+      "description": "Open the official site, docs, and pricing information."
+    }
+  },
+  "summary": {
+    "title": "Decision summary",
+    "fitFor": "Fits for",
+    "notFitFor": "Doesn't fit for",
+    "mainRisk": "Main risk",
+    "nextStep": "Suggested next step",
+    "riskFallback": {
+      "low": "Only low-risk signals are documented, but start with a narrow trial.",
+      "medium": "Medium risk. Review critical outputs before formal adoption.",
+      "high": "High-risk tool. Do not use in production without clear audit evidence and boundaries."
+    },
+    "nextStepFallback": {
+      "curated": "Open the getting-started guide below and walk through it first.",
+      "listed": "Check the official docs and pricing before you commit.",
+      "native": "Review the audit report and on-chain evidence before renting."
+    }
+  },
+  "runtimeBoundary": {
+    "title": "Runtime and boundaries",
+    "description": "The catalog card keeps the status short; this section explains how it runs, where data goes, what it delivers, and where it should not be used.",
+    "runMode": "Run mode",
+    "dataBoundary": "Data boundary",
+    "runtimeSecurity": "Runtime security",
+    "runtimeProtocol": "Runtime trust protocol",
+    "deliverable": "Deliverable",
+    "notFor": "Not for",
+    "differentiation": "Why this Agent"
+  },
+  "capabilityContract": {
+    "title": "Capability contract",
+    "description": "This is not a marketing label. It is the capability checklist AgentLens must honor when routing the Agent into a workspace and runtime.",
+    "mapFit": "Workspace map",
+    "runtimeMode": "Runtime path",
+    "mobileSupport": "Mobile",
+    "desktopSupport": "Desktop",
+    "inputs": "Inputs",
+    "outputs": "Outputs",
+    "requiredTools": "Required tools",
+    "permissions": "Permissions",
+    "pricingMode": "Pricing mode",
+    "trustSignals": "Trust signals",
+    "knownLimits": "Known limits",
+    "noSpecialPermission": "No special permission",
+    "maps": {
+      "main": "Main map",
+      "code": "Code map",
+      "browser": "Browser map",
+      "workflow": "Workflow map",
+      "data": "Data / prediction map",
+      "creative": "Creative map",
+      "official-only": "Official entry only"
+    },
+    "runtimeModes": {
+      "managed-runtime": "Managed runtime runtime",
+      "seller-api": "Seller API gateway",
+      "external-adapter": "External adapter",
+      "model-gateway": "Model gateway",
+      "official-only": "Official runtime only"
+    },
+    "support": {
+      "full": "Full support",
+      "partial": "Partial support",
+      "jump-out": "Jump out",
+      "unsupported": "Not supported yet"
+    },
+    "inputTypes": {
+      "text": "Text",
+      "voice": "Voice",
+      "image": "Image",
+      "file": "File",
+      "url": "Link",
+      "dataset": "Dataset",
+      "repo": "Code repository"
+    },
+    "outputTypes": {
+      "text": "Text result",
+      "report": "Report",
+      "table": "Table",
+      "chart": "Chart",
+      "file": "File",
+      "patch": "Code patch",
+      "workflow": "Workflow log",
+      "image": "Image",
+      "audio": "Audio"
+    },
+    "tools": {
+      "model": "Model call",
+      "web-search": "Web search",
+      "web-fetch": "Web fetch",
+      "file-parser": "File parser",
+      "ocr": "OCR / vision",
+      "code-runner": "Code runner",
+      "browser": "Remote browser",
+      "workflow-api": "Workflow / API",
+      "remote-runtime": "Remote runtime",
+      "audit-log": "Audit log"
+    },
+    "permissionsList": {
+      "login": "Login",
+      "external-account": "External account",
+      "submit-form": "Submit forms",
+      "payment": "Payment approval",
+      "file-access": "File access",
+      "repo-access": "Repository access",
+      "browser-session": "Browser session"
+    },
+    "pricingModes": {
+      "free-trial": "Free trial",
+      "per-run": "Per run",
+      "per-token": "Per model usage",
+      "per-tool": "Per tool usage",
+      "seller-defined": "Seller-defined"
+    },
+    "trustSignalsList": {
+      "audit": "Audit",
+      "reputation": "Dynamic reputation",
+      "chain-proof": "On-chain proof",
+      "sample-output": "Sample output",
+      "seller-verified": "Seller verified"
+    }
+  },
+  "agentDemos": {
+    "title": "Video demos",
+    "description": "This tab is reserved for real usage demos. Before a video is uploaded, the walkthrough shows the intended task flow.",
+    "emptyTitle": "No demo configured yet",
+    "emptyDescription": "This Agent does not have demo material yet; later this area can host mobile demos, desktop demos, and full workspace replays.",
+    "pendingVideo": "Demo video pending upload",
+    "transcript": "How to use",
+    "status": {
+      "available": "Playable",
+      "planned": "Pending upload"
+    }
+  },
+  "scenarios": {
+    "title": "Scenario fit",
+    "fit": "Good fit",
+    "unfit": "Avoid for",
+    "noUnfit": "No explicit unfit scenarios documented yet."
+  },
+  "risk": {
+    "title": "Risks & mitigation",
+    "level": "Risk level",
+    "notes": "Risk notes",
+    "mitigation": "Mitigation",
+    "mitigationFallback": "Pilot in a sandbox before expanding the scope."
+  },
+  "onboarding": {
+    "title": "Getting started",
+    "missing": "No platform-maintained guide yet — see official resources below.",
+    "tabs": {
+      "prereq": "Prerequisites",
+      "firstStep": "First step",
+      "steps": "Steps",
+      "pitfalls": "Pitfalls",
+      "official": "Official"
+    },
+    "platformAdvice": "AgentLens suggests",
+    "officialDocsLabel": "Official docs"
+  },
+  "trust": {
+    "title": "Trust evidence",
+    "tier": "Trust tier",
+    "evidence": "Evidence",
+    "audit": "Audit receipt",
+    "platformAudit": {
+      "title": "Platform sandbox audit dimensions",
+      "description": "This area is reserved for real sandbox audit results. A six-dimensional radar is generated only when the platform can run the same submitted image.",
+      "scoreLabel": "Platform audit score",
+      "pendingTitle": "Platform sandbox audit is not complete",
+      "pendingDescription": "This Agent submitted an image, but the owner has not requested a platform sandbox audit yet. After completion, this area shows the 0-100 six-dimensional radar.",
+      "dimensionPending": "Waiting for the owner to request platform audit",
+      "dimensionLocked": "No image submitted; locked with no score",
+      "runtime": {
+        "platform_image": "Image submitted",
+        "seller_runtime": "No image submitted",
+        "external_tool": "External tool"
+      },
+      "status": {
+        "ownerActionRequired": "Owner audit pending",
+        "lockedWithoutImage": "Audit locked"
+      },
+      "ownerTitle": "The Agent owner has not run platform audit yet",
+      "ownerDescription": "The owner can request a platform sandbox audit: AgentLens runs the submitted image, uses {{provider}} to generate audit questions and evaluate answers, then produces the real six-dimensional radar.",
+      "ownerPrefill": "AgentLens will carry {{agent}}'s name and summary into the publish-audit form: {{summary}}",
+      "ownerAction": "Owner starts sandbox audit",
+      "ownerStepManifest": "1. Validate manifest and image fingerprint",
+      "ownerStepSandbox": "2. Run image in sandbox and audit with {{provider}}",
+      "ownerStepReport": "3. Generate report, six-dimensional scores, and later chain anchoring",
+      "lockedTitle": "Platform sandbox audit is locked",
+      "lockedDescription": "This Agent did not submit a Docker image. The platform cannot guarantee the audited version matches the version users actually call, so it does not generate a platform sandbox radar.",
+      "lockedHelpLabel": "Why no-image Agents cannot run platform sandbox audit",
+      "lockedHelp": "Sandbox audit requires the platform to start and observe the same runnable image, collecting healthcheck, network, resource, and audit-answer evidence. Seller-hosted Agents without an image can only receive black-box connectivity/access checks, not platform sandbox six-dimensional scores."
+    },
+    "noChainEvidence": "Not registered on-chain. Only content-layer evidence is available."
+  },
+  "official": {
+    "title": "Official resources",
+    "homepage": "Homepage",
+    "docs": "Docs",
+    "pricing": "Pricing"
+  },
+  "native": {
+    "pricing": "Rental pricing",
+    "history": "Access history",
+    "reviews": "Reviews",
+    "noPricing": "No rental pricing configured yet."
+  },
+  "nativeChain": {
+    "invalidToken": "This native entry does not expose a valid on-chain token id.",
+    "profileTitle": "On-chain native profile",
+    "profileLoadError": "Unable to load the on-chain profile for this native agent.",
+    "reputationTitle": "Reputation and access",
+    "capabilityTitle": "Platform sandbox audit and scene fit",
+    "latestAudit": "Latest audit",
+    "auditHistory": "Audit history",
+    "recentRentals": "Recent marketplace rentals",
+    "anonymousRental": "Anonymous rental record #{{index}}",
+    "noReputation": "No reputation record returned by the registry.",
+    "marketplaceUnavailable": "Marketplace pricing is not configured for this frontend.",
+    "noAudit": "No audit record yet.",
+    "noAuditHistory": "No audit history found.",
+    "loadMoreAudits": "Load more audits",
+    "loading": "Loading",
+    "viewReport": "View report",
+    "score": "Score",
+    "auditNumber": "Audit #{{auditId}}",
+    "rental": "Rental",
+    "paid": "Paid {{amount}}",
+    "expires": "expires {{time}}",
+    "blacklisted": "Blacklisted",
+    "notConfigured": "Not configured",
+    "notSet": "Not set",
+    "meta": {
+      "token": "Token",
+      "developer": "Developer",
+      "bond": "Bond",
+      "audits": "Audits",
+      "created": "Created",
+      "lastAudit": "Last audit",
+      "zkVerifier": "ZK verifier",
+      "score": "Score",
+      "appealsWon": "Appeals won",
+      "appealsLost": "Appeals lost",
+      "rentPerDay": "Rent / day",
+      "accesses": "Accesses",
+      "reportCid": "Report CID",
+      "attestation": "Attestation"
+    },
+    "dimensions": {
+      "security": "Security",
+      "taskExecution": "Task execution",
+      "cognitive": "Cognitive",
+      "environment": "Environment",
+      "engineering": "Engineering",
+      "compliance": "Compliance"
+    },
+    "suitability": {
+      "recommended": "recommended",
+      "acceptable": "acceptable",
+      "not-recommended": "not recommended"
+    },
+    "status": {
+      "Pending": "Pending",
+      "Passed": "Passed",
+      "Failed": "Failed",
+      "Slashed": "Slashed",
+      "Compensated": "Compensated",
+      "Unknown": "Unknown"
+    },
+    "auditService": {
+      "title": "Platform audit service",
+      "unavailable": "The platform audit service status endpoint is not configured.",
+      "runtime": "Service status",
+      "latestTask": "Latest audit task for this agent",
+      "lastPoll": "Last check",
+      "nextBlock": "Next block",
+      "updatedAt": "Updated",
+      "auditScore": "Audit score",
+      "manifestUrl": "Manifest",
+      "noTasks": "No audit task history for this agent yet.",
+      "states": {
+        "starting": "Starting",
+        "running": "Running",
+        "stopped": "Stopped",
+        "failed": "Failed",
+        "notConfigured": "Not configured"
+      },
+      "taskStates": {
+        "listener-task-received": "Received",
+        "listener-task-started": "Auditing",
+        "listener-task-processed": "Report generated",
+        "writeback-submitting": "Writing back",
+        "writeback-confirmed": "Anchored on chain",
+        "writeback-failed": "Writeback failed",
+        "audit-execution-retry-queued": "Waiting for retry"
+      }
+    },
+    "marketplace": {
+      "title": "Rental and user review",
+      "description": "Wallet users can rent temporary access directly. Reviews are gated by active access.",
+      "walletConnected": "Wallet {{address}}",
+      "walletNotConnected": "Wallet not connected",
+      "chain": "Chain {{chainId}}",
+      "expectedChain": "Expected chain {{chainId}}",
+      "activeAccess": "Active access",
+      "noActiveAccess": "No active access",
+      "reviewed": "Reviewed",
+      "refresh": "Refresh",
+      "connect": "Connect wallet",
+      "connecting": "Connecting",
+      "rentTitle": "Rent access",
+      "rentDescription": "Access expires after the selected duration.",
+      "configured": "Configured",
+      "notConfigured": "Not configured",
+      "durationDays": "Duration days",
+      "rentPerDay": "Rent / day",
+      "total": "Total",
+      "switchChain": "Switch to chain {{chainId}}",
+      "rentAgent": "Rent agent",
+      "renting": "Renting",
+      "rentalTx": "Rental tx",
+      "reviewTitle": "Usage feedback",
+      "reviewDescription": "Only users with active access can submit one usage feedback record.",
+      "reviews": "{{count}} reviews",
+      "goodRatio": "{{ratio}} good",
+      "bad": "Bad",
+      "neutral": "Neutral",
+      "good": "Good",
+      "offChainComment": "Off-chain comment",
+      "commentPlaceholder": "Briefly describe your rental experience.",
+      "submitReview": "Submit review",
+      "submittingReview": "Submitting review",
+      "alreadyReviewed": "This wallet has already reviewed this agent.",
+      "reviewTx": "Review tx",
+      "commentHash": "Comment hash",
+      "errors": {
+        "loadAccess": "Unable to load wallet access.",
+        "chainMismatch": "Wallet is on chain {{current}}, expected {{expected}}.",
+        "pricingMissing": "Rental pricing is not configured for this agent.",
+        "rentalFailed": "Rental transaction failed.",
+        "reviewRegistryMissing": "Review registry is not configured.",
+        "accessRequired": "You need active rental access before submitting a review.",
+        "reviewFailed": "Review transaction failed.",
+        "switchChain": "Unable to switch chain."
+      }
+    }
+  },
+  "observations": {
+    "title": "Recent observations",
+    "empty": "No recent observations."
+  },
+  "errors": {
+    "notFound": "We couldn't find that agent.",
+    "tryHome": "Back to home"
+  }
+}

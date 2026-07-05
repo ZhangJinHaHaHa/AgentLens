@@ -1,0 +1,55 @@
+{
+  "tray": {
+    "title": "Compare tray",
+    "empty": "No agents added yet.",
+    "limit": "You can compare up to 4 agents.",
+    "open": "Open compare"
+  },
+  "narrative": {
+    "title": "How to choose, in plain words"
+  },
+  "runtimeSecurity": {
+    "notice": {
+      "title": "Image recognition note",
+      "platformImage": "A recognized platform image is not a platform safety guarantee; it only means the platform recognizes a Docker image it can run in a controlled cloud runtime.",
+      "sellerHosted": "An unrecognized image means the runtime boundary is outside the platform-controlled cloud environment, so buyer input may be exposed to the seller runtime.",
+      "buyerChoice": "The platform only shows the runtime-boundary signal; buyers decide whether the material is sensitive enough to require it."
+    }
+  },
+  "page": {
+    "title": "Compare Agents",
+    "subtitle": "Select the best Agent based on multiple metrics",
+    "empty": "No Agents Selected",
+    "emptyDesc": "Please select at least 2 agents to compare",
+    "clear": "Clear compare",
+    "back": "Back to Directory",
+    "removeAgent": "Remove {{name}}",
+    "rentalLifecycleAction": "Rent and review",
+    "limit": "Only the first 4 agents are shown; remove extras from the URL or the compare list.",
+    "conclusion": "Conclusion",
+    "winner": "Recommended",
+    "rules": {
+      "try-first": "Try First: Best balance of risk, complexity, and trust.",
+      "formal-integration": "Formal Integration: Powerful but complex or lacks onboarding.",
+      "avoid-for-now": "Avoid For Now: All options have high risk or lack trust evidence.",
+      "manual-judgment": "Manual Judgment: Similar metrics, please evaluate based on your use case."
+    },
+    "attrs": {
+      "dimension": "Dimension",
+      "scenario": "Scenarios",
+      "unsuitableScenario": "Unsuitable",
+      "seller": "Seller behind it",
+      "complexity": "Complexity",
+      "riskLevel": "Risk Level",
+      "trustTier": "Trust Tier",
+      "runtimeSecurity": "Runtime Security Boundary",
+      "onboarding": "Onboarding Guide",
+      "auditEvidence": "Audit Evidence",
+      "pricing": "Pricing",
+      "rentalLifecycle": "Rental loop",
+      "officialRoute": "Official Route"
+    },
+    "has": "Yes",
+    "none": "No"
+  }
+}

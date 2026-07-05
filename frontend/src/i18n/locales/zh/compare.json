@@ -1,0 +1,55 @@
+{
+  "tray": {
+    "title": "对比清单",
+    "empty": "尚未加入任何 Agent。",
+    "limit": "最多对比 4 个 Agent。",
+    "open": "开始对比"
+  },
+  "narrative": {
+    "title": "一句话怎么选"
+  },
+  "runtimeSecurity": {
+    "notice": {
+      "title": "镜像识别提示",
+      "platformImage": "平台镜像已识别不等于平台担保安全，只表示平台识别到可云端受控运行的 Docker 镜像。",
+      "sellerHosted": "未识别镜像表示运行边界不在平台云端受控环境内，买家输入可能暴露给卖家运行环境。",
+      "buyerChoice": "平台只展示运行边界标识，是否用于敏感材料由买家自行判断。"
+    }
+  },
+  "page": {
+    "title": "对比 Agent",
+    "subtitle": "通过各项指标选择最适合的 Agent",
+    "empty": "未选择 Agent",
+    "emptyDesc": "请至少选择 2 个 Agent 进行对比",
+    "clear": "清空对比",
+    "back": "返回目录",
+    "removeAgent": "移除 {{name}}",
+    "rentalLifecycleAction": "租赁与评价",
+    "limit": "仅展示前 4 个 Agent；请从 URL 或对比清单中移除多余项。",
+    "conclusion": "对比结论",
+    "winner": "推荐选择",
+    "rules": {
+      "try-first": "尝试首选：综合风险、复杂度和信任等级最佳",
+      "formal-integration": "正式集成：能力强大但存在一定复杂度或无入门指南",
+      "avoid-for-now": "暂缓使用：所有选项均存在高风险或缺乏信任证据",
+      "manual-judgment": "需要人工判断：指标相近，建议根据具体场景自行判断"
+    },
+    "attrs": {
+      "dimension": "对比维度",
+      "scenario": "适用场景",
+      "unsuitableScenario": "不适用场景",
+      "seller": "背后卖家",
+      "complexity": "接入复杂度",
+      "riskLevel": "风险等级",
+      "trustTier": "信任等级",
+      "runtimeSecurity": "运行安全边界",
+      "onboarding": "入门指南",
+      "auditEvidence": "审计证据",
+      "pricing": "定价信息",
+      "rentalLifecycle": "租赁闭环",
+      "officialRoute": "官方入口"
+    },
+    "has": "有",
+    "none": "无"
+  }
+}

@@ -1,0 +1,406 @@
+{
+  "header": {
+    "addToCompare": "加入对比",
+    "addedToCompare": "已加入对比",
+    "viewOfficial": "访问官方",
+    "viewAudit": "查看审计报告",
+    "installAgent": "一键安装",
+    "useAgent": "使用",
+    "requestAudit": "发起审计"
+  },
+  "detailTabs": {
+    "overview": {
+      "label": "选型摘要",
+      "title": "先判断值不值得用",
+      "description": "快速看它适合谁、风险在哪里、第一步怎么试。"
+    },
+    "advisor": {
+      "label": "使用指导",
+      "title": "Agent 使用指导",
+      "description": "输入你的目标，得到围绕这个 Agent 的使用建议。"
+    },
+    "install": {
+      "label": "安装",
+      "useLabel": "使用",
+      "title": "一键安装与部署状态",
+      "useTitle": "使用与运行状态",
+      "description": "说明这个 Agent 当前适合官方安装、云端部署，还是通过 AgentLens 平台工作区使用。",
+      "useDescription": "这个 Agent 已可通过 AgentLens 专属工作区使用；积分、文件、权限和运行记录由平台统一管理。"
+    },
+    "demo": {
+      "label": "演示视频",
+      "title": "看它真实怎么工作",
+      "description": "用短视频或典型用法展示这个 Agent 在典型场景里会怎样输入、运行和交付结果。"
+    },
+    "trust": {
+      "label": "信任审计",
+      "title": "查看信任证据",
+      "description": "查看信任等级、审计状态和已公开的证据。"
+    },
+    "rental": {
+      "label": "租赁评价",
+      "title": "租赁与评价",
+      "description": "租赁后可以查看访问状态，并提交真实使用评价。"
+    },
+    "resources": {
+      "label": "官方资源",
+      "title": "官方入口和价格文档",
+      "description": "查看官网、文档和价格信息。"
+    }
+  },
+  "summary": {
+    "title": "决策摘要",
+    "fitFor": "适合谁",
+    "notFitFor": "不适合谁",
+    "mainRisk": "主风险",
+    "nextStep": "建议下一步",
+    "riskFallback": {
+      "low": "当前只看到低风险信号，但仍建议先小范围试用。",
+      "medium": "存在中等风险，正式接入前需要人工复核关键输出。",
+      "high": "高风险工具；除非有明确审计和边界控制，否则不应直接接入生产。"
+    },
+    "nextStepFallback": {
+      "curated": "查看下方“起步指南”，先按指南跑一遍。",
+      "listed": "查官方文档与报价，再决定要不要试。",
+      "native": "查看审计报告与链上证据，再决定是否租赁试用。"
+    }
+  },
+  "runtimeBoundary": {
+    "title": "运行与边界",
+    "description": "列表卡只放简短状态；这里集中说明它怎么运行、数据会去哪、交付物是什么，以及哪些场景不该用。",
+    "runMode": "运行方式",
+    "dataBoundary": "数据边界",
+    "runtimeSecurity": "运行安全",
+    "runtimeProtocol": "运行环境协议",
+    "deliverable": "交付物",
+    "notFor": "不适合",
+    "differentiation": "差异价值"
+  },
+  "capabilityContract": {
+    "title": "能力契约",
+    "description": "这不是宣传标签，而是平台后续接入工作区和运行器时要遵守的能力清单。",
+    "mapFit": "工作区地图",
+    "runtimeMode": "运行路径",
+    "mobileSupport": "手机端",
+    "desktopSupport": "电脑端",
+    "inputs": "可输入",
+    "outputs": "可输出",
+    "requiredTools": "需要工具",
+    "permissions": "权限",
+    "pricingMode": "计费方式",
+    "trustSignals": "可信信号",
+    "knownLimits": "已知限制",
+    "noSpecialPermission": "暂无特殊权限",
+    "maps": {
+      "main": "主地图",
+      "code": "代码地图",
+      "browser": "浏览器地图",
+      "workflow": "工作流地图",
+      "data": "数据/预测地图",
+      "creative": "创作地图",
+      "official-only": "仅官方入口"
+    },
+    "runtimeModes": {
+      "managed-runtime": "平台托管运行",
+      "seller-api": "卖家 API 网关",
+      "external-adapter": "外部适配器",
+      "model-gateway": "模型网关",
+      "official-only": "仅官方运行"
+    },
+    "support": {
+      "full": "完整支持",
+      "partial": "部分支持",
+      "jump-out": "跳转官方",
+      "unsupported": "暂不支持"
+    },
+    "inputTypes": {
+      "text": "文字",
+      "voice": "语音",
+      "image": "图片",
+      "file": "文件",
+      "url": "链接",
+      "dataset": "数据集",
+      "repo": "代码仓库"
+    },
+    "outputTypes": {
+      "text": "文字结果",
+      "report": "报告",
+      "table": "表格",
+      "chart": "图表",
+      "file": "文件",
+      "patch": "代码补丁",
+      "workflow": "工作流记录",
+      "image": "图片",
+      "audio": "音频"
+    },
+    "tools": {
+      "model": "模型调用",
+      "web-search": "联网搜索",
+      "web-fetch": "网页读取",
+      "file-parser": "文件解析",
+      "ocr": "OCR/图片理解",
+      "code-runner": "代码执行",
+      "browser": "远程浏览器",
+      "workflow-api": "工作流/API",
+      "remote-runtime": "远程运行器",
+      "audit-log": "审计日志"
+    },
+    "permissionsList": {
+      "login": "登录",
+      "external-account": "外部账号",
+      "submit-form": "提交表单",
+      "payment": "付款确认",
+      "file-access": "文件访问",
+      "repo-access": "仓库权限",
+      "browser-session": "浏览器会话"
+    },
+    "pricingModes": {
+      "free-trial": "免费试用",
+      "per-run": "按次扣积分",
+      "per-token": "按模型消耗扣积分",
+      "per-tool": "按工具用量扣积分",
+      "seller-defined": "卖家定义"
+    },
+    "trustSignalsList": {
+      "audit": "审计",
+      "reputation": "动态信誉",
+      "chain-proof": "链上证据",
+      "sample-output": "样例结果",
+      "seller-verified": "卖家确认"
+    }
+  },
+  "agentDemos": {
+    "title": "视频演示",
+    "description": "这里专门放真实使用演示。没有上传视频前，先用典型用法说明这个 Agent 未来应该怎样跑通一个典型任务。",
+    "emptyTitle": "暂未配置演示视频",
+    "emptyDescription": "这个 Agent 还没有上传演示材料；后续可以在这里放手机端演示、桌面端演示和完整工作区回放。",
+    "pendingVideo": "演示视频待上传",
+    "transcript": "典型用法",
+    "status": {
+      "available": "可播放",
+      "planned": "待上传"
+    }
+  },
+  "scenarios": {
+    "title": "场景适配",
+    "fit": "适合的场景",
+    "unfit": "不适合的场景",
+    "noUnfit": "暂无不适合场景的明确说明。"
+  },
+  "risk": {
+    "title": "风险与缓解",
+    "level": "风险等级",
+    "notes": "风险点",
+    "mitigation": "缓解建议",
+    "mitigationFallback": "建议先在小范围沙盒中试跑，再扩大覆盖。"
+  },
+  "onboarding": {
+    "title": "起步指南",
+    "missing": "这个 Agent 暂无平台维护的起步指南，请直接参考下方官方资源。",
+    "tabs": {
+      "prereq": "前置条件",
+      "firstStep": "第一步",
+      "steps": "操作步骤",
+      "pitfalls": "常见坑",
+      "official": "官方资源"
+    },
+    "platformAdvice": "AgentLens 建议",
+    "officialDocsLabel": "官方文档"
+  },
+  "trust": {
+    "title": "信任证据",
+    "tier": "信任层级",
+    "evidence": "证据",
+    "audit": "审计回执",
+    "platformAudit": {
+      "title": "平台沙箱审计六维",
+      "description": "这里预留真实沙箱审计结果位置；只有平台能运行同一份镜像时，才会生成六维雷达图。",
+      "scoreLabel": "平台审计分",
+      "pendingTitle": "平台沙箱审计未完成",
+      "pendingDescription": "该 Agent 已提交镜像，但拥有者尚未发起平台沙箱审计；完成后这里会显示 0-100 六维雷达图。",
+      "dimensionPending": "等待拥有者发起平台审计",
+      "dimensionLocked": "未提交镜像，已锁定不生成分数",
+      "runtime": {
+        "platform_image": "已提交镜像",
+        "seller_runtime": "未提交镜像",
+        "external_tool": "外部工具"
+      },
+      "status": {
+        "ownerActionRequired": "待拥有者审计",
+        "lockedWithoutImage": "审计锁定"
+      },
+      "ownerTitle": "Agent 拥有者暂时还未进行审计",
+      "ownerDescription": "拥有者可以选择平台沙箱审计：平台运行已提交镜像，使用 {{provider}} 生成审计问题并评估回答，最终输出真实六维雷达图。",
+      "ownerPrefill": "将带入 {{agent}} 的名称和摘要进入发布审计表单：{{summary}}",
+      "ownerAction": "拥有者发起沙箱审计",
+      "ownerStepManifest": "1. 校验 manifest 与镜像指纹",
+      "ownerStepSandbox": "2. 沙箱运行镜像并调用 {{provider}} 审计",
+      "ownerStepReport": "3. 生成报告、六维分数与后续链上锚定",
+      "lockedTitle": "平台沙箱审计已锁定",
+      "lockedDescription": "该 Agent 未提交 Docker 镜像，平台无法保证审计时运行的版本和用户实际调用的版本一致，因此不生成平台沙箱六维雷达图。",
+      "lockedHelpLabel": "为什么未提交镜像不能做平台沙箱审计",
+      "lockedHelp": "沙箱审计需要平台启动并观测同一份可运行镜像，采集 healthcheck、网络访问、资源占用和审计回答证据。未提交镜像的卖家托管 Agent 只能做黑盒连通性/访问权检查，不能生成平台沙箱六维分数。"
+    },
+    "noChainEvidence": "该 Agent 不在链上注册，仅有内容层证据。"
+  },
+  "official": {
+    "title": "官方资源",
+    "homepage": "官方主页",
+    "docs": "官方文档",
+    "pricing": "价格说明"
+  },
+  "native": {
+    "pricing": "租赁价格",
+    "history": "调用记录",
+    "reviews": "用户反馈",
+    "noPricing": "尚未配置租赁价格。"
+  },
+  "nativeChain": {
+    "invalidToken": "这个平台原生 Agent 没有暴露有效的链上 token id。",
+    "profileTitle": "链上原生档案",
+    "profileLoadError": "无法读取这个原生 Agent 的链上档案。",
+    "reputationTitle": "信誉与访问权",
+    "capabilityTitle": "平台沙箱审计与场景适配",
+    "latestAudit": "最新审计",
+    "auditHistory": "审计历史",
+    "recentRentals": "最近租赁记录",
+    "anonymousRental": "匿名租赁记录 #{{index}}",
+    "noReputation": "Registry 未返回信誉记录。",
+    "marketplaceUnavailable": "当前前端未配置 Marketplace 价格读取。",
+    "noAudit": "暂无审计记录。",
+    "noAuditHistory": "未找到审计历史。",
+    "loadMoreAudits": "加载更多审计",
+    "loading": "加载中",
+    "viewReport": "查看报告",
+    "score": "评分",
+    "auditNumber": "审计 #{{auditId}}",
+    "rental": "租赁",
+    "paid": "已支付 {{amount}}",
+    "expires": "到期 {{time}}",
+    "blacklisted": "已列入黑名单",
+    "notConfigured": "未配置",
+    "notSet": "未设置",
+    "meta": {
+      "token": "Token",
+      "developer": "开发者",
+      "bond": "保证金",
+      "audits": "审计次数",
+      "created": "创建时间",
+      "lastAudit": "最近审计",
+      "zkVerifier": "ZK 验证器",
+      "score": "信誉分",
+      "appealsWon": "申诉成功",
+      "appealsLost": "申诉失败",
+      "rentPerDay": "每日租金",
+      "accesses": "访问次数",
+      "reportCid": "报告 CID",
+      "attestation": "TEE 证明"
+    },
+    "dimensions": {
+      "security": "安全性",
+      "taskExecution": "任务执行",
+      "cognitive": "推理能力",
+      "environment": "环境约束",
+      "engineering": "工程质量",
+      "compliance": "合规性"
+    },
+    "suitability": {
+      "recommended": "推荐",
+      "acceptable": "可接受",
+      "not-recommended": "不推荐"
+    },
+    "status": {
+      "Pending": "待审计",
+      "Passed": "已通过",
+      "Failed": "未通过",
+      "Slashed": "已罚没",
+      "Compensated": "已补偿",
+      "Unknown": "未知"
+    },
+    "auditService": {
+      "title": "平台审计服务",
+      "unavailable": "当前没有配置平台审计服务状态接口。",
+      "runtime": "服务状态",
+      "latestTask": "当前 Agent 最近审计任务",
+      "lastPoll": "最近检查",
+      "nextBlock": "下个区块",
+      "updatedAt": "更新时间",
+      "auditScore": "审计分",
+      "manifestUrl": "Manifest",
+      "noTasks": "这个 Agent 暂无审计任务流水。",
+      "states": {
+        "starting": "启动中",
+        "running": "运行中",
+        "stopped": "已停止",
+        "failed": "异常",
+        "notConfigured": "未配置"
+      },
+      "taskStates": {
+        "listener-task-received": "已收到",
+        "listener-task-started": "审计中",
+        "listener-task-processed": "已生成报告",
+        "writeback-submitting": "写回中",
+        "writeback-confirmed": "已写回链上",
+        "writeback-failed": "写回失败",
+        "audit-execution-retry-queued": "等待重试"
+      }
+    },
+    "marketplace": {
+      "title": "租赁与用户评价",
+      "description": "钱包用户可以直接租赁获得临时访问权；评价必须基于有效访问权提交。",
+      "walletConnected": "钱包 {{address}}",
+      "walletNotConnected": "钱包未连接",
+      "chain": "链 {{chainId}}",
+      "expectedChain": "需要链 {{chainId}}",
+      "activeAccess": "已有访问权",
+      "noActiveAccess": "暂无访问权",
+      "reviewed": "已评价",
+      "refresh": "刷新",
+      "connect": "连接钱包",
+      "connecting": "连接中",
+      "rentTitle": "租赁访问权",
+      "rentDescription": "访问权会在所选天数后过期。",
+      "configured": "已配置",
+      "notConfigured": "未配置",
+      "durationDays": "租赁天数",
+      "rentPerDay": "每日租金",
+      "total": "合计",
+      "switchChain": "切换到链 {{chainId}}",
+      "rentAgent": "租赁 Agent",
+      "renting": "租赁中",
+      "rentalTx": "租赁交易",
+      "reviewTitle": "使用反馈",
+      "reviewDescription": "只有拥有有效访问权的用户可以提交一次使用反馈。",
+      "reviews": "{{count}} 条评价",
+      "goodRatio": "{{ratio}} 好评",
+      "bad": "差",
+      "neutral": "中立",
+      "good": "好",
+      "offChainComment": "链下评论",
+      "commentPlaceholder": "简单描述你的租赁体验。",
+      "submitReview": "提交评价",
+      "submittingReview": "正在提交评价",
+      "alreadyReviewed": "这个钱包已经评价过该 Agent。",
+      "reviewTx": "评价交易",
+      "commentHash": "评论哈希",
+      "errors": {
+        "loadAccess": "无法读取钱包访问权。",
+        "chainMismatch": "钱包当前在链 {{current}}，需要链 {{expected}}。",
+        "pricingMissing": "这个 Agent 尚未配置租赁价格。",
+        "rentalFailed": "租赁交易失败。",
+        "reviewRegistryMissing": "未配置 Review Registry。",
+        "accessRequired": "提交评价前需要先拥有有效租赁访问权。",
+        "reviewFailed": "评价交易失败。",
+        "switchChain": "无法切换链。"
+      }
+    }
+  },
+  "observations": {
+    "title": "最近观察",
+    "empty": "近期没有新的观察记录。"
+  },
+  "errors": {
+    "notFound": "未找到这个 Agent。",
+    "tryHome": "回到首页"
+  }
+}
