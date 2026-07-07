@@ -2,6 +2,7 @@ export interface AttestationServiceConfig {
   host: string;
   port: number;
   providerMode: string;
+  authToken?: string;
   commandBackend?: {
     command: string;
     args: string[];
@@ -40,6 +41,14 @@ export function readAttestationServiceConfig(
     throw new Error("AUDIT_ATTESTATION_SERVICE_PORT must be a positive integer");
   }
 
+  const host = env.AUDIT_ATTESTATION_SERVICE_HOST || "127.0.0.1";
+  const authToken = env.AUDIT_ATTESTATION_API_TOKEN;
+  if (isPublicBindHost(host) && !authToken) {
+    throw new Error(
+      "AUDIT_ATTESTATION_API_TOKEN is required when AUDIT_ATTESTATION_SERVICE_HOST is public."
+    );
+  }
+
   if (providerMode === "real-http") {
     const backendUrl = env.AUDIT_ATTESTATION_REAL_BACKEND_URL;
     if (!backendUrl) {
@@ -53,9 +62,10 @@ export function readAttestationServiceConfig(
     }
 
     return {
-      host: env.AUDIT_ATTESTATION_SERVICE_HOST || "127.0.0.1",
+      host,
       port,
       providerMode,
+      ...(authToken ? { authToken } : {}),
       realBackend: {
         backendUrl,
         authToken: env.AUDIT_ATTESTATION_REAL_BACKEND_AUTH_TOKEN,
@@ -89,9 +99,10 @@ export function readAttestationServiceConfig(
       .filter((value) => value.length > 0);
 
     return {
-      host: env.AUDIT_ATTESTATION_SERVICE_HOST || "127.0.0.1",
+      host,
       port,
       providerMode,
+      ...(authToken ? { authToken } : {}),
       commandBackend: {
         command,
         args,
@@ -107,8 +118,14 @@ export function readAttestationServiceConfig(
   }
 
   return {
-    host: env.AUDIT_ATTESTATION_SERVICE_HOST || "127.0.0.1",
+    host,
     port,
-    providerMode
+    providerMode,
+    ...(authToken ? { authToken } : {})
   };
+}
+
+function isPublicBindHost(host: string): boolean {
+  const normalized = host.trim().toLowerCase();
+  return normalized === "0.0.0.0" || normalized === "::" || normalized === "[::]" || normalized === "";
 }

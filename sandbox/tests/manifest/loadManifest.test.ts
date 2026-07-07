@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import {
+  loadAuditChainManifestSource,
   loadManifest,
   loadManifestFromUrl,
   ManifestValidationError
@@ -199,5 +200,51 @@ test("loadManifestFromUrl throws MANIFEST_INVALID for unsupported protocols", as
       error instanceof ManifestValidationError &&
       error.reasonCode === "MANIFEST_INVALID" &&
       error.message.includes("http or https")
+  );
+});
+
+test("loadAuditChainManifestSource rejects local files", async () => {
+  const filePath = await writeManifestFile(
+    JSON.stringify({
+      agent_name: "risk-agent",
+      image: "registry.example.com/agents/risk-agent:1.0.0",
+      allowed_hosts: ["api.risk.com"],
+      allowed_rpc_endpoints: ["https://rpc.edge.local"]
+    })
+  );
+
+  await assert.rejects(
+    () => loadAuditChainManifestSource(filePath),
+    (error: unknown) =>
+      error instanceof ManifestValidationError &&
+      error.reasonCode === "MANIFEST_INVALID" &&
+      error.message.includes("HTTPS URL")
+  );
+});
+
+test("loadAuditChainManifestSource rejects non-HTTPS manifest URLs", async () => {
+  await assert.rejects(
+    () => loadAuditChainManifestSource("http://93.184.216.34/manifest.json"),
+    (error: unknown) =>
+      error instanceof ManifestValidationError &&
+      error.reasonCode === "MANIFEST_INVALID" &&
+      error.message.includes("https")
+  );
+});
+
+test("loadManifestFromUrl rejects private-network manifest URLs", async () => {
+  await assert.rejects(
+    () =>
+      loadManifestFromUrl("https://127.0.0.1/manifest.json", {
+        fetchImpl: async () =>
+          new Response("{}", {
+            status: 200,
+            headers: { "content-type": "application/json" }
+          })
+      }),
+    (error: unknown) =>
+      error instanceof ManifestValidationError &&
+      error.reasonCode === "MANIFEST_INVALID" &&
+      error.message.includes("Unable to download manifest URL")
   );
 });

@@ -51,13 +51,16 @@ export async function handleAppealIntakeRequest(
   appealChainWriter?: AppealChainWriter
 ): Promise<void> {
   if (request.method === "PATCH" && request.url?.startsWith("/api/appeals/") && request.url.endsWith("/review")) {
-    if (adminToken) {
-      const rawAuth = request.headers?.authorization;
-      const authHeader = Array.isArray(rawAuth) ? rawAuth[0] ?? "" : rawAuth ?? "";
-      if (authHeader !== `Bearer ${adminToken}`) {
-        writeJson(response, 401, { error: "Unauthorized" });
-        return;
-      }
+    if (!adminToken) {
+      writeJson(response, 403, { error: "Appeal review authorization is not configured." });
+      return;
+    }
+
+    const rawAuth = request.headers?.authorization;
+    const authHeader = Array.isArray(rawAuth) ? rawAuth[0] ?? "" : rawAuth ?? "";
+    if (authHeader !== `Bearer ${adminToken}`) {
+      writeJson(response, 401, { error: "Unauthorized" });
+      return;
     }
 
     try {

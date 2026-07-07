@@ -175,9 +175,11 @@ test("createAppealIntakeServer updates an appeal review result", async () => {
       status: "rejected",
       reviewer: "operator-1",
       reviewResult: "Observed undeclared egress was confirmed."
-    }),
+    }, { authorization: "Bearer secret-admin-token" }),
     response,
-    store
+    store,
+    undefined,
+    "secret-admin-token"
   );
 
   assert.equal(response.statusCode, 200);
@@ -213,7 +215,7 @@ test("createAppealIntakeServer executes on-chain compensation when an appeal is 
       reviewResult: "False positive confirmed.",
       compensationAmount: "400000000000000000",
       compensationReasonCode: "APPEAL_APPROVED"
-    }),
+    }, { authorization: "Bearer secret-admin-token" }),
     response,
     store,
     async (request) => {
@@ -221,7 +223,8 @@ test("createAppealIntakeServer executes on-chain compensation when an appeal is 
       return {
         transactionHash: "0xcompensated"
       };
-    }
+    },
+    "secret-admin-token"
   );
 
   assert.deepEqual(compensationRequests, [
@@ -334,7 +337,7 @@ test("PATCH review succeeds when adminToken is configured and correct token prov
   });
 });
 
-test("PATCH review remains open when adminToken is not configured (backward compat)", async () => {
+test("PATCH review fails closed when adminToken is not configured", async () => {
   const { store, created } = createStoreDouble();
   created.push({
     appealId: "apl-001",
@@ -357,11 +360,8 @@ test("PATCH review remains open when adminToken is not configured (backward comp
     store
   );
 
-  assert.equal(response.statusCode, 200);
-  assert.deepEqual(response.jsonBody, {
-    appealId: "apl-001",
-    status: "rejected"
-  });
+  assert.equal(response.statusCode, 403);
+  assert.deepEqual(response.jsonBody, { error: "Appeal review authorization is not configured." });
 });
 
 test("GET and POST are not affected by adminToken", async () => {
@@ -414,9 +414,11 @@ test("createAppealIntakeServer rejects approved reviews without compensation det
       status: "approved",
       reviewer: "operator-1",
       reviewResult: "False positive confirmed."
-    }),
+    }, { authorization: "Bearer secret-admin-token" }),
     response,
-    store
+    store,
+    undefined,
+    "secret-admin-token"
   );
 
   assert.equal(response.statusCode, 400);

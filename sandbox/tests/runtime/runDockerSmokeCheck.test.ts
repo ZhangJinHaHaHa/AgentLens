@@ -39,9 +39,10 @@ test("runDockerSmokeCheck returns unavailable when docker daemon cannot be reach
 });
 
 test("runDockerSmokeCheck accepts a manifest URL before checking docker availability", async () => {
+  const manifestUrl = "https://93.184.216.34/manifest.json";
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (input: string | URL | Request) => {
-    assert.equal(String(input), "https://manifests.example/manifest.json");
+    assert.equal(String(input), manifestUrl);
     return new Response(
       JSON.stringify({
         agent_name: "risk-agent",
@@ -58,7 +59,7 @@ test("runDockerSmokeCheck accepts a manifest URL before checking docker availabi
 
   try {
     const result = await runDockerSmokeCheck({
-      manifestPath: "https://manifests.example/manifest.json",
+      manifestPath: manifestUrl,
       checkDockerAvailability: async () => ({
         available: false,
         reason: "DOCKER_UNAVAILABLE",

@@ -54,7 +54,8 @@ export async function runAttestationApiCli(
       type: "attestation-api-listening",
       host: config.host,
       port: config.port,
-      providerMode: config.providerMode
+      providerMode: config.providerMode,
+      authTokenConfigured: Boolean(config.authToken)
     })}\n`
   );
 }

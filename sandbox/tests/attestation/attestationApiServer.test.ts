@@ -71,6 +71,68 @@ test("handleAttestationApiRequest returns canonical attestation response for a v
   });
 });
 
+test("handleAttestationApiRequest requires authorization when configured", async () => {
+  const denied = createResponseDouble();
+  await handleAttestationApiRequest(
+    createRequestDouble({
+      method: "POST",
+      url: "/attest",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        schemaVersion: "audit-attestation-request.v1",
+        eventKey: "0xabc:0",
+        tokenId: "1",
+        manifestHash: "a".repeat(64),
+        evidenceRoot: "e".repeat(64),
+        manifestUrl: "https://example.com/manifest.json"
+      })
+    }),
+    denied,
+    { ...baseConfig, authToken: "attest-token" },
+    {
+      attest: async () => {
+        throw new Error("provider should not be called");
+      }
+    }
+  );
+
+  const allowed = createResponseDouble();
+  await handleAttestationApiRequest(
+    createRequestDouble({
+      method: "POST",
+      url: "/attest",
+      headers: {
+        authorization: "Bearer attest-token",
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        schemaVersion: "audit-attestation-request.v1",
+        eventKey: "0xabc:0",
+        tokenId: "1",
+        manifestHash: "a".repeat(64),
+        evidenceRoot: "e".repeat(64),
+        manifestUrl: "https://example.com/manifest.json"
+      })
+    }),
+    allowed,
+    { ...baseConfig, authToken: "attest-token" },
+    {
+      attest: async () => ({
+        measurement: "m".repeat(64),
+        quoteFormat: "mock-quote",
+        sessionPublicKey: "spk-123",
+        quote: "quote-abc"
+      })
+    }
+  );
+
+  assert.equal(denied.statusCode, 401);
+  assert.equal(denied.jsonBody?.error, "Attestation API authorization is required.");
+  assert.equal(allowed.statusCode, 200);
+});
+
 test("handleAttestationApiRequest rejects invalid bodies", async () => {
   const response = createResponseDouble();
 

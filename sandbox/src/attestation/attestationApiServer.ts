@@ -67,7 +67,7 @@ export function createAttestationApiServer(
 export async function handleAttestationApiRequest(
   request: AttestationApiRequestLike,
   response: AttestationApiResponseLike,
-  _config: AttestationServiceConfig,
+  config: AttestationServiceConfig,
   provider: TeeProvider
 ): Promise<void> {
   if (request.method === "GET" && request.url === "/health") {
@@ -76,7 +76,12 @@ export async function handleAttestationApiRequest(
   }
 
   if (request.method === "POST" && request.url === "/attest") {
-    const contentType = request.headers?.["content-type"];
+    if (!isAuthorizedAttestationRequest(request, config)) {
+      writeJson(response, 401, { error: "Attestation API authorization is required." });
+      return;
+    }
+
+    const contentType = readHeader(request, "content-type");
     if (typeof contentType !== "string" || !contentType.includes("application/json")) {
       writeJson(response, 400, { error: "application/json content-type is required" });
       return;
@@ -95,4 +100,35 @@ export async function handleAttestationApiRequest(
   }
 
   writeJson(response, 404, { error: "not found" });
+}
+
+function isAuthorizedAttestationRequest(
+  request: AttestationApiRequestLike,
+  config: AttestationServiceConfig
+): boolean {
+  if (!config.authToken) {
+    return true;
+  }
+  const provided =
+    readBearerToken(readHeader(request, "authorization")) ??
+    readHeader(request, "x-agentlens-attestation-token");
+  return provided === config.authToken;
+}
+
+function readHeader(request: AttestationApiRequestLike, name: string): string | undefined {
+  const headers = request.headers;
+  if (!headers) return undefined;
+  const normalized = name.toLowerCase();
+  for (const [key, value] of Object.entries(headers)) {
+    if (key.toLowerCase() === normalized) {
+      return Array.isArray(value) ? value[0] : value;
+    }
+  }
+  return undefined;
+}
+
+function readBearerToken(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  const match = /^Bearer\s+(.+)$/i.exec(value.trim());
+  return match?.[1]?.trim() || undefined;
 }

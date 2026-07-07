@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 
 import type { SandboxManifest } from "../types/manifest";
+import { fetchPublicHttpUrl } from "../security/publicHttpUrl";
 import { validateManifest } from "./schema";
 
 export class ManifestValidationError extends Error {
@@ -51,17 +52,23 @@ async function readManifestFile(filePath: string): Promise<string> {
 
 async function downloadManifestUrl(
   manifestUrl: string,
-  options: { fetchImpl?: typeof fetch } = {}
+  options: LoadManifestSourceOptions = {}
 ): Promise<string> {
   try {
     const parsedUrl = new URL(manifestUrl);
+
+    if (options.requireRemoteHttps && parsedUrl.protocol !== "https:") {
+      throw new ManifestValidationError("Manifest URL must use https");
+    }
 
     if (!["http:", "https:"].includes(parsedUrl.protocol)) {
       throw new ManifestValidationError("Manifest URL must use http or https");
     }
 
-    const fetchImpl = options.fetchImpl ?? fetch;
-    const response = await fetchImpl(parsedUrl);
+    const response = await fetchPublicHttpUrl(parsedUrl, {
+      fetchImpl: options.fetchImpl,
+      requireHttps: options.requireRemoteHttps
+    });
     if (!response.ok) {
       throw new ManifestValidationError(
         `Unable to download manifest URL: HTTP ${response.status}`
@@ -86,13 +93,22 @@ export interface LoadedManifestSource {
   sourceContents: string;
 }
 
+export interface LoadManifestSourceOptions {
+  fetchImpl?: typeof fetch;
+  allowLocalFile?: boolean;
+  requireRemoteHttps?: boolean;
+}
+
 export async function loadManifestSource(
   manifestLocation: string,
-  options: { fetchImpl?: typeof fetch } = {}
+  options: LoadManifestSourceOptions = {}
 ): Promise<LoadedManifestSource> {
   const locationKind = getManifestLocationKind(manifestLocation);
   if (locationKind === "unsupported_url") {
     throw new ManifestValidationError("Manifest URL must use http or https");
+  }
+  if (locationKind === "local" && options.allowLocalFile === false) {
+    throw new ManifestValidationError("Manifest location must be an HTTPS URL");
   }
 
   const sourceContents =
@@ -114,7 +130,18 @@ export async function loadManifest(filePath: string): Promise<SandboxManifest> {
 
 export async function loadManifestFromUrl(
   manifestUrl: string,
-  options: { fetchImpl?: typeof fetch } = {}
+  options: LoadManifestSourceOptions = {}
 ): Promise<SandboxManifest> {
   return (await loadManifestSource(manifestUrl, options)).manifest;
+}
+
+export async function loadAuditChainManifestSource(
+  manifestUrl: string,
+  options: LoadManifestSourceOptions = {}
+): Promise<LoadedManifestSource> {
+  return loadManifestSource(manifestUrl, {
+    ...options,
+    allowLocalFile: false,
+    requireRemoteHttps: true
+  });
 }

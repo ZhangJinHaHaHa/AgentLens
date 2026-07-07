@@ -1,7 +1,7 @@
 import { utils } from "ethers";
 import { createJsonRpcWriteClient } from "../chain/jsonRpcWriteClient";
 import { createLocalAuditRunOptions } from "../cli/localAuditOptions";
-import { loadManifestSource } from "../manifest/loadManifest";
+import { loadAuditChainManifestSource, loadManifestSource } from "../manifest/loadManifest";
 import { runLocalSandboxAudit } from "../runtime/runLocalSandboxAudit";
 import type { AuditSolveRequest, SandboxManifest } from "../types/manifest";
 import {
@@ -392,10 +392,10 @@ export function createListenerRuntime(
         fromBlock,
         toBlock,
         fetchImpl: config.fetchImpl
-      }),
+    }),
     processAuditRequested: (event) =>
       processAuditRequested(event, {
-        loadManifestSource: dependencies.loadManifestSource ?? loadManifestSource,
+        loadManifestSource: dependencies.loadManifestSource ?? loadAuditChainManifestSource,
         persistAuditReport: (options) =>
           (dependencies.persistAuditReport ?? persistAuditReport)({
             ...options,

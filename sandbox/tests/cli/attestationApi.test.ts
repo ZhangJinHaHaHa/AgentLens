@@ -38,7 +38,8 @@ test("runAttestationApiCli starts the attestation API server and logs the listen
       type: "attestation-api-listening",
       host: "127.0.0.1",
       port: 3311,
-      providerMode: "mock"
+      providerMode: "mock",
+      authTokenConfigured: false
     })}\n`
   ]);
 });

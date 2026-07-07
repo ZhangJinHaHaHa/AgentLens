@@ -25,17 +25,29 @@ test("readAttestationServiceConfig returns canonical config with defaults", () =
   });
 });
 
-test("readAttestationServiceConfig accepts explicit host and port", () => {
+test("readAttestationServiceConfig accepts explicit public host only with an API token", () => {
+  assert.throws(
+    () =>
+      readAttestationServiceConfig({
+        AUDIT_ATTESTATION_SERVICE_HOST: "0.0.0.0",
+        AUDIT_ATTESTATION_SERVICE_PORT: "4411",
+        AUDIT_ATTESTATION_SERVICE_PROVIDER_MODE: "mock"
+      }),
+    /AUDIT_ATTESTATION_API_TOKEN is required/
+  );
+
   const config = readAttestationServiceConfig({
     AUDIT_ATTESTATION_SERVICE_HOST: "0.0.0.0",
     AUDIT_ATTESTATION_SERVICE_PORT: "4411",
-    AUDIT_ATTESTATION_SERVICE_PROVIDER_MODE: "mock"
+    AUDIT_ATTESTATION_SERVICE_PROVIDER_MODE: "mock",
+    AUDIT_ATTESTATION_API_TOKEN: "attest-token"
   });
 
   assert.deepEqual(config, {
     host: "0.0.0.0",
     port: 4411,
-    providerMode: "mock"
+    providerMode: "mock",
+    authToken: "attest-token"
   });
 });
 

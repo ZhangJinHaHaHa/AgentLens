@@ -74,7 +74,7 @@ export function readAttestationConfig(
 
   return {
     apiUrl: requireEnvValue(env, "AUDIT_ATTESTATION_API_URL"),
-    authToken: env.AUDIT_ATTESTATION_AUTH_TOKEN,
+    authToken: env.AUDIT_ATTESTATION_AUTH_TOKEN ?? env.AUDIT_ATTESTATION_API_TOKEN,
     providerType: env.AUDIT_ATTESTATION_PROVIDER_TYPE || "http-tee",
     timeoutMs,
     ...(verification ? { verification } : {})

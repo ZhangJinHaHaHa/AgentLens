@@ -42,6 +42,15 @@ test("readAttestationConfig accepts explicit provider type and timeout", () => {
   });
 });
 
+test("readAttestationConfig accepts AUDIT_ATTESTATION_API_TOKEN as the service token", () => {
+  const config = readAttestationConfig({
+    AUDIT_ATTESTATION_API_URL: "https://tee.example/attest",
+    AUDIT_ATTESTATION_API_TOKEN: "api-token-123"
+  });
+
+  assert.equal(config.authToken, "api-token-123");
+});
+
 test("readAttestationConfig surfaces MRENCLAVE pinning when expectations are present", () => {
   const config = readAttestationConfig({
     AUDIT_ATTESTATION_API_URL: "https://tee.example/attest",
