@@ -47,29 +47,17 @@ export async function runInitCommand(options: InitCommandOptions): Promise<void>
       return;
     }
 
-    const hostsRaw = await ask("Allowed hosts (comma-separated): ");
+    const hostsRaw = await ask("Allowed hosts (comma-separated, blank for no network access): ");
     const allowedHosts = hostsRaw
       .split(",")
       .map((h) => h.trim())
       .filter((h) => h.length > 0);
 
-    if (allowedHosts.length === 0) {
-      printError("At least one allowed host is required");
-      process.exitCode = 1;
-      return;
-    }
-
-    const rpcRaw = await ask("Allowed RPC endpoints (comma-separated): ");
+    const rpcRaw = await ask("Allowed RPC endpoints (comma-separated, blank for none): ");
     const allowedRpcEndpoints = rpcRaw
       .split(",")
       .map((r) => r.trim())
       .filter((r) => r.length > 0);
-
-    if (allowedRpcEndpoints.length === 0) {
-      printError("At least one RPC endpoint is required");
-      process.exitCode = 1;
-      return;
-    }
 
     const manifestData = {
       agent_name: agentName,

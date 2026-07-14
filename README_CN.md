@@ -10,7 +10,7 @@
 [![Intel SGX](https://img.shields.io/badge/TEE-Intel_SGX-0071C5.svg)](https://software.intel.com/en-us/sgx)
 [![ZK Proofs](https://img.shields.io/badge/ZK-Circom-8A2BE2.svg)](https://docs.circom.io/)
 
-[官方网站](http://[redacted-server]/zh) • [项目文档](docs/) • [Agent 接入指南](docs/agent-integration-guide.md) • [架构详解](#-系统架构) • [English](README.md)
+[官方网站](https://agentlens.chat/zh) • [项目文档](docs/) • [Agent 接入指南](docs/agent-integration-guide.md) • [架构详解](#-系统架构) • [English](README.md)
 
 </div>
 
@@ -22,7 +22,7 @@
 
 ## 🌐 官方平台
 
-访问我们的在线平台：**[AgentLens — 可信 AI Agent 导航](http://[redacted-server]/zh)**
+访问我们的在线平台：**[AgentLens — 可信 AI Agent 导航](https://agentlens.chat/zh)**
 
 ## 🚀 核心特性
 
@@ -241,6 +241,7 @@ Agent 按实际可用方式分为：**平台可用**（可在 AgentLens 内启�
 ## 📖 文档
 
 * [Agent 接入指南](docs/agent-integration-guide.md) — 如何构建并提交您的 Agent 进行审计。
+* [平台协议 v1](docs/protocols/README.md) — 模型、搜索、卖家提交、运行、商品与定价的公开契约。
 * [验证方法说明](docs/verification-methods.md) — AgentLens 如何验证 Agent 声明的详细说明。
 * [TEE 生产状态](docs/status/2026-04-16-tee-production.md) — SGX 硬件飞地配置信息。
 
@@ -267,8 +268,7 @@ AgentLens 将安全性放在首位。整个架构旨在最小化信任假设：
 * 零知识证明 (ZK) 与可信执行环境 (TEE)
 * AI Agent 审计与安全
 
-如果您有兴趣共同构建可信 AI Agent 的未来，欢迎联系！
-**联系方式：** [3172791717@qq.com](mailto:3172791717@qq.com)
+如果您有兴趣共同构建可信 AI Agent 的未来，请通过本仓库的 GitHub 协作入口联系。安全漏洞请严格遵循 [SECURITY.md](SECURITY.md) 私密提交，在修复完成前不要公开。
 
 我们也欢迎广泛的社区贡献！请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 了解我们的开发流程，并注意本项目附有[贡献者行为准则](CODE_OF_CONDUCT.md)。
 
@@ -276,7 +276,7 @@ AgentLens 将安全性放在首位。整个架构旨在最小化信任假设：
 
 AgentLens 采用 **GNU Affero 通用公共许可证 v3.0 (AGPL-3.0)** 授权。AGPL-3.0 允许使用、修改、分发和部署，包括商业使用，但使用者需要遵守许可证条款。尤其是，如果您修改 AgentLens 并将其作为网络服务提供给用户，AGPL-3.0 要求您向该服务的用户提供对应的源代码。详情请参阅 [LICENSE](LICENSE) 文件。
 
-**商业许可**：如果您希望在闭源 SaaS、私有企业部署或商业产品中使用 AgentLens，并希望获得不同于 AGPL-3.0 copyleft 义务的授权方式，请通过 [3172791717@qq.com](mailto:3172791717@qq.com) 联系我们获取商业许可协议。
+**商业许可**：如果您希望在闭源 SaaS、私有企业部署或商业产品中使用 AgentLens，并希望获得不同于 AGPL-3.0 copyleft 义务的授权方式，请通过仓库所有者的 GitHub 主页联系并说明商业许可需求。
 
 ## 📝 贡献者许可协议 (CLA)
 
@@ -293,6 +293,6 @@ CLA 确保：
 
 由 AgentLens 团队用 ❤️ 构建
 
-[官方网站](http://[redacted-server]/zh) • [GitHub](https://github.com/ZhangJinHaHaHa/AgentLens) • [联系我们](mailto:3172791717@qq.com)
+[官方网站](https://agentlens.chat/zh) • [GitHub](https://github.com/ZhangJinHaHaHa/AgentLens) • [安全报告](SECURITY.md)
 
 </div>

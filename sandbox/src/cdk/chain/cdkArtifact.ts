@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { utils } from "ethers";
+import { Interface } from "ethers";
 
 interface ContractArtifactEntry {
   type: string;
@@ -45,21 +45,21 @@ export function getCdkV3Artifact(): ContractArtifact {
   return artifact;
 }
 
-let cachedInterface: utils.Interface | undefined;
+let cachedInterface: Interface | undefined;
 
-export function getCdkV2Interface(): utils.Interface {
+export function getCdkV2Interface(): Interface {
   if (cachedInterface === undefined) {
-    cachedInterface = new utils.Interface(getCdkV2Artifact().abi);
+    cachedInterface = new Interface(getCdkV2Artifact().abi);
   }
 
   return cachedInterface;
 }
 
-let cachedV3Interface: utils.Interface | undefined;
+let cachedV3Interface: Interface | undefined;
 
-export function getCdkV3Interface(): utils.Interface {
+export function getCdkV3Interface(): Interface {
   if (cachedV3Interface === undefined) {
-    cachedV3Interface = new utils.Interface(getCdkV3Artifact().abi);
+    cachedV3Interface = new Interface(getCdkV3Artifact().abi);
   }
 
   return cachedV3Interface;

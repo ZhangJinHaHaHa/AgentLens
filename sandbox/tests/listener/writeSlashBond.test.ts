@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { utils } from "ethers";
+import { encodeBytes32String } from "ethers";
 
 import { writeSlashBond } from "../../src/listener/writeSlashBond";
 
@@ -34,7 +34,7 @@ test("writeSlashBond maps slash arguments into slashBond calldata arguments", as
         tokenId: 1n,
         auditId: 3,
         amount: 1000000000000000000n,
-        reasonCode: utils.formatBytes32String("ACTION_MISMATCH")
+        reasonCode: encodeBytes32String("ACTION_MISMATCH")
       }
     }
   ]);

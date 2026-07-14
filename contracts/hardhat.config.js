@@ -1,6 +1,9 @@
-require("@nomiclabs/hardhat-ethers");
+import hardhatEthers from "@nomicfoundation/hardhat-ethers";
+import hardhatMocha from "@nomicfoundation/hardhat-mocha";
+import { defineConfig } from "hardhat/config";
 
-module.exports = {
+export default defineConfig({
+  plugins: [hardhatEthers, hardhatMocha],
   solidity: {
     version: "0.8.24",
     settings: {
@@ -13,5 +16,11 @@ module.exports = {
     tests: "./tests",
     artifacts: "./artifacts",
     cache: "./cache"
+  },
+  networks: {
+    hardhat: {
+      type: "edr-simulated",
+      chainType: "l1"
+    }
   }
-};
+});

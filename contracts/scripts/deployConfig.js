@@ -1,4 +1,4 @@
-const { ethers, utils } = require("ethers");
+const { ethers } = require("ethers");
 
 function parseRequiredInteger(value, variableName) {
   if (!value) {
@@ -22,7 +22,7 @@ function parseRequiredPrivateKey(value, variableName) {
     throw new Error(`${variableName} is required`);
   }
 
-  if (!utils.isHexString(value, 32)) {
+  if (!ethers.isHexString(value, 32)) {
     throw new Error(`${variableName} must be a 32-byte hex private key`);
   }
 
@@ -34,7 +34,7 @@ function parseOptionalAddress(value, variableName) {
     return "";
   }
 
-  if (!utils.isAddress(value)) {
+  if (!ethers.isAddress(value)) {
     throw new Error(`${variableName} must be a valid EVM address`);
   }
 
@@ -48,7 +48,7 @@ function parseWeiString(value, variableName, fallbackValue) {
     throw new Error(`${variableName} must be a non-negative integer string in wei`);
   }
 
-  return ethers.BigNumber.from(rawValue).toString();
+  return BigInt(rawValue).toString();
 }
 
 function readRegistryDeploymentConfig(env, options = {}) {

@@ -2,7 +2,20 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 
-const { ethers } = require("hardhat");
+const { getHardhatConnection } = require("../scripts/hardhatConnection");
+
+let ethers;
+let STAKE_VALUE;
+let ZERO_HASH;
+before(async function () {
+  ({ ethers } = await getHardhatConnection());
+  STAKE_VALUE = ethers.parseEther("1.01");
+  ZERO_HASH = pad32("0x0");
+});
+
+function pad32(value) {
+  return ethers.toBeHex(BigInt(value), 32);
+}
 
 function loadV3Artifact() {
   const artifactPath = path.join(__dirname, "..", "artifacts", "AgentAuditRegistryV3.json");
@@ -14,16 +27,13 @@ async function deployV3Registry() {
   const artifact = loadV3Artifact();
   const factory = new ethers.ContractFactory(artifact.abi, artifact.bytecode, owner);
   const contract = await factory.deploy(
-    ethers.utils.parseEther("0.01"),
-    ethers.utils.parseEther("1"),
+    ethers.parseEther("0.01"),
+    ethers.parseEther("1"),
     operator.address
   );
-  await contract.deployed();
+  await contract.waitForDeployment();
   return { contract, owner, operator, developer };
 }
-
-const STAKE_VALUE = ethers.utils.parseEther("1.01");
-const ZERO_HASH = ethers.utils.hexZeroPad("0x0", 32);
 
 async function stakeAndPassAudit(contract, operator, developer, score) {
   await (await contract.connect(developer).stake("test-agent", "https://m.example.com", {
@@ -31,12 +41,12 @@ async function stakeAndPassAudit(contract, operator, developer, score) {
   })).wait();
 
   const auditCount = await contract.getAuditCount(1);
-  const auditId = auditCount.toNumber();
+  const auditId = Number(auditCount);
 
   await (await contract.connect(operator).recordAuditResultV2(
     1, score, 256, 150, 3, 1, // status 1 = Passed
-    ethers.utils.hexZeroPad("0xabc", 32),
-    ethers.utils.hexZeroPad("0xdef", 32),
+    pad32("0xabc"),
+    pad32("0xdef"),
     ZERO_HASH, ZERO_HASH,
     "", "QmReport", "https://m.example.com",
     [8500, 9000, 7500, 8000, 7000, 9500]
@@ -53,7 +63,7 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
       value: STAKE_VALUE
     })).wait();
 
-    const fee = ethers.utils.parseEther("0.01");
+    const fee = ethers.parseEther("0.01");
     assert.strictEqual((await contract.accruedServiceFees()).toString(), fee.toString());
 
     const before = await ethers.provider.getBalance(operator.address);
@@ -61,7 +71,7 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
     const after = await ethers.provider.getBalance(operator.address);
 
     assert.strictEqual((await contract.accruedServiceFees()).toString(), "0");
-    assert.strictEqual(after.sub(before).toString(), fee.toString());
+    assert.strictEqual((after - before).toString(), fee.toString());
   });
 
   it("lets the operator release remaining bond to the developer", async function () {
@@ -71,14 +81,14 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
       value: STAKE_VALUE
     })).wait();
 
-    const releaseAmount = ethers.utils.parseEther("0.4");
+    const releaseAmount = ethers.parseEther("0.4");
     const before = await ethers.provider.getBalance(developer.address);
     await (await contract.connect(operator).releaseBond(1, releaseAmount)).wait();
     const after = await ethers.provider.getBalance(developer.address);
 
     const profile = await contract.getAgentProfile(1);
-    assert.strictEqual(after.sub(before).toString(), releaseAmount.toString());
-    assert.strictEqual(profile.totalBond.toString(), ethers.utils.parseEther("0.6").toString());
+    assert.strictEqual((after - before).toString(), releaseAmount.toString());
+    assert.strictEqual(profile.totalBond.toString(), ethers.parseEther("0.6").toString());
   });
 
   it("audit pass increases currentReputationScore by BASE_POINTS * auditScore / 100", async function () {
@@ -88,8 +98,8 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
 
     const rep = await contract.getReputation(1);
     // BASE_POINTS_PER_AUDIT = 50, score = 80 → contribution = 50 * 80 / 100 = 40
-    assert.strictEqual(rep.currentReputationScore, 40);
-    assert.ok(rep.lastReputationUpdateAt > 0);
+    assert.strictEqual(Number(rep.currentReputationScore), 40);
+    assert.ok(rep.lastReputationUpdateAt > 0n);
   });
 
   it("multiple audit passes accumulate score, capped at 10000", async function () {
@@ -99,17 +109,17 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
     // We need 200 passes to reach 10000, but let's do a few and verify accumulation
     await stakeAndPassAudit(contract, operator, developer, 100);
     let rep = await contract.getReputation(1);
-    assert.strictEqual(rep.currentReputationScore, 50);
+    assert.strictEqual(Number(rep.currentReputationScore), 50);
 
     // Second audit
     await stakeAndPassAudit(contract, operator, developer, 100);
     rep = await contract.getReputation(1);
-    assert.strictEqual(rep.currentReputationScore, 100);
+    assert.strictEqual(Number(rep.currentReputationScore), 100);
 
     // Third audit with score 60 → contribution = 50 * 60 / 100 = 30
     await stakeAndPassAudit(contract, operator, developer, 60);
     rep = await contract.getReputation(1);
-    assert.strictEqual(rep.currentReputationScore, 130);
+    assert.strictEqual(Number(rep.currentReputationScore), 130);
   });
 
   it("appeal success adds APPEAL_SUCCESS_BONUS (100) and reputationDelta +1", async function () {
@@ -124,31 +134,31 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
     })).wait();
     await (await contract.connect(operator).recordAuditResult(
       1, 0, 256, 150, 3, 2, // status 2 = Failed
-      ethers.utils.hexZeroPad("0xabc", 32),
-      ethers.utils.hexZeroPad("0xdef", 32),
+      pad32("0xabc"),
+      pad32("0xdef"),
       ZERO_HASH, ZERO_HASH,
       "", "QmReport", "https://m2.example.com"
     )).wait();
 
     await (await contract.connect(operator).slashBond(
-      1, 2, ethers.utils.parseEther("0.5"),
-      ethers.utils.hexZeroPad("0x01", 32)
+      1, 2, ethers.parseEther("0.5"),
+      pad32("0x01")
     )).wait();
 
     // File and approve appeal
     await (await contract.connect(operator).fileAppeal(
       1, 2,
-      ethers.utils.hexZeroPad("0xed1d", 32),
+      pad32("0xed1d"),
       "QmAppealData"
     )).wait();
 
     await (await contract.connect(operator).resolveAppeal(1, 1, 1)).wait(); // Approved
 
     const rep = await contract.getReputation(1);
-    assert.strictEqual(rep.successfulAppeals, 1);
-    assert.strictEqual(rep.reputationDelta, 1);
+    assert.strictEqual(Number(rep.successfulAppeals), 1);
+    assert.strictEqual(Number(rep.reputationDelta), 1);
     // Slash zeroed score (blacklisted), appeal adds 100 → 100
-    assert.strictEqual(rep.currentReputationScore, 100);
+    assert.strictEqual(Number(rep.currentReputationScore), 100);
   });
 
   it("appeal failure subtracts APPEAL_FAILURE_PENALTY (200), floor at 0", async function () {
@@ -163,15 +173,15 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
     })).wait();
     await (await contract.connect(operator).recordAuditResult(
       1, 0, 256, 150, 3, 2,
-      ethers.utils.hexZeroPad("0xabc", 32),
-      ethers.utils.hexZeroPad("0xdef", 32),
+      pad32("0xabc"),
+      pad32("0xdef"),
       ZERO_HASH, ZERO_HASH,
       "", "QmReport", "https://m2.example.com"
     )).wait();
 
     await (await contract.connect(operator).slashBond(
-      1, 2, ethers.utils.parseEther("0.5"),
-      ethers.utils.hexZeroPad("0x01", 32)
+      1, 2, ethers.parseEther("0.5"),
+      pad32("0x01")
     )).wait();
 
     // File and reject appeal
@@ -179,10 +189,10 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
     await (await contract.connect(operator).resolveAppeal(1, 1, 2)).wait(); // Rejected
 
     const rep = await contract.getReputation(1);
-    assert.strictEqual(rep.failedAppeals, 1);
-    assert.strictEqual(rep.reputationDelta, -1);
+    assert.strictEqual(Number(rep.failedAppeals), 1);
+    assert.strictEqual(Number(rep.reputationDelta), -1);
     // Score was 0 (blacklist zeroed it), penalty 200 → still 0 (floor)
-    assert.strictEqual(rep.currentReputationScore, 0);
+    assert.strictEqual(Number(rep.currentReputationScore), 0);
   });
 
   it("slash halves score; blacklisted zeroes score", async function () {
@@ -192,7 +202,7 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
     await stakeAndPassAudit(contract, operator, developer, 100);
 
     let rep = await contract.getReputation(1);
-    assert.strictEqual(rep.currentReputationScore, 50);
+    assert.strictEqual(Number(rep.currentReputationScore), 50);
 
     // Slash (sets blacklisted = true → score goes to 0)
     await (await contract.connect(developer).stake("test-agent", "https://m2.example.com", {
@@ -200,20 +210,20 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
     })).wait();
     await (await contract.connect(operator).recordAuditResult(
       1, 0, 256, 150, 3, 2,
-      ethers.utils.hexZeroPad("0xabc", 32),
-      ethers.utils.hexZeroPad("0xdef", 32),
+      pad32("0xabc"),
+      pad32("0xdef"),
       ZERO_HASH, ZERO_HASH,
       "", "QmReport", "https://m2.example.com"
     )).wait();
 
     await (await contract.connect(operator).slashBond(
-      1, 2, ethers.utils.parseEther("0.5"),
-      ethers.utils.hexZeroPad("0x01", 32)
+      1, 2, ethers.parseEther("0.5"),
+      pad32("0x01")
     )).wait();
 
     rep = await contract.getReputation(1);
     // blacklisted = true → score zeroed
-    assert.strictEqual(rep.currentReputationScore, 0);
+    assert.strictEqual(Number(rep.currentReputationScore), 0);
   });
 
   it("time decay reduces score proportionally after DECAY_PERIOD", async function () {
@@ -225,7 +235,7 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
     }
 
     let rep = await contract.getReputation(1);
-    assert.strictEqual(rep.currentReputationScore, 500);
+    assert.strictEqual(Number(rep.currentReputationScore), 500);
 
     // Advance time by 30 days (DECAY_PERIOD)
     await ethers.provider.send("evm_increaseTime", [30 * 24 * 60 * 60]);
@@ -237,7 +247,7 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
     rep = await contract.getReputation(1);
     // After 30 days: decay = 500 * 100 * (30 days) / (30 days * 10000) = 500 * 1% = 5
     // new score = 500 - 5 + 50 = 545
-    assert.strictEqual(rep.currentReputationScore, 545);
+    assert.strictEqual(Number(rep.currentReputationScore), 545);
   });
 
   it("zero score agent with decay remains at 0, no underflow", async function () {
@@ -251,14 +261,14 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
     // Record a failed audit (no reputation gain)
     await (await contract.connect(operator).recordAuditResult(
       1, 0, 256, 150, 3, 2,
-      ethers.utils.hexZeroPad("0xabc", 32),
-      ethers.utils.hexZeroPad("0xdef", 32),
+      pad32("0xabc"),
+      pad32("0xdef"),
       ZERO_HASH, ZERO_HASH,
       "", "QmReport", "https://m.example.com"
     )).wait();
 
     let rep = await contract.getReputation(1);
-    assert.strictEqual(rep.currentReputationScore, 0);
+    assert.strictEqual(Number(rep.currentReputationScore), 0);
 
     // Advance time
     await ethers.provider.send("evm_increaseTime", [60 * 24 * 60 * 60]);
@@ -269,6 +279,6 @@ describe("AgentAuditRegistryV3 — MDDRM Reputation", function () {
 
     rep = await contract.getReputation(1);
     // Decay on 0 = 0, then add 50 * 50 / 100 = 25
-    assert.strictEqual(rep.currentReputationScore, 25);
+    assert.strictEqual(Number(rep.currentReputationScore), 25);
   });
 });

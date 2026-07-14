@@ -2,7 +2,17 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 
-describe("local polygon edge e2e script", function () {
+const localE2EScriptPath = path.join(
+  __dirname,
+  "..",
+  "..",
+  "infra",
+  "polygon-edge-local",
+  "scripts",
+  "run-local-e2e.sh"
+);
+
+(fs.existsSync(localE2EScriptPath) ? describe : describe.skip)("local polygon edge e2e script", function () {
   it("uses the local edge deployer key for listener writeback", function () {
     const scriptPath = path.join(
       __dirname,

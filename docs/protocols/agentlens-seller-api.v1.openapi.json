@@ -1,0 +1,495 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "AgentLens Seller Publishing API",
+    "version": "1.0.0",
+    "description": "Public contract for authenticated seller publishing. Buyers purchase runtime access and never receive seller source packages."
+  },
+  "servers": [
+    {
+      "url": "https://api.agentlens.example",
+      "description": "Placeholder only; use the base URL published by the deployment."
+    }
+  ],
+  "tags": [
+    { "name": "protocols" },
+    { "name": "market" },
+    { "name": "seller" }
+  ],
+  "paths": {
+    "/api/protocols": {
+      "get": {
+        "tags": ["protocols"],
+        "operationId": "getPlatformProtocols",
+        "summary": "Read supported public contract versions",
+        "responses": {
+          "200": {
+            "description": "Versioned protocol catalog",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/market/agents": {
+      "get": {
+        "tags": ["market"],
+        "operationId": "listMarketAgents",
+        "summary": "List buyer-visible, admitted seller Agents",
+        "responses": {
+          "200": {
+            "description": "Public listings only",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["agents"],
+                  "properties": {
+                    "agents": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "./schemas/agentlens-market-listing.v1.schema.json"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/my/agents": {
+      "get": {
+        "tags": ["seller"],
+        "operationId": "listMyAgents",
+        "summary": "List the current seller's Agent records and quota",
+        "security": [{ "platformSession": [] }],
+        "responses": {
+          "200": {
+            "description": "Owner-scoped Agent records, quota and earnings",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" }
+        }
+      },
+      "post": {
+        "tags": ["seller"],
+        "operationId": "createSellerAgent",
+        "summary": "Create one seller Agent draft",
+        "description": "An account can have at most three non-deleted seller Agents.",
+        "security": [{ "platformSession": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SellerAgentCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Draft created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SellerAgentEnvelope" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "409": { "$ref": "#/components/responses/Conflict" }
+        }
+      }
+    },
+    "/api/my/agents/{agentId}": {
+      "parameters": [{ "$ref": "#/components/parameters/AgentId" }],
+      "get": {
+        "tags": ["seller"],
+        "operationId": "getSellerAgent",
+        "summary": "Read one owner-scoped seller Agent",
+        "security": [{ "platformSession": [] }],
+        "responses": {
+          "200": {
+            "description": "Seller Agent record",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SellerAgentEnvelope" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "patch": {
+        "tags": ["seller"],
+        "operationId": "updateSellerAgent",
+        "summary": "Update listing metadata or the price for future runs",
+        "security": [{ "platformSession": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SellerAgentPatch" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated Agent and quota",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SellerAgentEnvelope" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      },
+      "delete": {
+        "tags": ["seller"],
+        "operationId": "deleteSellerAgent",
+        "summary": "Soft-delete one seller Agent and free one quota slot",
+        "security": [{ "platformSession": [] }],
+        "responses": {
+          "200": {
+            "description": "Deleted Agent and updated quota",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SellerAgentEnvelope" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/my/agents/{agentId}/source-artifacts": {
+      "parameters": [{ "$ref": "#/components/parameters/AgentId" }],
+      "post": {
+        "tags": ["seller"],
+        "operationId": "uploadSellerAgentSourcePackage",
+        "summary": "Upload an owner-scoped ZIP source package",
+        "description": "The platform validates archive type, size, paths and extraction limits before recording the artifact.",
+        "security": [{ "platformSession": [] }],
+        "parameters": [
+          {
+            "name": "X-AgentLens-File-Name",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string", "maxLength": 255 }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/zip": {
+              "schema": { "type": "string", "contentEncoding": "binary" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Stored source artifact metadata; source bytes are not returned",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SourceArtifactEnvelope" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "413": { "$ref": "#/components/responses/PayloadTooLarge" }
+        }
+      }
+    },
+    "/api/my/agents/{agentId}/source-artifacts/{artifactId}/download": {
+      "parameters": [
+        { "$ref": "#/components/parameters/AgentId" },
+        { "$ref": "#/components/parameters/ArtifactId" }
+      ],
+      "get": {
+        "tags": ["seller"],
+        "operationId": "downloadSellerAgentSourcePackage",
+        "summary": "Download a source package as its owner",
+        "description": "There is no buyer source-download route. The response is private and must not be cached.",
+        "security": [{ "platformSession": [] }],
+        "responses": {
+          "200": {
+            "description": "Original ZIP bytes",
+            "headers": {
+              "Cache-Control": {
+                "schema": { "type": "string", "const": "private, no-store" }
+              },
+              "ETag": {
+                "schema": { "type": "string" }
+              },
+              "X-AgentLens-SHA256": {
+                "schema": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+              },
+              "Content-Disposition": {
+                "schema": { "type": "string" }
+              },
+              "X-Content-Type-Options": {
+                "schema": { "type": "string", "const": "nosniff" }
+              }
+            },
+            "content": {
+              "application/zip": {
+                "schema": { "type": "string", "contentEncoding": "binary" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/my/agents/{agentId}/api-secret": {
+      "parameters": [{ "$ref": "#/components/parameters/AgentId" }],
+      "post": {
+        "tags": ["seller"],
+        "operationId": "writeSellerAgentApiSecret",
+        "summary": "Store or rotate a seller-hosted API credential",
+        "description": "The raw secret is accepted once, encrypted server-side and never returned by this or any read response.",
+        "security": [{ "platformSession": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ApiSecretWrite" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Non-sensitive secret metadata only",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ApiSecretMetadataEnvelope" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    },
+    "/api/my/agents/{agentId}/submit": {
+      "parameters": [{ "$ref": "#/components/parameters/AgentId" }],
+      "post": {
+        "tags": ["seller"],
+        "operationId": "submitSellerAgentVersion",
+        "summary": "Submit a new Agent version for platform processing",
+        "security": [{ "platformSession": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "./schemas/agentlens-seller-submission.v1.schema.json" }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Submission accepted or seller-hosted API inspection completed",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "409": { "$ref": "#/components/responses/Conflict" }
+        }
+      }
+    },
+    "/api/my/agents/{agentId}/status": {
+      "parameters": [{ "$ref": "#/components/parameters/AgentId" }],
+      "get": {
+        "tags": ["seller"],
+        "operationId": "getSellerAgentPublicationStatus",
+        "summary": "Read the latest owner-scoped processing and publication state",
+        "security": [{ "platformSession": [] }],
+        "responses": {
+          "200": {
+            "description": "Seller-facing state; internal sandbox stages and thresholds remain private",
+            "content": {
+              "application/json": {
+                "schema": { "type": "object" }
+              }
+            }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "platformSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-agentlens_session",
+        "description": "HttpOnly, Secure and SameSite=Strict in production."
+      }
+    },
+    "parameters": {
+      "AgentId": {
+        "name": "agentId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "pattern": "^seller-agent-[0-9]{6}$" }
+      },
+      "ArtifactId": {
+        "name": "artifactId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "pattern": "^seller-source-" }
+      }
+    },
+    "schemas": {
+      "SellerAgentCreate": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["displayName", "summary", "costCredits"],
+        "properties": {
+          "displayName": { "type": "string", "minLength": 1, "maxLength": 50 },
+          "summary": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "costCredits": { "type": "integer", "minimum": 1, "maximum": 10000 },
+          "iconArtifactId": { "type": "string" }
+        }
+      },
+      "SellerAgentPatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "properties": {
+          "displayName": { "type": "string", "minLength": 1, "maxLength": 50 },
+          "summary": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "costCredits": { "type": "integer", "minimum": 1, "maximum": 10000 },
+          "iconArtifactId": { "type": "string" }
+        }
+      },
+      "SellerAgentEnvelope": {
+        "type": "object",
+        "required": ["agent", "quota"],
+        "properties": {
+          "agent": { "type": "object" },
+          "quota": {
+            "type": "object",
+            "required": ["limit", "used", "remaining"],
+            "properties": {
+              "limit": { "type": "integer", "const": 3 },
+              "used": { "type": "integer", "minimum": 0, "maximum": 3 },
+              "remaining": { "type": "integer", "minimum": 0, "maximum": 3 }
+            }
+          }
+        }
+      },
+      "SourceArtifactEnvelope": {
+        "type": "object",
+        "required": ["artifact"],
+        "properties": {
+          "artifact": {
+            "type": "object",
+            "required": ["artifactId", "fileName", "mimeType", "sizeBytes", "sha256"],
+            "properties": {
+              "artifactId": { "type": "string" },
+              "fileName": { "type": "string" },
+              "mimeType": { "type": "string", "const": "application/zip" },
+              "sizeBytes": { "type": "integer", "minimum": 1 },
+              "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+            }
+          }
+        }
+      },
+      "ApiSecretWrite": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["authMethod", "secretValue"],
+        "properties": {
+          "authMethod": { "enum": ["bearer", "api_key", "basic"] },
+          "headerName": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "secretValue": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192,
+            "writeOnly": true
+          }
+        }
+      },
+      "ApiSecretMetadataEnvelope": {
+        "type": "object",
+        "required": ["secret"],
+        "properties": {
+          "secret": {
+            "type": "object",
+            "required": ["secretId", "authMethod", "createdAt"],
+            "properties": {
+              "secretId": { "type": "string" },
+              "authMethod": { "enum": ["bearer", "api_key", "basic"] },
+              "headerName": { "type": "string" },
+              "createdAt": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": { "type": "string", "maxLength": 500 }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid input",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+        }
+      },
+      "Unauthorized": {
+        "description": "A valid platform session is required",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+        }
+      },
+      "NotFound": {
+        "description": "The owner-scoped resource was not found",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+        }
+      },
+      "Conflict": {
+        "description": "Quota or state transition conflict",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+        }
+      },
+      "PayloadTooLarge": {
+        "description": "The package exceeds the configured upload boundary",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/Error" } }
+        }
+      }
+    }
+  }
+}

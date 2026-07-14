@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agentlens.example/agentlens-market-listing.v1.schema.json",
+  "title": "AgentLens Market Listing v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "agentId", "displayName", "summary", "publicationRoute", "version", "costCredits", "dataBoundary"],
+  "properties": {
+    "contractVersion": { "const": "agentlens.market-listing.v1" },
+    "agentId": { "type": "string", "pattern": "^seller-agent-[0-9]{6}$" },
+    "displayName": { "type": "string", "minLength": 1, "maxLength": 50 },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "publicationRoute": { "enum": ["platform_managed", "seller_hosted_api"] },
+    "version": { "type": "string" },
+    "costCredits": { "type": "integer", "minimum": 1, "maximum": 10000 },
+    "platformFeeRateBps": { "type": "integer", "minimum": 0, "maximum": 2000 },
+    "capabilities": { "type": "array", "maxItems": 32, "items": { "type": "string" } },
+    "codeAudited": { "type": "boolean" },
+    "recommendationEligible": { "type": "boolean" },
+    "dataBoundary": { "enum": ["platform_sandbox_only", "task_and_context_to_seller"] },
+    "listedAt": { "type": "string", "format": "date-time" }
+  }
+}

@@ -1,12 +1,13 @@
 const fs = require("fs");
 const path = require("path");
 
-const { ethers, utils } = require("ethers");
+const { ethers } = require("ethers");
+const { createStaticJsonRpcProvider, waitForDeploymentMetadata } = require("./ethersDeployment");
 
 const ARTIFACT_PATH = path.join(__dirname, "..", "artifacts", "AgentAuditRegistry.json");
 const DEFAULT_NETWORK_NAME = "polygon-edge-test";
-const DEFAULT_SERVICE_FEE_WEI = ethers.constants.Zero;
-const DEFAULT_MINIMUM_BOND_WEI = ethers.constants.One;
+const DEFAULT_SERVICE_FEE_WEI = 0n;
+const DEFAULT_MINIMUM_BOND_WEI = 1n;
 
 function loadArtifact() {
   return JSON.parse(fs.readFileSync(ARTIFACT_PATH, "utf8"));
@@ -29,7 +30,7 @@ function parseRequiredPrivateKey(value, variableName) {
     throw new Error(`${variableName} is required`);
   }
 
-  if (!utils.isHexString(value, 32)) {
+  if (!ethers.isHexString(value, 32)) {
     throw new Error(`${variableName} must be a 32-byte hex private key`);
   }
 
@@ -41,7 +42,7 @@ function parseOptionalAddress(value, variableName) {
     return undefined;
   }
 
-  if (!utils.isAddress(value)) {
+  if (!ethers.isAddress(value)) {
     throw new Error(`${variableName} must be a valid EVM address`);
   }
 
@@ -57,7 +58,7 @@ function parseOptionalBigNumber(value, variableName, fallbackValue) {
     throw new Error(`${variableName} must be a non-negative integer string in wei`);
   }
 
-  return ethers.BigNumber.from(value);
+  return BigInt(value);
 }
 
 function readEdgeDeploymentConfig(env = process.env) {
@@ -93,10 +94,7 @@ async function deployEdgeRegistry(config, dependencies = {}) {
     path.join(__dirname, "..", "deployments", config.networkName);
   const provider =
     dependencies.createProvider?.(config) ??
-    new ethers.providers.StaticJsonRpcProvider(config.rpcUrl, {
-      chainId: config.chainId,
-      name: config.networkName
-    });
+    createStaticJsonRpcProvider(config);
   const wallet =
     dependencies.createWallet?.(config, provider) ??
     new ethers.Wallet(config.privateKey, provider);
@@ -111,7 +109,7 @@ async function deployEdgeRegistry(config, dependencies = {}) {
     config.initialMinimumBondWei,
     initialOperator
   );
-  const receipt = await contract.deployTransaction.wait();
+  const { address, transactionHash, receipt } = await waitForDeploymentMetadata(contract);
   const network = await provider.getNetwork();
 
   const deployment = {
@@ -119,8 +117,8 @@ async function deployEdgeRegistry(config, dependencies = {}) {
     networkName: config.networkName,
     chainId: String(network.chainId),
     rpcUrl: config.rpcUrl,
-    address: contract.address,
-    deployTransactionHash: contract.deployTransaction.hash,
+    address,
+    deployTransactionHash: transactionHash,
     deployedBlockNumber: receipt.blockNumber,
     deployer: wallet.address,
     constructorArgs: {

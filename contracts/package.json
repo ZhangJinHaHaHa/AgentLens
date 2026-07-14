@@ -2,7 +2,7 @@
   "name": "agent-shenji-contracts",
   "version": "0.1.0",
   "private": true,
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "compile": "node scripts/compileV2.js",
     "deploy:local": "npm run compile && HOME=$PWD/.home XDG_CONFIG_HOME=$PWD/.xdg/config XDG_DATA_HOME=$PWD/.xdg/data npx hardhat run --no-compile scripts/runDeployLocal.js --network hardhat",
@@ -10,9 +10,16 @@
     "test": "npm run compile && HOME=$PWD/.home XDG_CONFIG_HOME=$PWD/.xdg/config XDG_DATA_HOME=$PWD/.xdg/data npx hardhat test --no-compile"
   },
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.2.3",
-    "ethers": "^5.7.2",
-    "hardhat": "^2.22.17",
+    "@nomicfoundation/hardhat-ethers": "^4.0.14",
+    "@nomicfoundation/hardhat-mocha": "^3.0.21",
+    "ethers": "^6.17.0",
+    "hardhat": "^3.9.1",
+    "mocha": "^11.7.5",
     "solc": "0.8.24"
+  },
+  "overrides": {
+    "diff": "8.0.3",
+    "serialize-javascript": "7.0.7",
+    "tmp": "0.2.7"
   }
 }

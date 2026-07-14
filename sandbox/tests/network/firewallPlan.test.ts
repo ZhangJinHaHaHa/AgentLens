@@ -26,6 +26,17 @@ test("buildFirewallPlan returns default deny rules plus manifest allow rules", (
   ]);
 });
 
+test("buildFirewallPlan keeps deny-by-default with empty allowlists", () => {
+  const plan = buildFirewallPlan({
+    agent_name: "offline-agent",
+    image: "registry.example.com/offline-agent:1.0.0",
+    allowed_hosts: [],
+    allowed_rpc_endpoints: []
+  });
+  assert.equal(plan.commands.includes("iptables -P OUTPUT DROP"), true);
+  assert.equal(plan.commands.some((command) => command.endsWith("-j ACCEPT") && command.includes("-d ")), false);
+});
+
 test("resolveFirewallPlan expands hostnames into deduplicated IPv4 allow rules", async () => {
   const plan = await resolveFirewallPlan(
     {

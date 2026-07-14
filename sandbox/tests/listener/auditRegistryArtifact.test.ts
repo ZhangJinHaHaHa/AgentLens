@@ -21,6 +21,7 @@ test("getAuditRegistryArtifact loads the compiled contract artifact from contrac
 test("getAuditRegistryInterface exposes the compiled recordAuditResult ABI", () => {
   const contractInterface = getAuditRegistryInterface();
   const fragment = contractInterface.getFunction("recordAuditResult");
+  assert.ok(fragment);
 
   assert.equal(fragment.name, "recordAuditResult");
   assert.deepEqual(

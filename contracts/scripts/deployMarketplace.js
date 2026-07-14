@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { ethers } = require("ethers");
 const { readRegistryDeploymentConfig } = require("./deployConfig");
+const { createStaticJsonRpcProvider, waitForDeploymentMetadata } = require("./ethersDeployment");
 
 const artifactsDir = path.join(__dirname, "..", "artifacts");
 const deploymentsDir = path.join(__dirname, "..", "deployments");
@@ -22,10 +23,7 @@ function readMarketplaceDeploymentConfig(env) {
 }
 
 async function deployMarketplaceAndReview(config) {
-  const provider = new ethers.providers.StaticJsonRpcProvider(config.rpcUrl, {
-    chainId: config.chainId,
-    name: config.networkName
-  });
+  const provider = createStaticJsonRpcProvider(config);
   const wallet = new ethers.Wallet(config.deployerPrivateKey, provider);
   const operatorAddress = config.initialOperator || wallet.address;
 
@@ -33,16 +31,16 @@ async function deployMarketplaceAndReview(config) {
   const mpArtifact = loadArtifact("AgentMarketplace");
   const mpFactory = new ethers.ContractFactory(mpArtifact.abi, mpArtifact.bytecode, wallet);
   const mpContract = await mpFactory.deploy(operatorAddress);
-  const mpReceipt = await mpContract.deployTransaction.wait();
+  const mpDeployment = await waitForDeploymentMetadata(mpContract);
 
   const mpMetadata = {
     contractName: "AgentMarketplace",
     networkName: config.networkName,
     chainId: String(config.chainId),
     rpcUrl: config.rpcUrl,
-    address: mpContract.address,
-    deployTransactionHash: mpContract.deployTransaction.hash,
-    deployedBlockNumber: mpReceipt.blockNumber,
+    address: mpDeployment.address,
+    deployTransactionHash: mpDeployment.transactionHash,
+    deployedBlockNumber: mpDeployment.receipt.blockNumber,
     deployer: wallet.address,
     constructorArgs: { initialOperator: operatorAddress }
   };
@@ -50,19 +48,19 @@ async function deployMarketplaceAndReview(config) {
   // Deploy AgentReviewRegistry (depends on marketplace address)
   const rrArtifact = loadArtifact("AgentReviewRegistry");
   const rrFactory = new ethers.ContractFactory(rrArtifact.abi, rrArtifact.bytecode, wallet);
-  const rrContract = await rrFactory.deploy(mpContract.address);
-  const rrReceipt = await rrContract.deployTransaction.wait();
+  const rrContract = await rrFactory.deploy(mpDeployment.address);
+  const rrDeployment = await waitForDeploymentMetadata(rrContract);
 
   const rrMetadata = {
     contractName: "AgentReviewRegistry",
     networkName: config.networkName,
     chainId: String(config.chainId),
     rpcUrl: config.rpcUrl,
-    address: rrContract.address,
-    deployTransactionHash: rrContract.deployTransaction.hash,
-    deployedBlockNumber: rrReceipt.blockNumber,
+    address: rrDeployment.address,
+    deployTransactionHash: rrDeployment.transactionHash,
+    deployedBlockNumber: rrDeployment.receipt.blockNumber,
     deployer: wallet.address,
-    constructorArgs: { marketplaceAddress: mpContract.address }
+    constructorArgs: { marketplaceAddress: mpDeployment.address }
   };
 
   // Write metadata

@@ -2,7 +2,12 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 
-const { ethers } = require("hardhat");
+const { getHardhatConnection } = require("../scripts/hardhatConnection");
+
+let ethers;
+before(async function () {
+  ({ ethers } = await getHardhatConnection());
+});
 
 function numericString(value) {
   return value.toString();
@@ -24,12 +29,12 @@ async function deployRegistry() {
   const artifact = loadArtifact();
   const factory = new ethers.ContractFactory(artifact.abi, artifact.bytecode, owner);
   const contract = await factory.deploy(
-    ethers.utils.parseEther("0.01"),
-    ethers.utils.parseEther("1"),
+    ethers.parseEther("0.01"),
+    ethers.parseEther("1"),
     operator.address
   );
 
-  await contract.deployed();
+  await contract.waitForDeployment();
 
   return { contract, owner, operator };
 }
@@ -37,7 +42,7 @@ async function deployRegistry() {
 describe("AgentAuditRegistry", function () {
   it("stakes once per identity and opens a pending audit", async function () {
     const { contract, owner } = await deployRegistry();
-    const totalValue = ethers.utils.parseEther("1.01");
+    const totalValue = ethers.parseEther("1.01");
 
     await contract.stake("demo-agent", "ipfs://manifest-1", { value: totalValue });
 
@@ -48,7 +53,7 @@ describe("AgentAuditRegistry", function () {
 
     assert.strictEqual(tokenId.toString(), "1");
     assert.strictEqual(numericString(profile.auditCount), "0");
-    assert.strictEqual(profile.totalBond.toString(), ethers.utils.parseEther("1").toString());
+    assert.strictEqual(profile.totalBond.toString(), ethers.parseEther("1").toString());
     assert.strictEqual(auditCount.toString(), "1");
     assert.strictEqual(numericString(latestReport.auditId), "1");
     assert.strictEqual(numericString(latestReport.status), "0");
@@ -59,7 +64,7 @@ describe("AgentAuditRegistry", function () {
     const { contract, owner, operator } = await deployRegistry();
 
     await contract.stake("demo-agent", "ipfs://manifest-1", {
-      value: ethers.utils.parseEther("1.01")
+      value: ethers.parseEther("1.01")
     });
 
     const tokenId = await contract.getTokenId(owner.address, "demo-agent");
@@ -73,10 +78,10 @@ describe("AgentAuditRegistry", function () {
         320,
         3,
         1,
-        ethers.utils.formatBytes32String("manifest"),
-        ethers.utils.formatBytes32String("report"),
-        ethers.utils.formatBytes32String("evidence"),
-        ethers.utils.formatBytes32String("attest"),
+        ethers.encodeBytes32String("manifest"),
+        ethers.encodeBytes32String("report"),
+        ethers.encodeBytes32String("evidence"),
+        ethers.encodeBytes32String("attest"),
         "ipfs://evidence-1",
         "ipfs://report-1",
         "ipfs://manifest-1"
@@ -86,7 +91,7 @@ describe("AgentAuditRegistry", function () {
     const latestReport = await contract.getLatestAuditReport(tokenId);
 
     assert.strictEqual(numericString(profile.auditCount), "1");
-    assert.ok(profile.lastAuditAt.gt(0));
+    assert.ok(profile.lastAuditAt > 0n);
     assert.strictEqual(numericString(latestReport.auditScore), "91");
     assert.strictEqual(numericString(latestReport.status), "1");
     assert.strictEqual(latestReport.evidenceCID, "ipfs://evidence-1");
@@ -97,20 +102,20 @@ describe("AgentAuditRegistry", function () {
     const { contract, owner, operator } = await deployRegistry();
 
     await contract.stake("demo-agent", "ipfs://manifest-1", {
-      value: ethers.utils.parseEther("1.01")
+      value: ethers.parseEther("1.01")
     });
 
     const tokenId = await contract.getTokenId(owner.address, "demo-agent");
 
     await contract
       .connect(operator)
-      .slashBond(tokenId, 1, ethers.utils.parseEther("0.4"), ethers.constants.HashZero);
+      .slashBond(tokenId, 1, ethers.parseEther("0.4"), ethers.ZeroHash);
 
     const profile = await contract.getAgentProfile(tokenId);
     const latestReport = await contract.getLatestAuditReport(tokenId);
 
     assert.strictEqual(profile.blacklisted, true);
-    assert.strictEqual(profile.totalBond.toString(), ethers.utils.parseEther("0.6").toString());
+    assert.strictEqual(profile.totalBond.toString(), ethers.parseEther("0.6").toString());
     assert.strictEqual(numericString(latestReport.status), "3");
   });
 
@@ -118,7 +123,7 @@ describe("AgentAuditRegistry", function () {
     const { contract, owner, operator } = await deployRegistry();
 
     await contract.stake("demo-agent", "ipfs://manifest-1", {
-      value: ethers.utils.parseEther("1.01")
+      value: ethers.parseEther("1.01")
     });
 
     const tokenId = await contract.getTokenId(owner.address, "demo-agent");
@@ -126,22 +131,22 @@ describe("AgentAuditRegistry", function () {
     await assert.rejects(
       contract
         .connect(operator)
-        .compensateBond(tokenId, 1, ethers.utils.parseEther("0.2"), ethers.constants.HashZero),
+        .compensateBond(tokenId, 1, ethers.parseEther("0.2"), ethers.ZeroHash),
       /AUDIT_NOT_SLASHED/
     );
 
     await contract
       .connect(operator)
-      .slashBond(tokenId, 1, ethers.utils.parseEther("0.4"), ethers.constants.HashZero);
+      .slashBond(tokenId, 1, ethers.parseEther("0.4"), ethers.ZeroHash);
 
     await contract
       .connect(operator)
-      .compensateBond(tokenId, 1, ethers.utils.parseEther("0.4"), ethers.constants.HashZero);
+      .compensateBond(tokenId, 1, ethers.parseEther("0.4"), ethers.ZeroHash);
 
     const profile = await contract.getAgentProfile(tokenId);
     const latestReport = await contract.getLatestAuditReport(tokenId);
 
-    assert.strictEqual(profile.totalBond.toString(), ethers.utils.parseEther("1").toString());
+    assert.strictEqual(profile.totalBond.toString(), ethers.parseEther("1").toString());
     assert.strictEqual(numericString(latestReport.status), "4");
     assert.strictEqual(latestReport.appealApproved, true);
   });

@@ -39,7 +39,9 @@ export async function stakeAgent(
     value: stakeValue
   });
 
-  const agentRegisteredTopic = iface.getEventTopic("AgentRegistered");
+  const agentRegisteredEvent = iface.getEvent("AgentRegistered");
+  if (!agentRegisteredEvent) throw new Error("AgentRegistered ABI event is unavailable");
+  const agentRegisteredTopic = agentRegisteredEvent.topicHash;
   const registeredLog = (receipt.logs ?? []).find(
     (log) => log.topics[0] === agentRegisteredTopic
   );

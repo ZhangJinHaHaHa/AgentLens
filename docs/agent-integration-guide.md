@@ -48,10 +48,10 @@ Manifest 是一个 JSON 文件，描述 Agent 的基本信息和网络权限声�
 |------|------|
 | `agent_name` | Agent 唯一名称，需与链上注册时一致 |
 | `image` | Docker 镜像地址（需公开可拉取，或使用私有仓库） |
-| `allowed_hosts` | Agent 声明会访问的域名列表（白名单） |
-| `allowed_rpc_endpoints` | Agent 声明会使用的 RPC 端点 |
+| `allowed_hosts` | 必填数组。Agent 声明会访问的公网主机白名单；填 `[]` 表示禁止访问任何外部主机 |
+| `allowed_rpc_endpoints` | 必填数组。Agent 声明会使用的 HTTP(S) RPC 端点；填 `[]` 表示不允许访问 RPC |
 
-**重要**：沙箱会强制网络隔离。访问未声明的域名 → 审计失败（`UNDECLARED_EGRESS`）。声明了但没访问 → 可能触发 `ACTION_MISMATCH`。
+**重要**：两个白名单字段都必须存在，但可以是空数组。空数组是最小权限配置，沙箱仍保持 `OUTPUT DROP`，不会开放外部网络。访问未声明的域名 → 审计失败（`UNDECLARED_EGRESS`）。声明了但没访问 → 可能触发 `ACTION_MISMATCH`。
 
 将 manifest 文件上传到公开可访问的 URL（如 GitHub raw 链接、对象存储等）。
 

@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { ethers } = require("ethers");
 const { readRegistryDeploymentConfig } = require("./deployConfig");
+const { createStaticJsonRpcProvider, waitForDeploymentMetadata } = require("./ethersDeployment");
 
 const artifactPath = path.join(__dirname, "..", "artifacts", "AgentAuditRegistryV2.json");
 const deploymentsDir = path.join(__dirname, "..", "deployments");
@@ -14,10 +15,7 @@ async function deployV2Registry(config, dependencies = {}) {
   const artifact = JSON.parse(fs.readFileSync(artifactPath, "utf8"));
 
   const provider = dependencies.provider ??
-    new ethers.providers.StaticJsonRpcProvider(config.rpcUrl, {
-      chainId: config.chainId,
-      name: config.networkName
-    });
+    createStaticJsonRpcProvider(config);
   const wallet = dependencies.wallet ??
     new ethers.Wallet(config.deployerPrivateKey, provider);
 
@@ -32,15 +30,15 @@ async function deployV2Registry(config, dependencies = {}) {
     operatorAddress
   );
 
-  const receipt = await contract.deployTransaction.wait();
+  const { address, transactionHash, receipt } = await waitForDeploymentMetadata(contract);
 
   const metadata = {
     contractName: "AgentAuditRegistryV2",
     networkName: config.networkName,
     chainId: String(config.chainId),
     rpcUrl: config.rpcUrl,
-    address: contract.address,
-    deployTransactionHash: contract.deployTransaction.hash,
+    address,
+    deployTransactionHash: transactionHash,
     deployedBlockNumber: receipt.blockNumber,
     deployer: wallet.address,
     constructorArgs: {

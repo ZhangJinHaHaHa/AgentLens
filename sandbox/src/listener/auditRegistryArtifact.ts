@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { utils } from "ethers";
+import { Interface } from "ethers";
 
 interface ContractArtifactFunctionEntry {
   type: "function";
@@ -55,12 +55,12 @@ export function getAuditRegistryV2Artifact(): AuditRegistryArtifact {
   return artifact;
 }
 
-export function getAuditRegistryInterface(): utils.Interface {
-  return new utils.Interface(getAuditRegistryArtifact().abi);
+export function getAuditRegistryInterface(): Interface {
+  return new Interface(getAuditRegistryArtifact().abi);
 }
 
-export function getAuditRegistryV2Interface(): utils.Interface {
-  return new utils.Interface(getAuditRegistryV2Artifact().abi);
+export function getAuditRegistryV2Interface(): Interface {
+  return new Interface(getAuditRegistryV2Artifact().abi);
 }
 
 export function getAuditRegistryV3Artifact(): AuditRegistryArtifact {
@@ -74,8 +74,8 @@ export function getAuditRegistryV3Artifact(): AuditRegistryArtifact {
   return artifact;
 }
 
-export function getAuditRegistryV3Interface(): utils.Interface {
-  return new utils.Interface(getAuditRegistryV3Artifact().abi);
+export function getAuditRegistryV3Interface(): Interface {
+  return new Interface(getAuditRegistryV3Artifact().abi);
 }
 
 export function getRecordAuditResultEntry(): ContractArtifactFunctionEntry {

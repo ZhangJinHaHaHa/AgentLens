@@ -1,4 +1,4 @@
-import { BigNumber, Wallet } from "ethers";
+import { Wallet } from "ethers";
 
 export interface SubmitTransactionRequest {
   to: string;
@@ -189,13 +189,14 @@ export function createJsonRpcWriteClient(
       );
 
       const signedTransaction = await wallet.signTransaction({
+        type: 0,
         chainId: options.chainId,
         nonce: parseRpcNumber(nonceHex),
-        gasLimit: BigNumber.from(gasLimitHex),
-        gasPrice: BigNumber.from(gasPriceHex),
+        gasLimit: BigInt(gasLimitHex),
+        gasPrice: BigInt(gasPriceHex),
         to: request.to,
         data: request.data,
-        value: BigNumber.from(request.value ?? 0n)
+        value: request.value ?? 0n
       });
 
       const transactionHash = await jsonRpcRequest<`0x${string}`>(

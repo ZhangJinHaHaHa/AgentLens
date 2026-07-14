@@ -1,12 +1,13 @@
 const fs = require("fs");
 const path = require("path");
 
-const hre = require("hardhat");
+const { waitForDeploymentMetadata } = require("./ethersDeployment");
+const { getHardhatConnection } = require("./hardhatConnection");
 
 const ARTIFACT_PATH = path.join(__dirname, "..", "artifacts", "AgentAuditRegistry.json");
 const DEFAULT_DEPLOYMENT_DIR = path.join(__dirname, "..", "deployments", "local");
-const DEFAULT_SERVICE_FEE_WEI = hre.ethers.constants.Zero;
-const DEFAULT_MINIMUM_BOND_WEI = hre.ethers.constants.One;
+const DEFAULT_SERVICE_FEE_WEI = 0n;
+const DEFAULT_MINIMUM_BOND_WEI = 1n;
 
 function loadArtifact() {
   return JSON.parse(fs.readFileSync(ARTIFACT_PATH, "utf8"));
@@ -14,24 +15,26 @@ function loadArtifact() {
 
 async function deployLocalRegistry(options = {}) {
   const outputDir = options.outputDir ?? DEFAULT_DEPLOYMENT_DIR;
-  const [deployer, operator] = await hre.ethers.getSigners();
+  const connection = await getHardhatConnection();
+  const { ethers } = connection;
+  const [deployer, operator] = await ethers.getSigners();
   const artifact = loadArtifact();
-  const factory = new hre.ethers.ContractFactory(artifact.abi, artifact.bytecode, deployer);
+  const factory = new ethers.ContractFactory(artifact.abi, artifact.bytecode, deployer);
 
   const contract = await factory.deploy(
     DEFAULT_SERVICE_FEE_WEI,
     DEFAULT_MINIMUM_BOND_WEI,
     operator.address
   );
-  const receipt = await contract.deployTransaction.wait();
-  const network = await hre.ethers.provider.getNetwork();
+  const { address, transactionHash, receipt } = await waitForDeploymentMetadata(contract);
+  const network = await ethers.provider.getNetwork();
 
   const deployment = {
     contractName: "AgentAuditRegistry",
-    networkName: hre.network.name,
+    networkName: connection.networkName,
     chainId: String(network.chainId),
-    address: contract.address,
-    deployTransactionHash: contract.deployTransaction.hash,
+    address,
+    deployTransactionHash: transactionHash,
     deployedBlockNumber: receipt.blockNumber,
     deployer: deployer.address,
     constructorArgs: {

@@ -15,7 +15,7 @@ We take the security of AgentLens very seriously. If you discover a vulnerabilit
 
 Please **DO NOT** report security vulnerabilities via public GitHub issues.
 
-Instead, please send an email to the project maintainers or open a private security advisory on GitHub if enabled.
+Instead, use GitHub's private vulnerability reporting flow for this repository. Do not include exploit details in a public issue. If private reporting is temporarily unavailable, open only a minimal public issue asking the maintainers to enable a private reporting channel, without disclosing vulnerability details.
 
 ## Public Repository Hygiene
 

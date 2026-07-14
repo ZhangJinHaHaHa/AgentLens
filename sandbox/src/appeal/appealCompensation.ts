@@ -1,4 +1,4 @@
-import { utils } from "ethers";
+import { isHexString } from "ethers";
 
 import { createJsonRpcWriteClient, type CreateJsonRpcWriteClientOptions } from "../chain/jsonRpcWriteClient";
 import { getAuditRegistryInterface } from "../listener/auditRegistryArtifact";
@@ -58,7 +58,7 @@ function parseRequiredString(value: string | undefined, variableName: string): s
 
 function parseRequiredPrivateKey(value: string | undefined): string {
   const privateKey = parseRequiredString(value, "AUDIT_OPERATOR_PRIVATE_KEY");
-  if (!utils.isHexString(privateKey, 32)) {
+  if (!isHexString(privateKey, 32)) {
     throw new Error("AUDIT_OPERATOR_PRIVATE_KEY must be a 32-byte hex private key");
   }
 

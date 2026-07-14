@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "cids": "^1.1.9",
-    "ethers": "^5.7.2",
+    "ethers": "^6.17.0",
     "nodemailer": "^9.0.1"
   },
   "overrides": {

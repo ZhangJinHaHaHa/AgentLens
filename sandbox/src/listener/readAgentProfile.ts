@@ -1,5 +1,4 @@
-import { BigNumber } from "ethers";
-
+import { decodedIntegerToBigInt, decodedIntegerToNumber } from "../chain/decodedInteger";
 import { getAuditRegistryInterface } from "./auditRegistryArtifact";
 
 interface JsonRpcSuccessResult<T> {
@@ -38,12 +37,12 @@ export interface ReadAgentProfileOptions {
 type DecodedAgentProfile = {
   developer: string;
   agentName: string;
-  tokenId: BigNumber;
-  totalBond: BigNumber;
+  tokenId: unknown;
+  totalBond: unknown;
   blacklisted: boolean;
-  createdAt: BigNumber;
-  lastAuditAt: BigNumber;
-  auditCount: number;
+  createdAt: unknown;
+  lastAuditAt: unknown;
+  auditCount: unknown;
 };
 
 async function jsonRpcRequest<T>(
@@ -106,11 +105,11 @@ export async function readAgentProfile(
   return {
     developer: decoded.developer,
     agentName: decoded.agentName,
-    tokenId: decoded.tokenId.toBigInt(),
-    totalBond: decoded.totalBond.toBigInt(),
+    tokenId: decodedIntegerToBigInt(decoded.tokenId, "tokenId"),
+    totalBond: decodedIntegerToBigInt(decoded.totalBond, "totalBond"),
     blacklisted: decoded.blacklisted,
-    createdAt: decoded.createdAt.toNumber(),
-    lastAuditAt: decoded.lastAuditAt.toNumber(),
-    auditCount: decoded.auditCount
+    createdAt: decodedIntegerToNumber(decoded.createdAt, "createdAt"),
+    lastAuditAt: decodedIntegerToNumber(decoded.lastAuditAt, "lastAuditAt"),
+    auditCount: decodedIntegerToNumber(decoded.auditCount, "auditCount")
   };
 }

@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { utils } from "ethers";
+import { Interface, Transaction, toBeHex } from "ethers";
 
 import { createJsonRpcWriteClient } from "../../src/chain/jsonRpcWriteClient";
 
@@ -45,7 +45,7 @@ const TEST_NONCE_HEX = "0x7";
 const TEST_GAS_LIMIT_HEX = "0x5208";
 const TEST_GAS_PRICE_HEX = "0x3b9aca00";
 
-const contractInterface = new utils.Interface([
+const contractInterface = new Interface([
   "function recordAuditResult(uint256 tokenId,uint256 auditScore,uint256 memoryPeakMb,uint256 cpuAvgMilli,uint256 requestIpCount,uint8 status,bytes32 manifestHash,bytes32 reportHash,bytes32 evidenceRoot,bytes32 attestationHash,string evidenceCID,string reportCID,string manifestUrl)",
   "event AuditRecorded(uint256 indexed tokenId,uint64 indexed auditId,uint8 status,uint32 auditScore,bytes32 reportHash,string reportCID)"
 ]);
@@ -69,7 +69,7 @@ const RECORD_AUDIT_RESULT_CALL_DATA = contractInterface.encodeFunctionData("reco
 test("createJsonRpcWriteClient sends a signed raw transaction and waits for a successful receipt", async () => {
   const txHash = `0x${"f".repeat(64)}`;
   const auditRecordedLog = contractInterface.encodeEventLog(
-    contractInterface.getEvent("AuditRecorded"),
+    contractInterface.getEvent("AuditRecorded")!,
     [1, 7, 1, 100, `0x${"b".repeat(64)}`, "bafybeigdyrzt"]
   );
   const capturedRequests: RpcRequestPayload[] = [];
@@ -152,13 +152,13 @@ test("createJsonRpcWriteClient sends a signed raw transaction and waits for a su
   assert.deepEqual(capturedRequests[2]?.params, []);
 
   const signedRawTx = (capturedRequests[3]?.params as [string])[0];
-  const parsedTx = utils.parseTransaction(signedRawTx);
+  const parsedTx = Transaction.from(signedRawTx);
   assert.equal(parsedTx.to?.toLowerCase(), CONTRACT_ADDRESS);
   assert.equal(parsedTx.data, RECORD_AUDIT_RESULT_CALL_DATA);
   assert.equal(parsedTx.nonce, 7);
-  assert.equal(parsedTx.chainId, TEST_CHAIN_ID);
-  assert.equal(parsedTx.gasLimit?.toHexString(), TEST_GAS_LIMIT_HEX);
-  assert.equal(parsedTx.gasPrice?.toHexString(), TEST_GAS_PRICE_HEX);
+  assert.equal(parsedTx.chainId, BigInt(TEST_CHAIN_ID));
+  assert.equal(toBeHex(parsedTx.gasLimit), TEST_GAS_LIMIT_HEX);
+  assert.equal(toBeHex(parsedTx.gasPrice ?? 0n), TEST_GAS_PRICE_HEX);
   assert.equal(parsedTx.from?.toLowerCase(), SIGNER_ADDRESS);
 });
 

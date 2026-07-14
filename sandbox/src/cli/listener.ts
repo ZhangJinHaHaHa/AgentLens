@@ -331,7 +331,7 @@ function decodeAuditRecordedAuditId(receipt: WritebackReceiptLike): number {
         topics: log.topics
       });
 
-      if (parsed.name === "AuditRecorded") {
+      if (parsed?.name === "AuditRecorded") {
         return Number(parsed.args.auditId.toString());
       }
     } catch {

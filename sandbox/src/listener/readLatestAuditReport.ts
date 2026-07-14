@@ -1,5 +1,4 @@
-import { BigNumber } from "ethers";
-
+import { decodedIntegerToNumber } from "../chain/decodedInteger";
 import { getAuditRegistryInterface } from "./auditRegistryArtifact";
 
 interface JsonRpcSuccessResult<T> {
@@ -44,13 +43,13 @@ export interface ReadLatestAuditReportOptions {
 }
 
 type DecodedLatestAuditReport = {
-  auditId: BigNumber;
-  timestamp: BigNumber;
-  auditScore: number;
-  memoryPeakMb: number;
-  cpuAvgMilli: number;
-  requestIpCount: number;
-  status: number;
+  auditId: unknown;
+  timestamp: unknown;
+  auditScore: unknown;
+  memoryPeakMb: unknown;
+  cpuAvgMilli: unknown;
+  requestIpCount: unknown;
+  status: unknown;
   manifestHash: `0x${string}`;
   reportHash: `0x${string}`;
   evidenceRoot?: `0x${string}`;
@@ -120,13 +119,13 @@ export async function readLatestAuditReport(
   )[0] as DecodedLatestAuditReport;
 
   return {
-    auditId: decoded.auditId.toNumber(),
-    timestamp: decoded.timestamp.toNumber(),
-    auditScore: decoded.auditScore,
-    memoryPeakMb: decoded.memoryPeakMb,
-    cpuAvgMilli: decoded.cpuAvgMilli,
-    requestIpCount: decoded.requestIpCount,
-    status: decoded.status,
+    auditId: decodedIntegerToNumber(decoded.auditId, "auditId"),
+    timestamp: decodedIntegerToNumber(decoded.timestamp, "timestamp"),
+    auditScore: decodedIntegerToNumber(decoded.auditScore, "auditScore"),
+    memoryPeakMb: decodedIntegerToNumber(decoded.memoryPeakMb, "memoryPeakMb"),
+    cpuAvgMilli: decodedIntegerToNumber(decoded.cpuAvgMilli, "cpuAvgMilli"),
+    requestIpCount: decodedIntegerToNumber(decoded.requestIpCount, "requestIpCount"),
+    status: decodedIntegerToNumber(decoded.status, "status"),
     manifestHash: decoded.manifestHash,
     reportHash: decoded.reportHash,
     ...(decoded.evidenceRoot ? { evidenceRoot: decoded.evidenceRoot } : {}),

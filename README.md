@@ -10,7 +10,7 @@
 [![Intel SGX](https://img.shields.io/badge/TEE-Intel_SGX-0071C5.svg)](https://software.intel.com/en-us/sgx)
 [![ZK Proofs](https://img.shields.io/badge/ZK-Circom-8A2BE2.svg)](https://docs.circom.io/)
 
-[Website](http://[redacted-server]/zh) • [Documentation](docs/) • [Integration Guide](docs/agent-integration-guide.md) • [Architecture](#-architecture) • [中文文档](README_CN.md)
+[Website](https://agentlens.chat/zh) • [Documentation](docs/) • [Integration Guide](docs/agent-integration-guide.md) • [Architecture](#-architecture) • [中文文档](README_CN.md)
 
 </div>
 
@@ -22,7 +22,7 @@ By combining **On-chain Audit Scores**, **Intel SGX TEE Attestation**, **Zero-Kn
 
 ## 🌐 Official Platform
 
-Visit our live platform: **[AgentLens — Trusted AI Agent Selection](http://[redacted-server]/zh)**
+Visit our live platform: **[AgentLens — Trusted AI Agent Selection](https://agentlens.chat/zh)**
 
 ## 🚀 Features
 
@@ -241,6 +241,7 @@ An isolated environment that automatically evaluates submitted Agents using an L
 ## 📖 Documentation
 
 * [Agent Integration Guide](docs/agent-integration-guide.md) — How to build and submit your Agent for auditing.
+* [Platform Protocol v1](docs/protocols/README.md) — Public model, search, seller submission, runtime, listing, and pricing contracts.
 * [Verification Methods](docs/verification-methods.md) — Details on how AgentLens verifies Agent claims.
 * [TEE Production Status](docs/status/2026-04-16-tee-production.md) — Information about the SGX hardware enclave setup.
 
@@ -267,8 +268,7 @@ I'm actively looking for **collaborators, researchers, and open-source contribut
 * Zero-Knowledge Proofs (ZK) & Trusted Execution Environments (TEE)
 * AI Agent Auditing & Safety
 
-If you're interested in building the future of trustworthy AI Agents together, feel free to reach out!
-**Contact:** [3172791717@qq.com](mailto:3172791717@qq.com)
+If you're interested in building the future of trustworthy AI Agents together, please use the repository's GitHub collaboration channels. Security reports must follow [SECURITY.md](SECURITY.md) and remain private until remediation is available.
 
 We also welcome broad community contributions! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) to understand our development process, and note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md).
 

@@ -30,7 +30,9 @@ function makeFetchForFees(serviceFee: string, minimumBond: string): typeof fetch
 }
 
 function makeWriteClient(tokenId: bigint): JsonRpcWriteClient {
-  const topic = iface.getEventTopic("AgentRegistered");
+  const agentRegisteredEvent = iface.getEvent("AgentRegistered");
+  assert.ok(agentRegisteredEvent);
+  const topic = agentRegisteredEvent.topicHash;
   return {
     async submitTransaction(): Promise<TransactionReceiptResult> {
       return {

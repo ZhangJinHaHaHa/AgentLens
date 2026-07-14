@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agentlens.example/agentlens-agent-runtime.v1.schema.json",
+  "title": "AgentLens Seller-hosted Agent Runtime v1",
+  "oneOf": [
+    {
+      "title": "Invocation request",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input", "task"],
+      "properties": {
+        "contractVersion": { "const": "agentlens.agent-runtime.v1" },
+        "input": { "type": "string", "minLength": 1, "maxLength": 20000 },
+        "task": { "type": "string", "minLength": 1, "maxLength": 20000 },
+        "requestId": { "type": "string", "maxLength": 200 }
+      }
+    },
+    {
+      "title": "Invocation response",
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["output"],
+      "properties": {
+        "output": { "type": "string", "minLength": 1, "maxLength": 200000 },
+        "usage": { "type": "object" },
+        "artifacts": { "type": "array", "maxItems": 20 }
+      }
+    },
+    {
+      "title": "Plain text response",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200000
+    }
+  ]
+}

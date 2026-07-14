@@ -2,16 +2,17 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 
-describe("full polygon edge e2e script", function () {
-  const scriptPath = path.join(
-    __dirname,
-    "..",
-    "..",
-    "infra",
-    "polygon-edge-local",
-    "scripts",
-    "run-full-e2e.sh"
-  );
+const scriptPath = path.join(
+  __dirname,
+  "..",
+  "..",
+  "infra",
+  "polygon-edge-local",
+  "scripts",
+  "run-full-e2e.sh"
+);
+
+(fs.existsSync(scriptPath) ? describe : describe.skip)("full polygon edge e2e script", function () {
 
   let script;
 

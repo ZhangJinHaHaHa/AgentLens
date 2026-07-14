@@ -1,4 +1,4 @@
-import { utils } from "ethers";
+import { isHexString } from "ethers";
 import { createJsonRpcWriteClient } from "../chain/jsonRpcWriteClient";
 import { createLocalAuditRunOptions } from "../cli/localAuditOptions";
 import { loadAuditChainManifestSource, loadManifestSource } from "../manifest/loadManifest";
@@ -111,7 +111,7 @@ function parseOptionalInteger(value: string | undefined, variableName: string): 
 }
 
 function parseOperatorPrivateKey(value: string): string {
-  if (!utils.isHexString(value, 32)) {
+  if (!isHexString(value, 32)) {
     throw new Error("AUDIT_OPERATOR_PRIVATE_KEY must be a 32-byte hex private key");
   }
 

@@ -1,5 +1,4 @@
-import { BigNumber } from "ethers";
-
+import { decodedIntegerToBigInt, decodedIntegerToNumber } from "../../chain/decodedInteger";
 import { getCdkV2Interface, getCdkV3Interface } from "./cdkArtifact";
 import type { AgentProfile, AuditReport, DimensionalScores, ReputationInfo } from "../cdkTypes";
 
@@ -54,31 +53,31 @@ export interface ReadRegistryOptions {
 type DecodedProfile = {
   developer: string;
   agentName: string;
-  tokenId: BigNumber;
-  totalBond: BigNumber;
+  tokenId: unknown;
+  totalBond: unknown;
   blacklisted: boolean;
-  createdAt: BigNumber;
-  lastAuditAt: BigNumber;
-  auditCount: number;
+  createdAt: unknown;
+  lastAuditAt: unknown;
+  auditCount: unknown;
 };
 
 type DecodedDimensionalScores = {
-  security: number;
-  taskExecution: number;
-  cognitive: number;
-  environment: number;
-  engineering: number;
-  compliance: number;
+  security: unknown;
+  taskExecution: unknown;
+  cognitive: unknown;
+  environment: unknown;
+  engineering: unknown;
+  compliance: unknown;
 };
 
 type DecodedAuditReport = {
-  auditId: BigNumber;
-  timestamp: BigNumber;
-  auditScore: number;
-  memoryPeakMb: number;
-  cpuAvgMilli: number;
-  requestIpCount: number;
-  status: number;
+  auditId: unknown;
+  timestamp: unknown;
+  auditScore: unknown;
+  memoryPeakMb: unknown;
+  cpuAvgMilli: unknown;
+  requestIpCount: unknown;
+  status: unknown;
   manifestHash: `0x${string}`;
   reportHash: `0x${string}`;
   evidenceRoot: `0x${string}`;
@@ -111,12 +110,12 @@ export async function readAgentProfile(
   return {
     developer: decoded.developer,
     agentName: decoded.agentName,
-    tokenId: decoded.tokenId.toBigInt(),
-    totalBond: decoded.totalBond.toBigInt(),
+    tokenId: decodedIntegerToBigInt(decoded.tokenId, "tokenId"),
+    totalBond: decodedIntegerToBigInt(decoded.totalBond, "totalBond"),
     blacklisted: decoded.blacklisted,
-    createdAt: decoded.createdAt.toNumber(),
-    lastAuditAt: decoded.lastAuditAt.toNumber(),
-    auditCount: decoded.auditCount
+    createdAt: decodedIntegerToNumber(decoded.createdAt, "createdAt"),
+    lastAuditAt: decodedIntegerToNumber(decoded.lastAuditAt, "lastAuditAt"),
+    auditCount: decodedIntegerToNumber(decoded.auditCount, "auditCount")
   };
 }
 
@@ -140,22 +139,22 @@ export async function readLatestAuditReport(
   const decoded = iface.decodeFunctionResult("getLatestAuditReport", result)[0] as DecodedAuditReport;
 
   const dimensionalScores: DimensionalScores = {
-    security: decoded.dimensionalScores.security,
-    taskExecution: decoded.dimensionalScores.taskExecution,
-    cognitive: decoded.dimensionalScores.cognitive,
-    environment: decoded.dimensionalScores.environment,
-    engineering: decoded.dimensionalScores.engineering,
-    compliance: decoded.dimensionalScores.compliance
+    security: decodedIntegerToNumber(decoded.dimensionalScores.security, "security"),
+    taskExecution: decodedIntegerToNumber(decoded.dimensionalScores.taskExecution, "taskExecution"),
+    cognitive: decodedIntegerToNumber(decoded.dimensionalScores.cognitive, "cognitive"),
+    environment: decodedIntegerToNumber(decoded.dimensionalScores.environment, "environment"),
+    engineering: decodedIntegerToNumber(decoded.dimensionalScores.engineering, "engineering"),
+    compliance: decodedIntegerToNumber(decoded.dimensionalScores.compliance, "compliance")
   };
 
   return {
-    auditId: decoded.auditId.toNumber(),
-    timestamp: decoded.timestamp.toNumber(),
-    auditScore: decoded.auditScore,
-    memoryPeakMb: decoded.memoryPeakMb,
-    cpuAvgMilli: decoded.cpuAvgMilli,
-    requestIpCount: decoded.requestIpCount,
-    status: decoded.status,
+    auditId: decodedIntegerToNumber(decoded.auditId, "auditId"),
+    timestamp: decodedIntegerToNumber(decoded.timestamp, "timestamp"),
+    auditScore: decodedIntegerToNumber(decoded.auditScore, "auditScore"),
+    memoryPeakMb: decodedIntegerToNumber(decoded.memoryPeakMb, "memoryPeakMb"),
+    cpuAvgMilli: decodedIntegerToNumber(decoded.cpuAvgMilli, "cpuAvgMilli"),
+    requestIpCount: decodedIntegerToNumber(decoded.requestIpCount, "requestIpCount"),
+    status: decodedIntegerToNumber(decoded.status, "status"),
     manifestHash: decoded.manifestHash,
     reportHash: decoded.reportHash,
     ...(decoded.evidenceRoot !== ZERO_BYTES32 ? { evidenceRoot: decoded.evidenceRoot } : {}),
@@ -181,16 +180,16 @@ export async function readServiceFee(options: ReadRegistryOptions): Promise<bigi
     fetchImpl
   );
 
-  const decoded = iface.decodeFunctionResult("serviceFee", result)[0] as BigNumber;
-  return decoded.toBigInt();
+  const decoded = iface.decodeFunctionResult("serviceFee", result)[0];
+  return decodedIntegerToBigInt(decoded, "serviceFee");
 }
 
 type DecodedReputationRecord = {
-  successfulAppeals: number;
-  failedAppeals: number;
-  reputationDelta: number;
-  currentReputationScore: number;
-  lastReputationUpdateAt: BigNumber;
+  successfulAppeals: unknown;
+  failedAppeals: unknown;
+  reputationDelta: unknown;
+  currentReputationScore: unknown;
+  lastReputationUpdateAt: unknown;
 };
 
 export async function readReputation(
@@ -211,11 +210,11 @@ export async function readReputation(
   const decoded = iface.decodeFunctionResult("getReputation", result)[0] as DecodedReputationRecord;
 
   return {
-    successfulAppeals: decoded.successfulAppeals,
-    failedAppeals: decoded.failedAppeals,
-    reputationDelta: decoded.reputationDelta,
-    currentReputationScore: decoded.currentReputationScore,
-    lastReputationUpdateAt: decoded.lastReputationUpdateAt.toNumber()
+    successfulAppeals: decodedIntegerToNumber(decoded.successfulAppeals, "successfulAppeals"),
+    failedAppeals: decodedIntegerToNumber(decoded.failedAppeals, "failedAppeals"),
+    reputationDelta: decodedIntegerToNumber(decoded.reputationDelta, "reputationDelta"),
+    currentReputationScore: decodedIntegerToNumber(decoded.currentReputationScore, "currentReputationScore"),
+    lastReputationUpdateAt: decodedIntegerToNumber(decoded.lastReputationUpdateAt, "lastReputationUpdateAt")
   };
 }
 
@@ -231,6 +230,6 @@ export async function readMinimumBond(options: ReadRegistryOptions): Promise<big
     fetchImpl
   );
 
-  const decoded = iface.decodeFunctionResult("minimumBond", result)[0] as BigNumber;
-  return decoded.toBigInt();
+  const decoded = iface.decodeFunctionResult("minimumBond", result)[0];
+  return decodedIntegerToBigInt(decoded, "minimumBond");
 }

@@ -23,8 +23,8 @@ function isNonEmptyString(value: unknown): value is string {
 }
 
 function assertStringArray(value: unknown, fieldName: string): string[] {
-  if (!Array.isArray(value) || value.length === 0) {
-    throw new Error(`${fieldName} must be a non-empty string array`);
+  if (!Array.isArray(value)) {
+    throw new Error(`${fieldName} must be a string array`);
   }
 
   const items = value.map((item) => {

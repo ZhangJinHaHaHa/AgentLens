@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agentlens.example/agentlens-search-provider.v1.schema.json",
+  "title": "AgentLens Search Provider v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "provider", "query", "sources"],
+  "properties": {
+    "contractVersion": { "const": "agentlens.search-provider.v1" },
+    "provider": { "enum": ["tavily", "brave", "duckduckgo"] },
+    "query": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "sources": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["title", "url"],
+        "properties": {
+          "title": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+          "snippet": { "type": "string", "maxLength": 3200 },
+          "publishedAt": { "type": "string", "format": "date-time" },
+          "providerScore": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "usageCredits": { "type": "number", "minimum": 0 }
+  }
+}

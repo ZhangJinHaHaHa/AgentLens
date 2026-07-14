@@ -2,7 +2,6 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { join } from "node:path";
 
-import { utils } from "ethers";
 import { buildAuditReport } from "../../src/report/buildAuditReport";
 import {
   getAuditRegistryInterface,
@@ -1194,11 +1193,11 @@ test("createListenerRuntime encodes recordAuditResultV2 calldata when dimensiona
   assert.equal(decoded[11], "");
   assert.equal(decoded[12], "https://example.com/manifest.json");
 
-  const scores = decoded[13] as unknown as [number, number, number, number, number, number];
-  assert.equal(scores[0], 8500);
-  assert.equal(scores[1], 7200);
-  assert.equal(scores[2], 6100);
-  assert.equal(scores[3], 9000);
-  assert.equal(scores[4], 7800);
-  assert.equal(scores[5], 9500);
+  const scores = decoded[13] as unknown as [bigint, bigint, bigint, bigint, bigint, bigint];
+  assert.equal(scores[0], 8500n);
+  assert.equal(scores[1], 7200n);
+  assert.equal(scores[2], 6100n);
+  assert.equal(scores[3], 9000n);
+  assert.equal(scores[4], 7800n);
+  assert.equal(scores[5], 9500n);
 });

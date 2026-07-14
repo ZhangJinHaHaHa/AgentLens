@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agentlens.example/agentlens-pricing-quote.v1.schema.json",
+  "title": "AgentLens Pricing Quote v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "brainAndSearchCredits", "sellerAgentCredits", "platformFeeCredits", "sellerPayoutCredits", "totalCredits", "platformFeeRateBps"],
+  "properties": {
+    "contractVersion": { "const": "agentlens.pricing-quote.v1" },
+    "brainAndSearchCredits": { "type": "number", "minimum": 0 },
+    "sellerAgentCredits": { "type": "number", "minimum": 0 },
+    "platformFeeCredits": { "type": "number", "minimum": 0 },
+    "sellerPayoutCredits": { "type": "number", "minimum": 0 },
+    "totalCredits": { "type": "number", "minimum": 0 },
+    "platformFeeRateBps": { "type": "integer", "minimum": 0, "maximum": 2000 },
+    "sellerAgentItems": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["agentId", "grossCredits", "platformFeeCredits", "sellerPayoutCredits", "platformFeeRateBps"],
+        "properties": {
+          "agentId": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "grossCredits": { "type": "number", "minimum": 0 },
+          "platformFeeCredits": { "type": "number", "minimum": 0 },
+          "sellerPayoutCredits": { "type": "number", "minimum": 0 },
+          "platformFeeRateBps": { "type": "integer", "minimum": 0, "maximum": 2000 }
+        }
+      }
+    }
+  }
+}

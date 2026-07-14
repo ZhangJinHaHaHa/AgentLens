@@ -1,4 +1,4 @@
-import { utils } from "ethers";
+import { Interface, isHexString, zeroPadValue } from "ethers";
 
 import { createJsonRpcWriteClient, type CreateJsonRpcWriteClientOptions } from "../chain/jsonRpcWriteClient.js";
 
@@ -59,9 +59,9 @@ function parseDecimalNumber(value: string, field: string): number {
 
 function normalizeBytes32(value: string): string {
   if (value.startsWith("0x")) {
-    return utils.hexZeroPad(value, 32);
+    return zeroPadValue(value, 32);
   }
-  return utils.hexZeroPad(`0x${value}`, 32);
+  return zeroPadValue(`0x${value}`, 32);
 }
 
 function outcomeToUint8(outcome: "approved" | "rejected"): number {
@@ -86,7 +86,7 @@ export function readAppealChainWriterConfigFromEnv(
   if (!chainIdStr) throw new Error("AUDIT_CHAIN_ID is required when APPEAL_CHAIN_WRITER_ENABLED is true");
   if (!operatorPrivateKey) throw new Error("AUDIT_OPERATOR_PRIVATE_KEY is required when APPEAL_CHAIN_WRITER_ENABLED is true");
 
-  if (!utils.isHexString(operatorPrivateKey, 32)) {
+  if (!isHexString(operatorPrivateKey, 32)) {
     throw new Error("AUDIT_OPERATOR_PRIVATE_KEY must be a 32-byte hex private key");
   }
 
@@ -108,8 +108,8 @@ export function createAppealChainWriter(
     privateKey: config.operatorPrivateKey
   });
 
-  const fileAppealInterface = new utils.Interface([FILE_APPEAL_ABI]);
-  const resolveAppealInterface = new utils.Interface([RESOLVE_APPEAL_ABI]);
+  const fileAppealInterface = new Interface([FILE_APPEAL_ABI]);
+  const resolveAppealInterface = new Interface([RESOLVE_APPEAL_ABI]);
 
   return {
     async fileAppealOnChain(request: FileAppealOnChainRequest): Promise<AppealChainWriteResult> {

@@ -2,7 +2,12 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 
-const { ethers } = require("hardhat");
+const { getHardhatConnection } = require("../scripts/hardhatConnection");
+
+let ethers;
+before(async function () {
+  ({ ethers } = await getHardhatConnection());
+});
 
 function loadArtifact(name) {
   const artifactPath = path.join(__dirname, "..", "artifacts", `${name}.json`);
@@ -14,7 +19,7 @@ async function deployMarketplace() {
   const artifact = loadArtifact("AgentMarketplace");
   const factory = new ethers.ContractFactory(artifact.abi, artifact.bytecode, owner);
   const contract = await factory.deploy(operator.address);
-  await contract.deployed();
+  await contract.waitForDeployment();
   return { contract, owner, operator, buyer1, buyer2 };
 }
 
@@ -24,8 +29,8 @@ describe("AgentMarketplace", function () {
 
     await (await contract.connect(operator).setPrice(
       1,
-      ethers.utils.parseEther("0.01"), // pricePerDay
-      ethers.utils.parseEther("1")     // buyPrice
+      ethers.parseEther("0.01"), // pricePerDay
+      ethers.parseEther("1")     // buyPrice
     )).wait();
 
     const pricing = await contract.getPricing(1);
@@ -33,21 +38,21 @@ describe("AgentMarketplace", function () {
 
     // Rent for 5 days
     await (await contract.connect(buyer1).rentAgent(1, 5, {
-      value: ethers.utils.parseEther("0.05")
+      value: ethers.parseEther("0.05")
     })).wait();
 
     const hasAccess = await contract.hasAccess(1, buyer1.address);
     assert.strictEqual(hasAccess, true);
 
     const count = await contract.getAccessCount(1);
-    assert.strictEqual(count.toNumber(), 1);
+    assert.strictEqual(Number(count), 1);
 
     const record = await contract.getAccessRecord(1, 0);
-    assert.strictEqual(record.tokenId.toNumber(), 1);
+    assert.strictEqual(Number(record.tokenId), 1);
     assert.strictEqual(record.buyer, buyer1.address);
     assert.strictEqual(record.isRental, true);
-    assert.strictEqual(record.amountPaid.toString(), ethers.utils.parseEther("0.05").toString());
-    assert.ok(record.expiresAt.toNumber() > 0);
+    assert.strictEqual(record.amountPaid.toString(), ethers.parseEther("0.05").toString());
+    assert.ok(Number(record.expiresAt) > 0);
   });
 
   it("allows permanent purchase", async function () {
@@ -55,12 +60,12 @@ describe("AgentMarketplace", function () {
 
     await (await contract.connect(operator).setPrice(
       1,
-      ethers.utils.parseEther("0.01"),
-      ethers.utils.parseEther("1")
+      ethers.parseEther("0.01"),
+      ethers.parseEther("1")
     )).wait();
 
     await (await contract.connect(buyer1).buyAgent(1, {
-      value: ethers.utils.parseEther("1")
+      value: ethers.parseEther("1")
     })).wait();
 
     const hasAccess = await contract.hasAccess(1, buyer1.address);
@@ -72,13 +77,13 @@ describe("AgentMarketplace", function () {
 
     await (await contract.connect(operator).setPrice(
       1,
-      ethers.utils.parseEther("0.01"),
-      ethers.utils.parseEther("1")
+      ethers.parseEther("0.01"),
+      ethers.parseEther("1")
     )).wait();
 
     try {
       await contract.connect(buyer1).rentAgent(1, 5, {
-        value: ethers.utils.parseEther("0.01") // only pays for 1 day
+        value: ethers.parseEther("0.01") // only pays for 1 day
       });
       assert.fail("Should revert");
     } catch (error) {
@@ -87,7 +92,7 @@ describe("AgentMarketplace", function () {
 
     try {
       await contract.connect(buyer1).rentAgent(1, 5, {
-        value: ethers.utils.parseEther("0.06")
+        value: ethers.parseEther("0.06")
       });
       assert.fail("Should revert");
     } catch (error) {
@@ -100,19 +105,19 @@ describe("AgentMarketplace", function () {
 
     await (await contract.connect(operator).setPrice(
       1,
-      ethers.utils.parseEther("0.01"),
-      ethers.utils.parseEther("1")
+      ethers.parseEther("0.01"),
+      ethers.parseEther("1")
     )).wait();
 
     await (await contract.connect(buyer1).rentAgent(1, 5, {
-      value: ethers.utils.parseEther("0.05")
+      value: ethers.parseEther("0.05")
     })).wait();
 
     const before = await ethers.provider.getBalance(buyer2.address);
-    await (await contract.connect(owner).withdrawPayments(buyer2.address, ethers.utils.parseEther("0.05"))).wait();
+    await (await contract.connect(owner).withdrawPayments(buyer2.address, ethers.parseEther("0.05"))).wait();
     const after = await ethers.provider.getBalance(buyer2.address);
 
-    assert.strictEqual(after.sub(before).toString(), ethers.utils.parseEther("0.05").toString());
+    assert.strictEqual((after - before).toString(), ethers.parseEther("0.05").toString());
   });
 
   it("prevents double purchase", async function () {
@@ -120,17 +125,17 @@ describe("AgentMarketplace", function () {
 
     await (await contract.connect(operator).setPrice(
       1,
-      ethers.utils.parseEther("0.01"),
-      ethers.utils.parseEther("1")
+      ethers.parseEther("0.01"),
+      ethers.parseEther("1")
     )).wait();
 
     await (await contract.connect(buyer1).buyAgent(1, {
-      value: ethers.utils.parseEther("1")
+      value: ethers.parseEther("1")
     })).wait();
 
     try {
       await contract.connect(buyer1).buyAgent(1, {
-        value: ethers.utils.parseEther("1")
+        value: ethers.parseEther("1")
       });
       assert.fail("Should revert");
     } catch (error) {

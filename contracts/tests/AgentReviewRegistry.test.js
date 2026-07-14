@@ -2,7 +2,16 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 
-const { ethers } = require("hardhat");
+const { getHardhatConnection } = require("../scripts/hardhatConnection");
+
+let ethers;
+before(async function () {
+  ({ ethers } = await getHardhatConnection());
+});
+
+function pad32(value) {
+  return ethers.toBeHex(BigInt(value), 32);
+}
 
 function loadArtifact(name) {
   // Try flat path first (compileV2.js output), then Hardhat nested path
@@ -21,23 +30,23 @@ async function deployContracts() {
   const mpArtifact = loadArtifact("AgentMarketplace");
   const mpFactory = new ethers.ContractFactory(mpArtifact.abi, mpArtifact.bytecode, owner);
   const marketplace = await mpFactory.deploy(operator.address);
-  await marketplace.deployed();
+  await marketplace.waitForDeployment();
 
   // Deploy review registry
   const rrArtifact = loadArtifact("AgentReviewRegistry");
   const rrFactory = new ethers.ContractFactory(rrArtifact.abi, rrArtifact.bytecode, owner);
-  const reviewRegistry = await rrFactory.deploy(marketplace.address);
-  await reviewRegistry.deployed();
+  const reviewRegistry = await rrFactory.deploy(await marketplace.getAddress());
+  await reviewRegistry.waitForDeployment();
 
   // Set pricing and grant access to reviewer1
   await (await marketplace.connect(operator).setPrice(
     1,
-    ethers.utils.parseEther("0.01"),
-    ethers.utils.parseEther("1")
+    ethers.parseEther("0.01"),
+    ethers.parseEther("1")
   )).wait();
 
   await (await marketplace.connect(reviewer1).buyAgent(1, {
-    value: ethers.utils.parseEther("1")
+    value: ethers.parseEther("1")
   })).wait();
 
   return { marketplace, reviewRegistry, owner, operator, reviewer1, reviewer2 };
@@ -49,7 +58,7 @@ describe("AgentReviewRegistry", function () {
   it("allows user with access to submit a review with 3-tier ratings", async function () {
     const { reviewRegistry, reviewer1 } = await deployContracts();
 
-    const commentHash = ethers.utils.hexZeroPad("0xabcd", 32);
+    const commentHash = pad32("0xabcd");
     // [good, neutral, bad, good, neutral, good]
     await (await reviewRegistry.connect(reviewer1).submitReview(
       1,
@@ -58,13 +67,13 @@ describe("AgentReviewRegistry", function () {
     )).wait();
 
     const count = await reviewRegistry.getReviewCount(1);
-    assert.strictEqual(count.toNumber(), 1);
+    assert.strictEqual(Number(count), 1);
 
     const review = await reviewRegistry.getReview(1, 0);
     assert.strictEqual(review.reviewer, reviewer1.address);
-    assert.strictEqual(review.securityRating, 2);       // good
-    assert.strictEqual(review.taskExecutionRating, 1);   // neutral
-    assert.strictEqual(review.cognitiveRating, 0);       // bad
+    assert.strictEqual(Number(review.securityRating), 2);       // good
+    assert.strictEqual(Number(review.taskExecutionRating), 1);   // neutral
+    assert.strictEqual(Number(review.cognitiveRating), 0);       // bad
   });
 
   it("rejects invalid rating values (> 2)", async function () {
@@ -74,7 +83,7 @@ describe("AgentReviewRegistry", function () {
       await reviewRegistry.connect(reviewer1).submitReview(
         1,
         [2, 2, 3, 2, 2, 2],  // 3 is invalid
-        ethers.utils.hexZeroPad("0x0", 32)
+        pad32("0x0")
       );
       assert.fail("Should revert");
     } catch (error) {
@@ -89,7 +98,7 @@ describe("AgentReviewRegistry", function () {
       await reviewRegistry.connect(reviewer2).submitReview(
         1,
         [2, 2, 2, 2, 2, 2],
-        ethers.utils.hexZeroPad("0x0", 32)
+        pad32("0x0")
       );
       assert.fail("Should revert");
     } catch (error) {
@@ -103,14 +112,14 @@ describe("AgentReviewRegistry", function () {
     await (await reviewRegistry.connect(reviewer1).submitReview(
       1,
       [2, 2, 2, 2, 2, 2],
-      ethers.utils.hexZeroPad("0x0", 32)
+      pad32("0x0")
     )).wait();
 
     try {
       await reviewRegistry.connect(reviewer1).submitReview(
         1,
         [0, 0, 0, 0, 0, 0],
-        ethers.utils.hexZeroPad("0x0", 32)
+        pad32("0x0")
       );
       assert.fail("Should revert");
     } catch (error) {
@@ -123,21 +132,21 @@ describe("AgentReviewRegistry", function () {
 
     // Grant access to reviewer2
     await (await marketplace.connect(reviewer2).buyAgent(1, {
-      value: ethers.utils.parseEther("1")
+      value: ethers.parseEther("1")
     })).wait();
 
     // reviewer1: [good, good, bad, neutral, good, good]
     await (await reviewRegistry.connect(reviewer1).submitReview(
       1,
       [2, 2, 0, 1, 2, 2],
-      ethers.utils.hexZeroPad("0x0", 32)
+      pad32("0x0")
     )).wait();
 
     // reviewer2: [good, neutral, good, bad, neutral, good]
     await (await reviewRegistry.connect(reviewer2).submitReview(
       1,
       [2, 1, 2, 0, 1, 2],
-      ethers.utils.hexZeroPad("0x0", 32)
+      pad32("0x0")
     )).wait();
 
     const result = await reviewRegistry.getRatingDistribution(1);
@@ -145,13 +154,13 @@ describe("AgentReviewRegistry", function () {
     const neutralRatios = result.neutralRatios ?? result[1];
 
     // security: 2 good / 2 = 10000
-    assert.strictEqual(goodRatios[0], 10000);
+    assert.strictEqual(Number(goodRatios[0]), 10000);
     // taskExecution: 1 good / 2 = 5000, 1 neutral / 2 = 5000
-    assert.strictEqual(goodRatios[1], 5000);
-    assert.strictEqual(neutralRatios[1], 5000);
+    assert.strictEqual(Number(goodRatios[1]), 5000);
+    assert.strictEqual(Number(neutralRatios[1]), 5000);
     // cognitive: 1 good / 2 = 5000
-    assert.strictEqual(goodRatios[2], 5000);
+    assert.strictEqual(Number(goodRatios[2]), 5000);
     // compliance: 2 good / 2 = 10000
-    assert.strictEqual(goodRatios[5], 10000);
+    assert.strictEqual(Number(goodRatios[5]), 10000);
   });
 });

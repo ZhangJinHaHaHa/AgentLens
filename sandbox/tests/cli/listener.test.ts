@@ -94,7 +94,7 @@ function buildAuditRecordedReceipt(tokenId: bigint, auditId: number): {
   }>;
 } {
   const encoded = contractInterface.encodeEventLog(
-    contractInterface.getEvent("AuditRecorded"),
+    contractInterface.getEvent("AuditRecorded")!,
     [tokenId, auditId, 2, 0, `0x${"b".repeat(64)}`, "bafybeigdyrzt"]
   );
 

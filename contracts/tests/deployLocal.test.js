@@ -2,8 +2,13 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 
-const { ethers } = require("hardhat");
+const { getHardhatConnection } = require("../scripts/hardhatConnection");
 const { deployLocalRegistry } = require("../scripts/deployLocal");
+
+let ethers;
+before(async function () {
+  ({ ethers } = await getHardhatConnection());
+});
 
 describe("local deployment", function () {
   it("deploys AgentAuditRegistry and writes deployment metadata", async function () {

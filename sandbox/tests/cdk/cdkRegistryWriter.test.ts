@@ -8,7 +8,9 @@ import type { JsonRpcWriteClient, TransactionReceiptResult } from "../../src/cha
 const iface = getCdkV2Interface();
 
 function makeWriteClientMock(tokenId: bigint): JsonRpcWriteClient {
-  const agentRegisteredTopic = iface.getEventTopic("AgentRegistered");
+  const agentRegisteredEvent = iface.getEvent("AgentRegistered");
+  assert.ok(agentRegisteredEvent);
+  const agentRegisteredTopic = agentRegisteredEvent.topicHash;
   const tokenIdHex = `0x${tokenId.toString(16).padStart(64, "0")}` as `0x${string}`;
 
   return {
@@ -21,7 +23,7 @@ function makeWriteClientMock(tokenId: bigint): JsonRpcWriteClient {
         logs: [
           {
             address: "0x4A679253410272dd5232B3Ff7cF5dbB88f295319",
-            data: iface.getEvent("AgentRegistered").format() ? "0x" as `0x${string}` : "0x" as `0x${string}`,
+            data: agentRegisteredEvent.format() ? "0x" as `0x${string}` : "0x" as `0x${string}`,
             topics: [
               agentRegisteredTopic as `0x${string}`,
               tokenIdHex,

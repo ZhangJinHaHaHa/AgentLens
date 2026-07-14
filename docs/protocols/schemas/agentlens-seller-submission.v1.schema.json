@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agentlens.example/agentlens-seller-submission.v1.schema.json",
+  "title": "AgentLens Seller Version Submission v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractVersion", "kind", "artifactId"],
+      "properties": {
+        "contractVersion": { "const": "agentlens.seller-submission.v1" },
+        "kind": { "const": "uploaded_package" },
+        "artifactId": { "type": "string", "pattern": "^seller-source-" },
+        "sampleTask": { "type": "string", "maxLength": 20000 },
+        "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$" },
+        "releaseNotes": { "type": "string", "minLength": 1, "maxLength": 500 }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractVersion", "kind", "entry"],
+      "properties": {
+        "contractVersion": { "const": "agentlens.seller-submission.v1" },
+        "kind": { "enum": ["github_repository", "docker_image", "other_code"] },
+        "entry": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "sampleTask": { "type": "string", "maxLength": 20000 },
+        "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$" },
+        "releaseNotes": { "type": "string", "minLength": 1, "maxLength": 500 }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractVersion", "kind", "endpointUrl", "authMethod", "sellerDataTransferAccepted"],
+      "properties": {
+        "contractVersion": { "const": "agentlens.seller-submission.v1" },
+        "kind": { "const": "seller_hosted_api" },
+        "endpointUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "schemaUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "healthcheckUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "authMethod": { "enum": ["none", "bearer", "api_key", "basic"] },
+        "secretId": { "type": "string", "pattern": "^seller-secret-" },
+        "sampleTask": { "type": "string", "maxLength": 20000 },
+        "sellerDataTransferAccepted": { "const": true },
+        "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$" },
+        "releaseNotes": { "type": "string", "minLength": 1, "maxLength": 500 }
+      }
+    }
+  ]
+}

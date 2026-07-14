@@ -40,6 +40,24 @@ test("initCommand creates manifest.json with valid inputs", async () => {
   fs.rmSync(tmpDir, { recursive: true });
 });
 
+test("initCommand creates a deny-all manifest when network allowlists are blank", async () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "cdk-init-"));
+  const outputPath = path.join(tmpDir, "manifest.json");
+
+  await runInitCommand({
+    output: outputPath,
+    deps: {
+      askUser: makeSequentialAsker(["offline-agent", "docker.io/offline-agent:latest", "", ""])
+    }
+  });
+
+  const manifest = JSON.parse(fs.readFileSync(outputPath, "utf8"));
+  assert.deepEqual(manifest.allowed_hosts, []);
+  assert.deepEqual(manifest.allowed_rpc_endpoints, []);
+
+  fs.rmSync(tmpDir, { recursive: true });
+});
+
 test("initCommand rejects invalid agent name", async () => {
   const originalExitCode = process.exitCode;
 

@@ -16,12 +16,10 @@ export interface AgentManifestInput {
 export type AgentManifestValidationError =
   | "agentName"
   | "image"
-  | "allowedHostsRequired"
   | "allowedHostsWildcard"
   | "allowedHostsPrivate"
   | "allowedHostsInvalid"
   | "allowedHostsPath"
-  | "rpcRequired"
   | "rpcInvalid"
   | "rpcProtocol"
   | "rpcPrivate"
@@ -72,15 +70,7 @@ export function validateAgentManifestInput(input: AgentManifestInput): AgentMani
     errors.push("image");
   }
 
-  if (allowedHosts.length === 0) {
-    errors.push("allowedHostsRequired");
-  }
-
   const normalizedHosts = allowedHosts.map((host) => normalizeHost(host, errors));
-
-  if (allowedRpcEndpoints.length === 0) {
-    errors.push("rpcRequired");
-  }
 
   const normalizedRpcEndpoints = allowedRpcEndpoints.map((endpoint) => normalizeRpcEndpoint(endpoint, errors));
 
