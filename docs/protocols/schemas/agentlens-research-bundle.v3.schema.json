@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agentlens.example/agentlens-research-bundle.v3.schema.json",
+  "title": "AgentLens Research Bundle v3",
+  "description": "Bounded, untrusted evidence handoff produced by AgentLens Brain before seller-Agent execution.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "task",
+    "deliverableIntent",
+    "researchTopic",
+    "retrievalStatus",
+    "retrievalIntents",
+    "minimumSearchRounds",
+    "requireDeepRead",
+    "requireCitations",
+    "sourcePolicy",
+    "sourcePolicyCompliance",
+    "queries",
+    "deepReadUrls",
+    "sources",
+    "evidencePolicy",
+    "createdAt",
+    "contentSha256"
+  ],
+  "properties": {
+    "contractVersion": { "const": "agentlens.research-bundle.v3" },
+    "task": { "type": "string", "minLength": 1, "maxLength": 50000 },
+    "deliverableIntent": {
+      "enum": [
+        "answer",
+        "presentation",
+        "document",
+        "spreadsheet",
+        "code",
+        "data_analysis",
+        "browser_action",
+        "other"
+      ]
+    },
+    "researchTopic": { "type": "string", "minLength": 1, "maxLength": 50000 },
+    "retrievalStatus": { "enum": ["disabled", "used", "failed"] },
+    "retrievalIntents": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "enum": ["direct_url", "fresh_fact", "policy", "market_data", "deep_read", "calculation", "general"]
+      }
+    },
+    "minimumSearchRounds": { "type": "integer", "minimum": 0, "maximum": 20 },
+    "requireDeepRead": { "type": "boolean" },
+    "requireCitations": { "type": "boolean" },
+    "sourcePolicy": { "$ref": "#/$defs/sourcePolicy" },
+    "sourcePolicyCompliance": { "$ref": "#/$defs/sourcePolicyCompliance" },
+    "provider": {
+      "enum": [
+        "duckduckgo",
+        "direct_url",
+        "bing",
+        "tavily",
+        "brave",
+        "sports_knockout",
+        "sports_scoreboard",
+        "finance_quote"
+      ]
+    },
+    "strategy": { "enum": ["direct_url", "structured", "search", "hybrid"] },
+    "queries": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "$ref": "#/$defs/query" }
+    },
+    "deepReadUrls": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "type": "string", "format": "uri", "pattern": "^https?://" }
+    },
+    "sources": {
+      "type": "array",
+      "maxItems": 6,
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "evidencePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceContentIsUntrusted",
+        "citeAdoptedClaimsOnly",
+        "unsupportedClaimsMustBeMarkedUncertain",
+        "sellerMustReturnClaimSourceMapping",
+        "strictSourcePolicyMustPassBeforeSellerExecution"
+      ],
+      "properties": {
+        "sourceContentIsUntrusted": { "const": true },
+        "citeAdoptedClaimsOnly": { "const": true },
+        "unsupportedClaimsMustBeMarkedUncertain": { "const": true },
+        "sellerMustReturnClaimSourceMapping": { "const": true },
+        "strictSourcePolicyMustPassBeforeSellerExecution": { "const": true }
+      }
+    },
+    "retrievalError": { "type": "string", "maxLength": 300 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "contentSha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["query", "purpose", "priority", "expectedSource", "executed"],
+      "properties": {
+        "query": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "purpose": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "priority": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "expectedSource": { "enum": ["official", "news", "data", "general"] },
+        "executed": { "type": "boolean" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceId",
+        "title",
+        "url",
+        "evidenceType",
+        "confidence",
+        "authority",
+        "category",
+        "evidenceSha256",
+        "adoptionStatus",
+        "claimIds"
+      ],
+      "properties": {
+        "sourceId": { "type": "string", "pattern": "^source-[0-9]{3}$" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "url": { "type": "string", "format": "uri", "pattern": "^https?://" },
+        "excerpt": { "type": "string", "maxLength": 900 },
+        "evidenceType": { "enum": ["structured", "search_result", "page_extract", "unknown"] },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "authority": { "enum": ["official", "academic", "publisher", "structured", "general"] },
+        "category": {
+          "enum": [
+            "intergovernmental",
+            "government",
+            "university_library",
+            "research_integrity",
+            "academic_publisher",
+            "academic",
+            "structured",
+            "general"
+          ]
+        },
+        "publishedAt": { "type": "string", "format": "date-time" },
+        "providerScore": { "type": "number", "minimum": 0 },
+        "evidenceSha256": { "$ref": "#/$defs/sha256" },
+        "adoptionStatus": { "const": "candidate" },
+        "claimIds": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": { "type": "string", "minLength": 1, "maxLength": 200 }
+        }
+      }
+    },
+    "sourcePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "minimumUniqueSources",
+        "minimumDistinctDomains",
+        "allowedCategories",
+        "allowedDomains",
+        "notes"
+      ],
+      "properties": {
+        "mode": { "enum": ["open", "authoritative_preferred", "strict"] },
+        "minimumUniqueSources": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "minimumDistinctDomains": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "allowedCategories": {
+          "type": "array",
+          "maxItems": 20,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "intergovernmental",
+              "government",
+              "university_library",
+              "research_integrity",
+              "academic_publisher",
+              "academic",
+              "structured",
+              "general"
+            ]
+          }
+        },
+        "allowedDomains": {
+          "type": "array",
+          "maxItems": 40,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 3, "maxLength": 253 }
+        },
+        "notes": {
+          "type": "array",
+          "maxItems": 20,
+          "items": { "type": "string", "minLength": 1, "maxLength": 300 }
+        }
+      }
+    },
+    "sourcePolicyCompliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "satisfied",
+        "eligibleSourceCount",
+        "uniqueSourceCount",
+        "distinctDomainCount",
+        "rejectedSourceCount",
+        "reasons"
+      ],
+      "properties": {
+        "satisfied": { "type": "boolean" },
+        "eligibleSourceCount": { "type": "integer", "minimum": 0 },
+        "uniqueSourceCount": { "type": "integer", "minimum": 0 },
+        "distinctDomainCount": { "type": "integer", "minimum": 0 },
+        "rejectedSourceCount": { "type": "integer", "minimum": 0 },
+        "reasons": {
+          "type": "array",
+          "maxItems": 20,
+          "items": { "type": "string", "minLength": 1, "maxLength": 300 }
+        }
+      }
+    },
+    "sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+  }
+}

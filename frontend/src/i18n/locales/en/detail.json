@@ -275,6 +275,7 @@
     "score": "Score",
     "auditNumber": "Audit #{{auditId}}",
     "rental": "Rental",
+    "rentalDays": "{{days}}-day rental",
     "paid": "Paid {{amount}}",
     "expires": "expires {{time}}",
     "blacklisted": "Blacklisted",

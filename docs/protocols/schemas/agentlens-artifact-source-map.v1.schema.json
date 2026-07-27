@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agentlens.example/agentlens-artifact-source-map.v1.schema.json",
+  "title": "AgentLens Artifact Source Map v1",
+  "description": "Tamper-evident mapping from adopted claims to frozen sources and precise locations in persisted buyer artifacts.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "runId",
+    "producer",
+    "producerId",
+    "status",
+    "researchBundle",
+    "sources",
+    "artifacts",
+    "claims",
+    "issues",
+    "coverage",
+    "createdAt",
+    "contentSha256"
+  ],
+  "properties": {
+    "contractVersion": { "const": "agentlens.artifact-source-map.v1" },
+    "runId": { "$ref": "#/$defs/identifier" },
+    "producer": {
+      "enum": [
+        "agent_contract_v3",
+        "agentlens_wire_v1",
+        "legacy_agent_runtime",
+        "brain_answer"
+      ]
+    },
+    "producerId": { "$ref": "#/$defs/identifier" },
+    "status": { "enum": ["complete", "partial", "not_required"] },
+    "researchBundle": { "$ref": "#/$defs/researchBundleRef" },
+    "sources": {
+      "type": "array",
+      "maxItems": 100,
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "artifacts": {
+      "type": "array",
+      "maxItems": 200,
+      "items": { "$ref": "#/$defs/artifact" }
+    },
+    "claims": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": { "$ref": "#/$defs/claim" }
+    },
+    "issues": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": { "$ref": "#/$defs/issue" }
+    },
+    "coverage": { "$ref": "#/$defs/coverage" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "contentSha256": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "researchBundleRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractVersion", "contentSha256", "sourceCount"],
+      "dependentRequired": {
+        "artifactId": ["artifactSha256"],
+        "artifactSha256": ["artifactId"]
+      },
+      "properties": {
+        "contractVersion": { "const": "agentlens.research-bundle.v3" },
+        "contentSha256": { "$ref": "#/$defs/sha256" },
+        "sourceCount": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "artifactId": { "$ref": "#/$defs/identifier" },
+        "artifactSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceId",
+        "origin",
+        "title",
+        "url",
+        "evidenceSha256"
+      ],
+      "properties": {
+        "sourceId": { "$ref": "#/$defs/identifier" },
+        "origin": {
+          "enum": ["research_bundle", "supplemental_web_context"]
+        },
+        "title": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://",
+          "maxLength": 2048
+        },
+        "excerpt": { "type": "string", "maxLength": 900 },
+        "evidenceSha256": { "$ref": "#/$defs/sha256" },
+        "authority": {
+          "enum": ["official", "academic", "publisher", "structured", "general"]
+        },
+        "category": {
+          "enum": [
+            "intergovernmental",
+            "government",
+            "university_library",
+            "research_integrity",
+            "academic_publisher",
+            "academic",
+            "structured",
+            "general"
+          ]
+        },
+        "publishedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "producerArtifactId",
+        "persistedArtifactId",
+        "name",
+        "projectPath",
+        "mediaType",
+        "artifactSha256"
+      ],
+      "properties": {
+        "producerArtifactId": { "$ref": "#/$defs/identifier" },
+        "persistedArtifactId": { "$ref": "#/$defs/identifier" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "projectPath": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "mediaType": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "artifactSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "persistedArtifactId",
+        "projectPath",
+        "kind",
+        "locator"
+      ],
+      "properties": {
+        "persistedArtifactId": { "$ref": "#/$defs/identifier" },
+        "projectPath": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "kind": {
+          "enum": [
+            "artifact",
+            "page",
+            "slide",
+            "section",
+            "line_range",
+            "sheet_cell",
+            "json_pointer"
+          ]
+        },
+        "locator": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "label": { "type": "string", "minLength": 1, "maxLength": 300 }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claimId",
+        "evidenceId",
+        "claim",
+        "claimSha256",
+        "disposition",
+        "mappingStatus",
+        "locations"
+      ],
+      "properties": {
+        "claimId": { "$ref": "#/$defs/identifier" },
+        "evidenceId": { "$ref": "#/$defs/identifier" },
+        "claim": { "type": "string", "minLength": 1, "maxLength": 8000 },
+        "claimSha256": { "$ref": "#/$defs/sha256" },
+        "disposition": { "enum": ["used", "background", "rejected"] },
+        "mappingStatus": {
+          "enum": ["mapped", "partial", "unmapped", "not_adopted"]
+        },
+        "sourceId": { "$ref": "#/$defs/identifier" },
+        "locations": {
+          "type": "array",
+          "maxItems": 200,
+          "items": { "$ref": "#/$defs/location" }
+        }
+      }
+    },
+    "issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "severity", "message"],
+      "properties": {
+        "code": {
+          "enum": [
+            "evidence_required_missing",
+            "source_id_missing",
+            "source_unknown",
+            "source_url_mismatch",
+            "source_hash_mismatch",
+            "artifact_unknown",
+            "content_location_missing",
+            "content_location_not_precise",
+            "citation_unknown",
+            "citation_footer_only",
+            "verification_incomplete"
+          ]
+        },
+        "severity": { "enum": ["warning", "error"] },
+        "message": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "evidenceId": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "submittedEvidenceCount",
+        "adoptedClaimCount",
+        "mappedClaimCount",
+        "preciselyMappedClaimCount",
+        "unmappedClaimCount",
+        "citedSourceCount",
+        "artifactCount"
+      ],
+      "properties": {
+        "submittedEvidenceCount": { "type": "integer", "minimum": 0 },
+        "adoptedClaimCount": { "type": "integer", "minimum": 0 },
+        "mappedClaimCount": { "type": "integer", "minimum": 0 },
+        "preciselyMappedClaimCount": { "type": "integer", "minimum": 0 },
+        "unmappedClaimCount": { "type": "integer", "minimum": 0 },
+        "citedSourceCount": { "type": "integer", "minimum": 0 },
+        "artifactCount": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

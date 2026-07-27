@@ -41,12 +41,11 @@ async function deployContracts() {
   // Set pricing and grant access to reviewer1
   await (await marketplace.connect(operator).setPrice(
     1,
-    ethers.parseEther("0.01"),
-    ethers.parseEther("1")
+    ethers.parseEther("0.01")
   )).wait();
 
-  await (await marketplace.connect(reviewer1).buyAgent(1, {
-    value: ethers.parseEther("1")
+  await (await marketplace.connect(reviewer1).rentAgent(1, 1, {
+    value: ethers.parseEther("0.01")
   })).wait();
 
   return { marketplace, reviewRegistry, owner, operator, reviewer1, reviewer2 };
@@ -131,8 +130,8 @@ describe("AgentReviewRegistry", function () {
     const { marketplace, reviewRegistry, reviewer1, reviewer2 } = await deployContracts();
 
     // Grant access to reviewer2
-    await (await marketplace.connect(reviewer2).buyAgent(1, {
-      value: ethers.parseEther("1")
+    await (await marketplace.connect(reviewer2).rentAgent(1, 1, {
+      value: ethers.parseEther("0.01")
     })).wait();
 
     // reviewer1: [good, good, bad, neutral, good, good]

@@ -8,6 +8,7 @@
   "properties": {
     "contractVersion": { "const": "agentlens.pricing-quote.v1" },
     "brainAndSearchCredits": { "type": "number", "minimum": 0 },
+    "platformCapabilityCredits": { "type": "number", "minimum": 0 },
     "sellerAgentCredits": { "type": "number", "minimum": 0 },
     "platformFeeCredits": { "type": "number", "minimum": 0 },
     "sellerPayoutCredits": { "type": "number", "minimum": 0 },
@@ -19,9 +20,10 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["agentId", "grossCredits", "platformFeeCredits", "sellerPayoutCredits", "platformFeeRateBps"],
+        "required": ["agentId", "label", "grossCredits", "platformFeeCredits", "sellerPayoutCredits", "platformFeeRateBps"],
         "properties": {
           "agentId": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "label": { "type": "string", "minLength": 1, "maxLength": 200 },
           "grossCredits": { "type": "number", "minimum": 0 },
           "platformFeeCredits": { "type": "number", "minimum": 0 },
           "sellerPayoutCredits": { "type": "number", "minimum": 0 },

@@ -11,7 +11,6 @@ interface UseAgentPricingState {
   status: "loading" | "ready" | "unavailable";
   pricing: {
     pricePerDay: bigint;
-    buyPrice: bigint;
     configured: boolean;
   } | null;
   accessCount: number | null;

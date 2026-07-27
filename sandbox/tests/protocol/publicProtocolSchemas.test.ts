@@ -4,12 +4,22 @@ import { resolve } from "node:path";
 import test from "node:test";
 
 const EXPECTED_SCHEMAS = [
+  "agentlens-agent-contract.v3.schema.json",
   "agentlens-agent-runtime.v1.schema.json",
+  "agentlens-artifact-source-map.v1.schema.json",
+  "agentlens-brain-runtime.v3.schema.json",
+  "agentlens-build-manifest.v1.schema.json",
   "agentlens-market-listing.v1.schema.json",
+  "agentlens-model-content-part.v1.schema.json",
+  "agentlens-model-provider-conformance.v1.schema.json",
   "agentlens-model-provider.v1.schema.json",
   "agentlens-pricing-quote.v1.schema.json",
+  "agentlens-research-bundle.v3.schema.json",
+  "agentlens-runtime-package.v1.schema.json",
   "agentlens-search-provider.v1.schema.json",
-  "agentlens-seller-submission.v1.schema.json"
+  "agentlens-seller-submission.v1.schema.json",
+  "agentlens-universal-runtime.v1.schema.json",
+  "agentlens-wire.v1.schema.json"
 ];
 
 test("public protocol schemas are valid JSON and contain no deployed credentials", async () => {

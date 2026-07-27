@@ -4,16 +4,15 @@ pragma solidity ^0.8.24;
 contract AgentMarketplace {
     struct PricingInfo {
         uint256 pricePerDay;   // rent cost per day in wei
-        uint256 buyPrice;      // buy (permanent access) cost in wei
         bool configured;
     }
 
     struct AccessRecord {
         uint256 tokenId;
         address buyer;
-        uint64 expiresAt;      // 0 = permanent purchase
+        uint64 expiresAt;
         uint256 amountPaid;
-        bool isRental;         // true = rental, false = purchase
+        uint32 durationDays;
     }
 
     address public owner;
@@ -21,11 +20,16 @@ contract AgentMarketplace {
 
     mapping(uint256 => PricingInfo) private _pricing;
     mapping(uint256 => AccessRecord[]) private _accessRecords;
-    mapping(bytes32 => bool) private _activeAccess; // keccak256(tokenId, user) => bool for permanent
     mapping(bytes32 => uint64) private _accessExpiry; // keccak256(tokenId, user) => expiresAt for rental
 
-    event PriceSet(uint256 indexed tokenId, uint256 pricePerDay, uint256 buyPrice);
-    event AccessGranted(uint256 indexed tokenId, address indexed buyer, bool isRental, uint64 expiresAt);
+    event PriceSet(uint256 indexed tokenId, uint256 pricePerDay);
+    event RentalGranted(
+        uint256 indexed tokenId,
+        address indexed renter,
+        uint32 durationDays,
+        uint64 expiresAt,
+        uint256 amountPaid
+    );
     event PaymentsWithdrawn(address indexed to, uint256 amount);
 
     modifier onlyOwner() {
@@ -45,21 +49,21 @@ contract AgentMarketplace {
 
     function setPrice(
         uint256 tokenId,
-        uint256 pricePerDay,
-        uint256 buyPrice
+        uint256 pricePerDay
     ) external onlyOperator {
+        require(pricePerDay > 0, "INVALID_PRICE");
         _pricing[tokenId] = PricingInfo({
             pricePerDay: pricePerDay,
-            buyPrice: buyPrice,
             configured: true
         });
-        emit PriceSet(tokenId, pricePerDay, buyPrice);
+        emit PriceSet(tokenId, pricePerDay);
     }
 
     function rentAgent(uint256 tokenId, uint256 durationDays) external payable {
         PricingInfo memory pricing = _pricing[tokenId];
         require(pricing.configured, "PRICING_NOT_SET");
         require(durationDays > 0, "INVALID_DURATION");
+        require(durationDays <= type(uint32).max, "DURATION_TOO_LARGE");
 
         uint256 totalCost = pricing.pricePerDay * durationDays;
         require(msg.value == totalCost, "INVALID_PAYMENT");
@@ -80,32 +84,10 @@ contract AgentMarketplace {
             buyer: msg.sender,
             expiresAt: expiresAt,
             amountPaid: totalCost,
-            isRental: true
+            durationDays: uint32(durationDays)
         }));
 
-        emit AccessGranted(tokenId, msg.sender, true, expiresAt);
-    }
-
-    function buyAgent(uint256 tokenId) external payable {
-        PricingInfo memory pricing = _pricing[tokenId];
-        require(pricing.configured, "PRICING_NOT_SET");
-        require(pricing.buyPrice > 0, "NOT_FOR_SALE");
-        require(msg.value == pricing.buyPrice, "INVALID_PAYMENT");
-
-        bytes32 key = _accessKey(tokenId, msg.sender);
-        require(!_activeAccess[key], "ALREADY_PURCHASED");
-
-        _activeAccess[key] = true;
-
-        _accessRecords[tokenId].push(AccessRecord({
-            tokenId: tokenId,
-            buyer: msg.sender,
-            expiresAt: 0,
-            amountPaid: pricing.buyPrice,
-            isRental: false
-        }));
-
-        emit AccessGranted(tokenId, msg.sender, false, 0);
+        emit RentalGranted(tokenId, msg.sender, uint32(durationDays), expiresAt, totalCost);
     }
 
     function withdrawPayments(address payable to, uint256 amount) external onlyOwner {
@@ -121,7 +103,6 @@ contract AgentMarketplace {
     function hasAccess(uint256 tokenId, address user) external view returns (bool) {
         bytes32 key = _accessKey(tokenId, user);
 
-        if (_activeAccess[key]) return true;
         if (_accessExpiry[key] > block.timestamp) return true;
 
         return false;

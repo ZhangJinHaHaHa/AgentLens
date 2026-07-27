@@ -140,7 +140,7 @@ function NativeChainPanelInner({
   const profile = credit.profile;
   const latestAudit = credit.latestAudit;
   const reputation = credit.reputation;
-  const rentalRecords = accessHistory.records.filter((record) => record.isRental);
+  const rentalRecords = accessHistory.records;
 
   return (
     <div className="flex flex-col gap-6">
@@ -314,7 +314,7 @@ function NativeChainPanelInner({
                 <p className="font-mono text-xs text-muted-foreground">
                   {t("nativeChain.anonymousRental", { index: idx + 1 })}
                 </p>
-                <p className="mt-1">{t("nativeChain.rental")}</p>
+                <p className="mt-1">{t("nativeChain.rentalDays", { days: record.durationDays })}</p>
                 <p className="text-xs text-muted-foreground">
                   {t("nativeChain.paid", { amount: formatPriceEth(record.amountPaid) })}
                   {record.expiresAt > 0 ? ` · ${t("nativeChain.expires", { time: formatTimestamp(record.expiresAt) })}` : ""}

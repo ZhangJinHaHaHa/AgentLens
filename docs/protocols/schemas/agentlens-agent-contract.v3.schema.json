@@ -1,0 +1,708 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agentlens.example/agentlens-agent-contract.v3.schema.json",
+  "title": "AgentLens Universal Agent Contract v3",
+  "description": "Public contract for Agent cards, durable tasks, runtime events, checkpoints and verified results.",
+  "oneOf": [
+    { "$ref": "#/$defs/agentCard" },
+    { "$ref": "#/$defs/task" },
+    { "$ref": "#/$defs/runtimeEvent" },
+    { "$ref": "#/$defs/checkpoint" },
+    { "$ref": "#/$defs/result" }
+  ],
+  "$defs": {
+    "base": {
+      "type": "object",
+      "required": ["contractVersion", "kind"],
+      "properties": {
+        "contractVersion": { "const": "agentlens.agent-contract.v3" },
+        "kind": {
+          "enum": ["agent_card", "task", "runtime_event", "checkpoint", "result"]
+        }
+      }
+    },
+    "runtimeRequirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resourceClass",
+        "cpuCores",
+        "memoryMb",
+        "ephemeralStorageMb",
+        "persistentStorageMb",
+        "maxDurationSeconds",
+        "maxConcurrency",
+        "networkAccess"
+      ],
+      "properties": {
+        "resourceClass": {
+          "enum": [
+            "light_cpu",
+            "standard_cpu",
+            "high_memory",
+            "browser_computer",
+            "gpu",
+            "large_storage",
+            "special_connector"
+          ]
+        },
+        "cpuCores": { "type": "number", "minimum": 0.1, "maximum": 256 },
+        "memoryMb": { "type": "integer", "minimum": 128, "maximum": 2097152 },
+        "gpu": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["count"],
+          "properties": {
+            "count": { "type": "integer", "minimum": 1, "maximum": 64 },
+            "minimumVramMb": { "type": "integer", "minimum": 1024, "maximum": 1048576 },
+            "acceleratorFamilies": {
+              "type": "array",
+              "maxItems": 20,
+              "items": { "type": "string", "minLength": 1, "maxLength": 100 }
+            }
+          }
+        },
+        "ephemeralStorageMb": { "type": "integer", "minimum": 128, "maximum": 100000000 },
+        "persistentStorageMb": { "type": "integer", "minimum": 0, "maximum": 1000000000 },
+        "maxDurationSeconds": { "type": "integer", "minimum": 1, "maximum": 604800 },
+        "maxConcurrency": { "type": "integer", "minimum": 1, "maximum": 1000 },
+        "networkAccess": { "enum": ["none", "allowlist", "internet"] }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "resourceClass": { "const": "gpu" } } },
+          "then": { "required": ["gpu"] },
+          "else": { "not": { "required": ["gpu"] } }
+        }
+      ]
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filesystem", "secrets", "sensitiveActions", "sellerDataTransfer"],
+      "properties": {
+        "filesystem": { "enum": ["none", "task_workspace", "project_workspace"] },
+        "secrets": { "enum": ["none", "short_lived_brokered"] },
+        "sensitiveActions": { "enum": ["deny", "explicit_per_action"] },
+        "sellerDataTransfer": { "enum": ["never", "explicit_per_task"] },
+        "allowedHosts": {
+          "type": "array",
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 253,
+            "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$"
+          }
+        },
+        "allowedHttpMethods": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": { "enum": ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE"] }
+        }
+      },
+      "dependentRequired": {
+        "allowedHttpMethods": ["allowedHosts"]
+      }
+    },
+    "prefixedSha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "workspaceTaskEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractVersion",
+        "primaryInstruction",
+        "primaryInstructionSha256",
+        "requirements",
+        "contentSha256"
+      ],
+      "properties": {
+        "contractVersion": { "const": "agentlens.workspace-task-envelope.v1" },
+        "primaryInstruction": { "type": "string", "minLength": 1, "maxLength": 12000 },
+        "primaryInstructionSha256": { "$ref": "#/$defs/prefixedSha256" },
+        "requirements": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["requirementId", "startOffset", "endOffset", "contentSha256"],
+            "properties": {
+              "requirementId": { "type": "string", "pattern": "^req-[0-9]{3}$" },
+              "startOffset": { "type": "integer", "minimum": 0, "maximum": 12000 },
+              "endOffset": { "type": "integer", "minimum": 1, "maximum": 12000 },
+              "contentSha256": { "$ref": "#/$defs/prefixedSha256" }
+            }
+          }
+        },
+        "contentSha256": { "$ref": "#/$defs/prefixedSha256" }
+      }
+    },
+    "workspaceResearchBundleReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractVersion", "contentSha256", "sourceIds"],
+      "properties": {
+        "contractVersion": { "const": "agentlens.research-bundle.v3" },
+        "contentSha256": { "$ref": "#/$defs/prefixedSha256" },
+        "artifactId": { "$ref": "#/$defs/identifier" },
+        "artifactSha256": { "$ref": "#/$defs/prefixedSha256" },
+        "sourceIds": {
+          "type": "array",
+          "maxItems": 500,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 10000 }
+        }
+      }
+    },
+    "workspaceExecutionBriefReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractVersion", "contentSha256"],
+      "properties": {
+        "contractVersion": { "const": "agentlens.seller-execution-brief.v1" },
+        "contentSha256": { "$ref": "#/$defs/prefixedSha256" },
+        "artifactId": { "$ref": "#/$defs/identifier" },
+        "artifactSha256": { "$ref": "#/$defs/prefixedSha256" }
+      }
+    },
+    "workspaceAgentHandoffReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractVersion",
+        "contentSha256",
+        "artifactId",
+        "artifactSha256",
+        "sourceAgentIds",
+        "readableArtifactIds"
+      ],
+      "properties": {
+        "contractVersion": { "const": "agentlens.seller-agent-handoff.v1" },
+        "contentSha256": { "$ref": "#/$defs/prefixedSha256" },
+        "artifactId": { "$ref": "#/$defs/identifier" },
+        "artifactSha256": { "$ref": "#/$defs/prefixedSha256" },
+        "sourceAgentIds": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/identifier" }
+        },
+        "readableArtifactIds": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/identifier" }
+        }
+      }
+    },
+    "workspaceReworkArtifactReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifactId",
+        "artifactSha256",
+        "name",
+        "projectPath",
+        "role",
+        "mediaType",
+        "byteLength",
+        "storageRef"
+      ],
+      "properties": {
+        "artifactId": { "$ref": "#/$defs/identifier" },
+        "artifactSha256": { "$ref": "#/$defs/prefixedSha256" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "projectPath": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "role": {
+          "enum": [
+            "deliverable",
+            "supporting_artifact",
+            "answer",
+            "qa_report",
+            "source_map",
+            "research_bundle",
+            "execution_brief",
+            "runtime_output",
+            "runtime_contract",
+            "audit_evidence"
+          ]
+        },
+        "mediaType": { "type": "string", "minLength": 3, "maxLength": 200, "pattern": "/" },
+        "byteLength": { "type": "integer", "minimum": 1, "maximum": 104857600 },
+        "storageRef": {
+          "type": "string",
+          "maxLength": 512,
+          "pattern": "^workspace-artifact:[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        }
+      }
+    },
+    "workspaceReworkReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractVersion",
+        "attempt",
+        "requestArtifactId",
+        "requestArtifactSha256",
+        "contentSha256",
+        "failureReportArtifactId",
+        "failureReportArtifactSha256",
+        "priorArtifacts"
+      ],
+      "properties": {
+        "contractVersion": { "const": "agentlens.seller-quality-rework.v1" },
+        "attempt": { "const": 1 },
+        "requestArtifactId": { "$ref": "#/$defs/identifier" },
+        "requestArtifactSha256": { "$ref": "#/$defs/prefixedSha256" },
+        "contentSha256": { "$ref": "#/$defs/prefixedSha256" },
+        "failureReportArtifactId": { "$ref": "#/$defs/identifier" },
+        "failureReportArtifactSha256": { "$ref": "#/$defs/prefixedSha256" },
+        "priorArtifacts": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/workspaceReworkArtifactReference" }
+        }
+      }
+    },
+    "taskWorkspaceContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["taskEnvelope"],
+      "properties": {
+        "taskEnvelope": { "$ref": "#/$defs/workspaceTaskEnvelope" },
+        "researchBundle": { "$ref": "#/$defs/workspaceResearchBundleReference" },
+        "executionBrief": { "$ref": "#/$defs/workspaceExecutionBriefReference" },
+        "agentHandoff": { "$ref": "#/$defs/workspaceAgentHandoffReference" },
+        "rework": { "$ref": "#/$defs/workspaceReworkReference" }
+      }
+    },
+    "agentCard": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "contractVersion",
+            "kind",
+            "agentId",
+            "versionId",
+            "displayName",
+            "summary",
+            "executionMode",
+            "capabilities",
+            "skills",
+            "runtime",
+            "permissions"
+          ],
+          "properties": {
+            "contractVersion": { "const": "agentlens.agent-contract.v3" },
+            "kind": { "const": "agent_card" },
+            "agentId": { "$ref": "#/$defs/identifier" },
+            "versionId": { "$ref": "#/$defs/identifier" },
+            "displayName": { "type": "string", "minLength": 1, "maxLength": 100 },
+            "summary": { "type": "string", "minLength": 1, "maxLength": 2000 },
+            "executionMode": {
+              "enum": ["platform_managed", "seller_hosted_api", "external_resource_node"]
+            },
+            "capabilities": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "inputTypes",
+                "outputTypes",
+                "tools",
+                "supportsInternalLoop",
+                "supportsSubagents",
+                "supportsStreaming",
+                "supportsCheckpointing"
+              ],
+              "properties": {
+                "inputTypes": { "$ref": "#/$defs/nonEmptyStringArray" },
+                "outputTypes": { "$ref": "#/$defs/nonEmptyStringArray" },
+                "tools": { "$ref": "#/$defs/stringArray" },
+                "supportsInternalLoop": { "type": "boolean" },
+                "supportsSubagents": { "type": "boolean" },
+                "supportsStreaming": { "type": "boolean" },
+                "supportsCheckpointing": { "type": "boolean" }
+              }
+            },
+            "skills": {
+              "type": "array",
+              "maxItems": 100,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "name", "description"],
+                "properties": {
+                  "id": { "$ref": "#/$defs/identifier" },
+                  "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+                  "description": { "type": "string", "minLength": 1, "maxLength": 1000 }
+                }
+              }
+            },
+            "admission": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["sampleTask"],
+              "properties": {
+                "sampleTask": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 10000
+                },
+                "minimumArtifactCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 200
+                },
+                "requireQaPassed": { "type": "boolean" }
+              }
+            },
+            "runtime": { "$ref": "#/$defs/runtimeRequirements" },
+            "permissions": { "$ref": "#/$defs/permissions" }
+          },
+          "allOf": [
+            {
+              "if": { "properties": { "executionMode": { "const": "seller_hosted_api" } } },
+              "then": {
+                "properties": {
+                  "permissions": {
+                    "properties": { "sellerDataTransfer": { "const": "explicit_per_task" } }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "capabilities": {
+                    "properties": {
+                      "tools": {
+                        "contains": {
+                          "enum": ["brokered_http", "brokered_http.request", "http.request"]
+                        }
+                      }
+                    },
+                    "required": ["tools"]
+                  }
+                },
+                "required": ["capabilities"]
+              },
+              "then": {
+                "properties": {
+                  "permissions": {
+                    "required": ["allowedHosts", "sellerDataTransfer"],
+                    "properties": {
+                      "allowedHosts": { "minItems": 1 },
+                      "sellerDataTransfer": { "const": "explicit_per_task" }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractVersion",
+        "kind",
+        "taskId",
+        "agentId",
+        "versionId",
+        "goal",
+        "contextRefs",
+        "constraints",
+        "budget",
+        "quality",
+        "permissionGrant"
+      ],
+      "properties": {
+        "contractVersion": { "const": "agentlens.agent-contract.v3" },
+        "kind": { "const": "task" },
+        "taskId": { "$ref": "#/$defs/identifier" },
+        "agentId": { "$ref": "#/$defs/identifier" },
+        "versionId": { "$ref": "#/$defs/identifier" },
+        "goal": { "type": "string", "minLength": 1, "maxLength": 50000 },
+        "contextRefs": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "ref"],
+            "properties": {
+              "type": { "enum": ["project", "thread", "file", "dataset", "url", "memory"] },
+              "ref": { "type": "string", "minLength": 1, "maxLength": 1000 }
+            }
+          }
+        },
+        "constraints": { "$ref": "#/$defs/stringArray" },
+        "budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["maxCredits", "maxDurationSeconds"],
+          "properties": {
+            "maxCredits": { "type": "number", "minimum": 0, "maximum": 1000000 },
+            "maxDurationSeconds": { "type": "integer", "minimum": 1, "maximum": 604800 }
+          }
+        },
+        "quality": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["requireEvidence", "requireIndependentQa", "acceptanceCriteria"],
+          "properties": {
+            "requireEvidence": { "type": "boolean" },
+            "requireIndependentQa": { "type": "boolean" },
+            "minimumArtifactCount": { "type": "integer", "minimum": 0, "maximum": 200 },
+            "requirePreciseEvidenceLocations": { "type": "boolean" },
+            "acceptanceCriteria": { "$ref": "#/$defs/stringArray" }
+          }
+        },
+        "permissionGrant": { "$ref": "#/$defs/permissions" },
+        "workspaceContext": { "$ref": "#/$defs/taskWorkspaceContext" }
+      }
+    },
+    "runtimeEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contractVersion", "kind", "taskId", "runId", "sequence", "eventType", "occurredAt"],
+      "properties": {
+        "contractVersion": { "const": "agentlens.agent-contract.v3" },
+        "kind": { "const": "runtime_event" },
+        "taskId": { "$ref": "#/$defs/identifier" },
+        "runId": { "$ref": "#/$defs/identifier" },
+        "sequence": { "type": "integer", "minimum": 0 },
+        "eventType": {
+          "enum": [
+            "accepted",
+            "planning",
+            "progress",
+            "tool_call",
+            "tool_result",
+            "artifact",
+            "approval_required",
+            "checkpoint",
+            "warning",
+            "completed",
+            "failed",
+            "cancelled"
+          ]
+        },
+        "occurredAt": { "type": "string", "format": "date-time" },
+        "message": { "type": "string", "maxLength": 10000 },
+        "payload": { "type": "object" }
+      }
+    },
+    "checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractVersion",
+        "kind",
+        "taskId",
+        "runId",
+        "checkpointId",
+        "sequence",
+        "createdAt",
+        "resumable",
+        "stateRef",
+        "stateSha256"
+      ],
+      "properties": {
+        "contractVersion": { "const": "agentlens.agent-contract.v3" },
+        "kind": { "const": "checkpoint" },
+        "taskId": { "$ref": "#/$defs/identifier" },
+        "runId": { "$ref": "#/$defs/identifier" },
+        "checkpointId": { "$ref": "#/$defs/identifier" },
+        "sequence": { "type": "integer", "minimum": 0 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "resumable": { "type": "boolean" },
+        "stateRef": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "stateSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifactId", "name", "mediaType", "sizeBytes", "sha256", "storageRef"],
+      "properties": {
+        "artifactId": { "$ref": "#/$defs/identifier" },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^(?!\\.{1,2}$)[^\\\\/:*?\\u0022<>|\\u0000-\\u001F\\u007F]+$"
+        },
+        "projectPath": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "description": "Buyer-visible relative project path. The final segment must equal name; internal/ is reserved by the platform.",
+          "pattern": "^(?!internal(?:/|$))(?!\\.{1,2}(?:/|$))(?!.*\\/\\.{1,2}(?:/|$))(?!.*[\\\\:*?\\u0022<>|\\u0000-\\u001F\\u007F])[^/]+(?:/[^/]+)*$"
+        },
+        "mediaType": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "sizeBytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "storageRef": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "previewRef": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidenceId", "claim", "disposition", "artifactIds"],
+      "properties": {
+        "evidenceId": { "$ref": "#/$defs/identifier" },
+        "claim": { "type": "string", "minLength": 1, "maxLength": 10000 },
+        "sourceId": { "$ref": "#/$defs/identifier" },
+        "sourceUrl": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2000,
+          "pattern": "^https?://"
+        },
+        "sourceTitle": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "excerpt": { "type": "string", "minLength": 1, "maxLength": 20000 },
+        "contentSha256": { "$ref": "#/$defs/sha256" },
+        "disposition": { "enum": ["used", "background", "rejected"] },
+        "artifactIds": {
+          "type": "array",
+          "maxItems": 200,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/identifier" }
+        },
+        "artifactLocations": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 200,
+          "items": { "$ref": "#/$defs/artifactLocation" }
+        }
+      }
+    },
+    "artifactLocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifactId", "kind", "locator"],
+      "properties": {
+        "artifactId": { "$ref": "#/$defs/identifier" },
+        "kind": {
+          "enum": [
+            "artifact",
+            "page",
+            "slide",
+            "section",
+            "line_range",
+            "sheet_cell",
+            "json_pointer"
+          ]
+        },
+        "locator": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "label": { "type": "string", "minLength": 1, "maxLength": 500 }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "modelCredits",
+        "searchCredits",
+        "computeCredits",
+        "storageCredits",
+        "sellerAgentCredits",
+        "totalCredits"
+      ],
+      "properties": {
+        "modelCredits": { "type": "number", "minimum": 0 },
+        "searchCredits": { "type": "number", "minimum": 0 },
+        "computeCredits": { "type": "number", "minimum": 0 },
+        "storageCredits": { "type": "number", "minimum": 0 },
+        "sellerAgentCredits": { "type": "number", "minimum": 0 },
+        "totalCredits": { "type": "number", "minimum": 0 }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractVersion",
+        "kind",
+        "taskId",
+        "runId",
+        "status",
+        "summary",
+        "artifacts",
+        "evidence",
+        "qa",
+        "usage",
+        "completedAt"
+      ],
+      "properties": {
+        "contractVersion": { "const": "agentlens.agent-contract.v3" },
+        "kind": { "const": "result" },
+        "taskId": { "$ref": "#/$defs/identifier" },
+        "runId": { "$ref": "#/$defs/identifier" },
+        "status": { "enum": ["completed", "failed", "cancelled"] },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 200000 },
+        "artifacts": {
+          "type": "array",
+          "maxItems": 200,
+          "items": { "$ref": "#/$defs/artifact" }
+        },
+        "evidence": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": { "$ref": "#/$defs/evidence" }
+        },
+        "qa": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["schemaVersion", "status", "warnings"],
+          "properties": {
+            "schemaVersion": { "type": "string", "minLength": 1, "maxLength": 200 },
+            "status": { "enum": ["passed", "failed", "not_run"] },
+            "reportArtifactId": { "$ref": "#/$defs/identifier" },
+            "warnings": { "$ref": "#/$defs/stringArray" }
+          }
+        },
+        "usage": { "$ref": "#/$defs/usage" },
+        "completedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "stringArray": {
+      "type": "array",
+      "maxItems": 200,
+      "items": { "type": "string", "minLength": 1, "maxLength": 10000 }
+    },
+    "nonEmptyStringArray": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": { "type": "string", "minLength": 1, "maxLength": 200 }
+    }
+  }
+}

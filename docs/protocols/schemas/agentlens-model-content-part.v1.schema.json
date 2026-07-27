@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agentlens.example/agentlens-model-content-part.v1.schema.json",
+  "title": "AgentLens Model Content Part v1",
+  "description": "Provider-neutral, hash-bound model input parts. Binary image data remains server-side and is never exposed through buyer-visible traces.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "text"],
+      "properties": {
+        "type": { "const": "text" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 20000 }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "mediaType",
+        "dataBase64",
+        "byteLength",
+        "sha256",
+        "detail",
+        "source"
+      ],
+      "properties": {
+        "type": { "const": "image" },
+        "mediaType": { "enum": ["image/jpeg", "image/png", "image/webp"] },
+        "dataBase64": {
+          "type": "string",
+          "minLength": 4,
+          "contentEncoding": "base64"
+        },
+        "byteLength": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8388608
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "detail": { "enum": ["auto", "low", "high"] },
+        "name": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "refId"],
+          "properties": {
+            "kind": {
+              "enum": ["temporary_attachment", "project_material"]
+            },
+            "refId": { "type": "string", "minLength": 1, "maxLength": 200 }
+          }
+        }
+      }
+    }
+  ]
+}

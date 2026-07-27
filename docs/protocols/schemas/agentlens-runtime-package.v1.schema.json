@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agentlens.example/agentlens-runtime-package.v1.schema.json",
+  "title": "AgentLens Runtime Source Package v1",
+  "description": "Immutable source entrypoint and complete file inventory for a platform-managed Runtime v3 build.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "packageName",
+    "packageVersion",
+    "runtimeContractVersion",
+    "runtimeTransportVersion",
+    "entrypoint",
+    "files"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "agentlens.runtime-package.v1" },
+    "packageName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^\\S(?:.*\\S)?$"
+    },
+    "packageVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^\\S(?:.*\\S)?$"
+    },
+    "runtimeContractVersion": { "const": "agentlens.agent-contract.v3" },
+    "runtimeTransportVersion": { "const": "agentlens.runtime-transport.v3" },
+    "entrypoint": { "$ref": "#/$defs/projectPath" },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1999,
+      "items": { "$ref": "#/$defs/file" }
+    }
+  },
+  "$defs": {
+    "projectPath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "^(?!/)(?!.*//)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\\\)[A-Za-z0-9._/-]+$"
+    },
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "byteLength", "sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/projectPath" },
+        "byteLength": { "type": "integer", "minimum": 0 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    }
+  }
+}

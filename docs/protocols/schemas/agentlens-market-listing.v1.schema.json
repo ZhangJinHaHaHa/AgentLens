@@ -4,20 +4,300 @@
   "title": "AgentLens Market Listing v1",
   "type": "object",
   "additionalProperties": false,
-  "required": ["contractVersion", "agentId", "displayName", "summary", "publicationRoute", "version", "costCredits", "dataBoundary"],
+  "required": [
+    "contractVersion",
+    "agentId",
+    "displayName",
+    "summary",
+    "publicationRoute",
+    "packageContractVersion",
+    "runtimeContractVersion",
+    "version",
+    "releaseNotes",
+    "costCredits",
+    "rentalBillingUnit",
+    "includedAutomaticReworkAttempts",
+    "settlementGate",
+    "platformFeeRateBps",
+    "capabilities",
+    "marketProductKind",
+    "executionBoundary",
+    "listedAt",
+    "workspaceRunnable",
+    "workspaceAvailabilityReason",
+    "recommendationEligible",
+    "codeAudited",
+    "dataBoundary",
+    "runtimeSecurity",
+    "admission"
+  ],
   "properties": {
     "contractVersion": { "const": "agentlens.market-listing.v1" },
     "agentId": { "type": "string", "pattern": "^seller-agent-[0-9]{6}$" },
     "displayName": { "type": "string", "minLength": 1, "maxLength": 50 },
     "summary": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "iconUrl": { "type": "string", "pattern": "^/api/market/agents/" },
     "publicationRoute": { "enum": ["platform_managed", "seller_hosted_api"] },
+    "packageContractVersion": { "enum": ["agentlens.package.v2", "agentlens.package.v3"] },
+    "runtimeContractVersion": { "enum": ["agentlens.agent-result.v1", "agentlens.agent-contract.v3"] },
+    "remoteProtocol": {
+      "enum": ["agentlens_http_legacy_v1", "agentlens_wire_v1", "agentlens_http_v3", "a2a_1_0"]
+    },
     "version": { "type": "string" },
+    "releaseNotes": { "type": "string", "minLength": 1, "maxLength": 500 },
     "costCredits": { "type": "integer", "minimum": 1, "maximum": 10000 },
+    "rentalBillingUnit": { "enum": ["per_run", "per_24h"] },
+    "includedAutomaticReworkAttempts": { "const": 1 },
+    "settlementGate": { "const": "platform_acceptance" },
     "platformFeeRateBps": { "type": "integer", "minimum": 0, "maximum": 2000 },
-    "capabilities": { "type": "array", "maxItems": 32, "items": { "type": "string" } },
-    "codeAudited": { "type": "boolean" },
+    "capabilities": {
+      "type": "array",
+      "maxItems": 32,
+      "items": { "type": "string" }
+    },
+    "nativeCapabilities": { "$ref": "#/$defs/nativeCapabilities" },
+    "universalRuntime": { "$ref": "#/$defs/universalRuntime" },
+    "marketProductKind": { "const": "agent" },
+    "executionBoundary": { "enum": ["oci_container_only", "seller_https_only"] },
+    "listedAt": { "type": "string", "format": "date-time" },
+    "workspaceRunnable": { "type": "boolean" },
+    "workspaceAvailabilityReason": {
+      "enum": [
+        "available",
+        "runtime_revalidation_required",
+        "runtime_capacity_unavailable",
+        "platform_runtime_disabled",
+        "managed_service_runtime_unavailable",
+        "capability_policy_invalid"
+      ]
+    },
     "recommendationEligible": { "type": "boolean" },
+    "codeAudited": { "type": "boolean" },
     "dataBoundary": { "enum": ["platform_sandbox_only", "task_and_context_to_seller"] },
-    "listedAt": { "type": "string", "format": "date-time" }
+    "runtimeSecurity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "evidence"],
+      "properties": {
+        "kind": { "enum": ["platform_image", "seller_hosted"] },
+        "evidence": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    },
+    "admission": { "$ref": "#/$defs/admission" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "workspaceRunnable": { "const": true } },
+        "required": ["workspaceRunnable"]
+      },
+      "then": {
+        "properties": { "workspaceAvailabilityReason": { "const": "available" } }
+      },
+      "else": {
+        "properties": {
+          "workspaceAvailabilityReason": {
+            "not": { "const": "available" }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "publicationRoute": { "const": "seller_hosted_api" } },
+        "required": ["publicationRoute"]
+      },
+      "then": {
+        "required": ["remoteProtocol"],
+        "properties": {
+          "codeAudited": { "const": false },
+          "recommendationEligible": { "const": false },
+          "dataBoundary": { "const": "task_and_context_to_seller" },
+          "executionBoundary": { "const": "seller_https_only" }
+        }
+      },
+      "else": {
+        "properties": {
+          "dataBoundary": { "const": "platform_sandbox_only" },
+          "executionBoundary": { "const": "oci_container_only" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "nativeCapabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractVersion",
+        "inputTypes",
+        "outputTypes",
+        "tools",
+        "skills",
+        "supportsInternalLoop",
+        "supportsSubagents",
+        "supportsStreaming",
+        "supportsCheckpointing",
+        "runtime",
+        "permissions"
+      ],
+      "properties": {
+        "contractVersion": { "const": "agentlens.native-capabilities.v1" },
+        "inputTypes": { "type": "array", "items": { "type": "string" }, "maxItems": 64 },
+        "outputTypes": { "type": "array", "items": { "type": "string" }, "maxItems": 64 },
+        "tools": { "type": "array", "items": { "type": "string" }, "maxItems": 64 },
+        "skills": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "name", "description"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1, "maxLength": 200 },
+              "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+              "description": { "type": "string", "maxLength": 2000 }
+            }
+          }
+        },
+        "supportsInternalLoop": { "type": "boolean" },
+        "supportsSubagents": { "type": "boolean" },
+        "supportsStreaming": { "type": "boolean" },
+        "supportsCheckpointing": { "type": "boolean" },
+        "runtime": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["resourceClass", "maxDurationSeconds", "maxConcurrency", "networkAccess"],
+          "properties": {
+            "resourceClass": { "type": "string", "minLength": 1, "maxLength": 100 },
+            "cpuCores": { "type": "number", "exclusiveMinimum": 0 },
+            "memoryMb": { "type": "integer", "minimum": 1 },
+            "ephemeralStorageMb": { "type": "integer", "minimum": 0 },
+            "persistentStorageMb": { "type": "integer", "minimum": 0 },
+            "gpu": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["count"],
+              "properties": {
+                "count": { "type": "integer", "minimum": 1, "maximum": 64 },
+                "minimumVramMb": { "type": "integer", "minimum": 1024, "maximum": 1048576 },
+                "acceleratorFamilies": {
+                  "type": "array",
+                  "minItems": 1,
+                  "maxItems": 20,
+                  "uniqueItems": true,
+                  "items": { "type": "string", "minLength": 1, "maxLength": 100 }
+                }
+              }
+            },
+            "maxDurationSeconds": { "type": "integer", "minimum": 1 },
+            "maxConcurrency": { "type": "integer", "minimum": 1 },
+            "networkAccess": { "enum": ["none", "allowlist", "internet"] }
+          }
+        },
+        "permissions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["filesystem", "secrets", "sensitiveActions", "sellerDataTransfer"],
+          "properties": {
+            "filesystem": { "enum": ["none", "task_workspace", "project_workspace"] },
+            "secrets": { "enum": ["none", "short_lived_brokered"] },
+            "sensitiveActions": { "enum": ["deny", "explicit_per_action"] },
+            "sellerDataTransfer": { "enum": ["never", "explicit_per_task"] }
+          }
+        }
+      }
+    },
+    "universalRuntime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageContractVersion",
+        "runtimeProfileVersion",
+        "requiredPlane",
+        "lifecycleMode",
+        "networkMode",
+        "browserMode",
+        "stateMode",
+        "capabilityPacks",
+        "resources",
+        "supportsCancellation",
+        "supportsResume",
+        "fallbackPolicy"
+      ],
+      "properties": {
+        "packageContractVersion": { "const": "agentlens.package.v4" },
+        "runtimeProfileVersion": { "const": "agentlens.runtime-profile.v1" },
+        "requiredPlane": {
+          "enum": ["sealed_ephemeral", "brokered_egress", "durable_session", "browser_computer", "accelerated_external"]
+        },
+        "lifecycleMode": { "enum": ["ephemeral_task", "durable_job", "session", "managed_service"] },
+        "networkMode": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "browserMode": { "enum": ["none", "read_only", "interactive"] },
+        "stateMode": { "enum": ["none", "encrypted_volume"] },
+        "capabilityPacks": { "type": "array", "items": { "type": "string" }, "maxItems": 64 },
+        "resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "cpuCores",
+            "memoryMb",
+            "ephemeralStorageMb",
+            "persistentStorageMb",
+            "maxDurationSeconds",
+            "maxConcurrency",
+            "gpuRequired"
+          ],
+          "properties": {
+            "cpuCores": { "type": "number", "exclusiveMinimum": 0 },
+            "memoryMb": { "type": "integer", "minimum": 1 },
+            "ephemeralStorageMb": { "type": "integer", "minimum": 0 },
+            "persistentStorageMb": { "type": "integer", "minimum": 0 },
+            "maxDurationSeconds": { "type": "integer", "minimum": 1 },
+            "maxConcurrency": { "type": "integer", "minimum": 1 },
+            "gpuRequired": { "type": "boolean" }
+          }
+        },
+        "supportsCancellation": { "type": "boolean" },
+        "supportsResume": { "type": "boolean" },
+        "fallbackPolicy": { "enum": ["fail_closed", "equivalent_only"] }
+      }
+    },
+    "admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sourceInspectionStatus",
+        "imageScanStatus",
+        "smokeTestStatus",
+        "runtimeConformanceStatus",
+        "sandboxReview"
+      ],
+      "properties": {
+        "sourceInspectionStatus": { "type": ["string", "null"] },
+        "imageScanStatus": { "type": ["string", "null"] },
+        "smokeTestStatus": { "type": ["string", "null"] },
+        "runtimeConformanceStatus": {
+          "type": ["string", "null"],
+          "enum": ["current", "legacy", "revalidation_required", null]
+        },
+        "sandboxReview": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": true,
+              "required": ["reviewVersion", "status", "overallScore", "dimensions"],
+              "properties": {
+                "reviewVersion": { "const": "agentlens.sandbox-review.v1" },
+                "status": { "const": "passed" },
+                "overallScore": { "type": "number", "minimum": 0, "maximum": 100 },
+                "dimensions": { "type": "object" }
+              }
+            }
+          ]
+        }
+      }
+    }
   }
 }

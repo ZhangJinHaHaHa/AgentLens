@@ -9,10 +9,31 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+!.env.*.example
+.npmrc
+.netrc
+.pypirc
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+*.mobileprovision
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.db
+*.bak
+*.backup
+*.dump
+*.tgz
+*.tar.gz
+credentials/
+secrets/
+secret-dumps/
 .DS_Store
 
 # Local tool/runtime homes
@@ -37,7 +58,15 @@ frontend/vite.config.js
 # Infra local secrets
 infra/polygon-edge-local/.env
 infra/polygon-edge-external/.env
-infra/production/scripts/regression-*/
+infra/production/
+
+# Private hosted-service implementation
+frontend/src/workspace/
+sandbox/src/platform/
+sandbox/src/workers/
+sandbox/src/worker/
+private/
+internal/
 
 # Markdown docs
 *.md
@@ -51,6 +80,7 @@ infra/production/scripts/regression-*/
 !docs/bug-audit-2026-06-10.md
 !docs/agent-integration-guide.md
 !docs/verification-methods.md
+!docs/protocols/provider-adapters.md
 
 # Codex tool memory
 .messages/

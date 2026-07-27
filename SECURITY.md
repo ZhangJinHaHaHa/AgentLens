@@ -19,13 +19,15 @@ Instead, use GitHub's private vulnerability reporting flow for this repository. 
 
 ## Public Repository Hygiene
 
-This public repository is limited to the public product surface: frontend code, public catalog data, public documentation, public-facing contract sources, and non-sensitive audit infrastructure.
+This public repository is limited to the public product surface: frontend code, public catalog data, public documentation, public-facing contract sources, machine-readable integration contracts, and non-sensitive audit infrastructure.
+
+Public protocol schemas may describe Brain inputs and receipts, R0-R4 runtime planes, capability calls, quality records, and pricing snapshots. Those schemas are interoperability boundaries; they do not make the hosted orchestration, production routing, Workers, policy engines, scoring systems, or settlement ledgers public.
 
 Do not commit any of the following to this repository:
 
 - Environment files, API keys, access tokens, private keys, passwords, or credential dumps.
-- Production server IPs, SSH details, deployment scripts, runtime state, logs, backups, or operational records.
-- Private control-plane code, internal worker services, runtime credentials, review consoles, or non-public platform implementation details.
+- Production server IPs, SSH details, production topology or deployment scripts, runtime state, logs, backups, or operational records. Generic local development and test deployment scripts may be public when they contain no production values.
+- Brain prompts and routing algorithms, Provider weights or fallback order, capability-broker policy and allowlists, private quality scoring, billing or settlement internals, production Workers, runtime credentials, review consoles, or other non-public platform implementation details.
 - Non-public research notes, incident artifacts, or customer/student data.
 
 Before pushing public changes, run a secret scan against the worktree and confirm that any private implementation remains in the private repository only.

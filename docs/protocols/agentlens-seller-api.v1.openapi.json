@@ -3,7 +3,7 @@
   "info": {
     "title": "AgentLens Seller Publishing API",
     "version": "1.0.0",
-    "description": "Public contract for authenticated seller publishing. Buyers purchase runtime access and never receive seller source packages."
+    "description": "Public contract for authenticated seller publishing. Buyers rent runtime access and never receive seller source packages or ownership."
   },
   "servers": [
     {

@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agentlens.example/agentlens-brain-runtime.v3.schema.json",
+  "title": "AgentLens Brain Runtime v3 Trace",
+  "description": "Provider-neutral execution trace emitted by the AgentLens platform supervisor.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "route",
+    "reasons",
+    "deliverableIntent",
+    "researchTopic",
+    "selectedModel",
+    "upstreamModel",
+    "provider",
+    "nativeTooling",
+    "toolRunCount",
+    "toolIds",
+    "retrievalStatus",
+    "sourceCount",
+    "verificationStatus",
+    "fallbackUsed",
+    "startedAt",
+    "completedAt"
+  ],
+  "properties": {
+    "contractVersion": { "const": "agentlens.brain-runtime.v3" },
+    "executionId": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "route": {
+      "enum": ["direct", "retrieval", "retrieval_and_compute", "tool_orchestration"]
+    },
+    "reasons": {
+      "type": "array",
+      "maxItems": 100,
+      "items": { "type": "string", "minLength": 1, "maxLength": 500 }
+    },
+    "deliverableIntent": {
+      "enum": [
+        "answer",
+        "presentation",
+        "document",
+        "spreadsheet",
+        "code",
+        "data_analysis",
+        "browser_action",
+        "other"
+      ]
+    },
+    "researchTopic": { "type": "string", "minLength": 1, "maxLength": 50000 },
+    "selectedModel": { "$ref": "#/$defs/modelId" },
+    "upstreamModel": { "$ref": "#/$defs/modelId" },
+    "provider": {
+      "enum": ["openai_responses", "anthropic_messages", "openai_compatible"]
+    },
+    "nativeTooling": { "type": "boolean" },
+    "toolRunCount": { "type": "integer", "minimum": 0, "maximum": 10000 },
+    "toolIds": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": { "type": "string", "minLength": 1, "maxLength": 200 }
+    },
+    "retrievalStatus": { "enum": ["disabled", "used", "failed"] },
+    "sourceCount": { "type": "integer", "minimum": 0, "maximum": 10000 },
+    "verificationStatus": { "enum": ["passed", "warning", "failed", "not_required"] },
+    "fallbackUsed": { "const": false },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "completedAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "modelId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    }
+  }
+}

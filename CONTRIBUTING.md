@@ -4,7 +4,7 @@ First off, thank you for considering contributing to AgentLens! It's people like
 
 ## Where do I go from here?
 
-If you've noticed a bug or have a feature request, make sure to check our [Issues](https://github.com/ZhangJinHaHaHa/Trusted-Agent-Marketplace/issues) to see if someone else has already created a ticket. If not, go ahead and [make one](https://github.com/ZhangJinHaHaHa/Trusted-Agent-Marketplace/issues/new)!
+If you've noticed a bug or have a feature request, check the [AgentLens issues](https://github.com/ZhangJinHaHaHa/AgentLens/issues) first. If the topic is security-sensitive, do not open a public issue; follow [SECURITY.md](SECURITY.md).
 
 ## Fork & create a branch
 
@@ -26,11 +26,17 @@ cd contracts && npm install
 cd ../sandbox && npm install
 cd ../frontend && npm install
 
-# Run tests
-cd contracts && npx hardhat test
+# Run tests and the production frontend build
+cd contracts && npm test
 cd ../sandbox && npm test
-cd ../frontend && npx vitest run
+cd ../frontend && npm test && npm run build
+
+# From the repository root, verify the public/private boundary
+cd ..
+node scripts/check-public-boundary.mjs
 ```
+
+The public repository intentionally contains integration contracts and non-sensitive reference code, not the hosted Brain implementation, production Workers, internal quality/billing logic, credentials, server details, topology or production deployment automation. The boundary check must pass before any public push.
 
 ## Implement your fix or feature
 
@@ -41,7 +47,7 @@ At this point, you're ready to make your changes. Feel free to ask for help; eve
 At this point, you should switch back to your master branch and make sure it's up to date with AgentLens's master branch:
 
 ```sh
-git remote add upstream git@github.com:ZhangJinHaHaHa/Trusted-Agent-Marketplace.git
+git remote add upstream git@github.com:ZhangJinHaHaHa/AgentLens.git
 git checkout main
 git pull upstream main
 ```
@@ -54,7 +60,7 @@ git rebase main
 git push --set-upstream origin 325-add-new-risk-filter
 ```
 
-Finally, go to GitHub and [make a Pull Request](https://github.com/ZhangJinHaHaHa/Trusted-Agent-Marketplace/compare) with a clear list of what you've done. Please make sure all of your commits are atomic (one feature per commit).
+Finally, go to GitHub and [make a Pull Request](https://github.com/ZhangJinHaHaHa/AgentLens/compare) with a clear list of what you've done. Please make sure all of your commits are atomic (one feature per commit).
 
 ## Code of Conduct
 

@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agentlens.example/agentlens-model-provider-conformance.v1.schema.json",
+  "title": "AgentLens Model Provider Conformance Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contractVersion", "verifierVersion", "generatedAt", "results"],
+  "properties": {
+    "contractVersion": {
+      "const": "agentlens.model-provider-conformance.v1"
+    },
+    "verifierVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 40
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "$ref": "#/$defs/result"
+      }
+    }
+  },
+  "$defs": {
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "streaming", "toolCalling", "vision", "structuredOutput"],
+      "properties": {
+        "text": { "type": "boolean" },
+        "streaming": { "type": "boolean" },
+        "toolCalling": { "type": "boolean" },
+        "vision": { "type": "boolean" },
+        "structuredOutput": { "type": "boolean" }
+      }
+    },
+    "capabilityFailures": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["vision"],
+      "properties": {
+        "vision": {
+          "enum": [
+            "capability_unsupported",
+            "authentication_failed",
+            "quota_exhausted",
+            "rate_limited",
+            "timeout",
+            "provider_unavailable",
+            "system_policy_unsupported",
+            "response_contract_invalid",
+            "unknown_failure"
+          ]
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "modelId",
+        "provider",
+        "status",
+        "checkedAt",
+        "latencyMs",
+        "capabilities"
+      ],
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+        },
+        "provider": {
+          "enum": ["openai_responses", "anthropic_messages", "openai_compatible"]
+        },
+        "status": {
+          "enum": ["passed", "failed"]
+        },
+        "checkedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "latencyMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "capabilities": {
+          "$ref": "#/$defs/capabilities"
+        },
+        "transport": {
+          "enum": ["json", "sse"]
+        },
+        "upstreamModel": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "failureCode": {
+          "enum": [
+            "capability_unsupported",
+            "authentication_failed",
+            "quota_exhausted",
+            "rate_limited",
+            "timeout",
+            "provider_unavailable",
+            "system_policy_unsupported",
+            "response_contract_invalid",
+            "unknown_failure"
+          ]
+        },
+        "capabilityFailures": {
+          "$ref": "#/$defs/capabilityFailures"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": { "const": "passed" }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "capabilities": {
+                "properties": {
+                  "text": { "const": true }
+                }
+              }
+            },
+            "not": {
+              "required": ["failureCode"]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": { "const": "failed" }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "required": ["failureCode"],
+            "not": {
+              "required": ["capabilityFailures"]
+            },
+            "properties": {
+              "capabilities": {
+                "properties": {
+                  "text": { "const": false },
+                  "streaming": { "const": false },
+                  "toolCalling": { "const": false },
+                  "vision": { "const": false },
+                  "structuredOutput": { "const": false }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "capabilities": {
+                "properties": {
+                  "vision": { "const": true }
+                },
+                "required": ["vision"]
+              }
+            },
+            "required": ["capabilities"]
+          },
+          "then": {
+            "not": {
+              "required": ["capabilityFailures"]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

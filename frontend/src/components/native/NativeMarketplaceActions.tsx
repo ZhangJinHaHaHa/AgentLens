@@ -26,7 +26,6 @@ interface NativeMarketplaceActionsProps {
   marketplaceClient: MarketplaceClient | null;
   pricing: {
     pricePerDay: bigint;
-    buyPrice: bigint;
     configured: boolean;
   } | null;
 }

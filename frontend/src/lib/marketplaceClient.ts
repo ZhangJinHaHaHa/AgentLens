@@ -2,16 +2,15 @@ import { Contract, JsonRpcProvider, type InterfaceAbi } from "ethers";
 
 export interface AccessRecord {
   buyer: string;
-  isRental: boolean;
   amountPaid: bigint;
   expiresAt: number;
+  durationDays: number;
 }
 
 export interface MarketplaceClient {
   hasAccess(tokenId: bigint, userAddress: string): Promise<boolean>;
   getPricing(tokenId: bigint): Promise<{
     pricePerDay: bigint;
-    buyPrice: bigint;
     configured: boolean;
   }>;
   getAccessCount(tokenId: bigint): Promise<bigint>;
@@ -51,9 +50,9 @@ export function createMarketplaceClient(
             const r = await contract.getAccessRecord(tokenId, i);
             records.push({
               buyer: r.buyer as string,
-              isRental: r.isRental as boolean,
               amountPaid: r.amountPaid as bigint,
-              expiresAt: Number(r.expiresAt)
+              expiresAt: Number(r.expiresAt),
+              durationDays: Number(r.durationDays)
             });
           } catch {
             // individual record fetch failed, skip

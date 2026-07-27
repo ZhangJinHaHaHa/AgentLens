@@ -7,9 +7,19 @@
   "required": ["contractVersion", "provider", "modelId", "capabilities"],
   "properties": {
     "contractVersion": { "const": "agentlens.model-provider.v1" },
-    "provider": { "enum": ["openai_responses", "anthropic_messages", "openai_compatible"] },
-    "modelId": { "type": "string", "minLength": 1, "maxLength": 200, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$" },
-    "credentialRef": { "type": "string", "pattern": "^secret://[A-Za-z0-9][A-Za-z0-9._/-]{1,199}$" },
+    "provider": {
+      "enum": ["openai_responses", "anthropic_messages", "openai_compatible"]
+    },
+    "modelId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]*$"
+    },
+    "credentialRef": {
+      "type": "string",
+      "pattern": "^secret://[A-Za-z0-9][A-Za-z0-9._/-]{1,199}$"
+    },
     "capabilities": {
       "type": "object",
       "additionalProperties": false,

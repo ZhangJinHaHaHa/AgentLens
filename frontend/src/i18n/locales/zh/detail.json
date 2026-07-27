@@ -275,6 +275,7 @@
     "score": "评分",
     "auditNumber": "审计 #{{auditId}}",
     "rental": "租赁",
+    "rentalDays": "租赁 {{days}} 天",
     "paid": "已支付 {{amount}}",
     "expires": "到期 {{time}}",
     "blacklisted": "已列入黑名单",

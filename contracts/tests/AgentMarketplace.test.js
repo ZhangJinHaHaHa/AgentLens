@@ -29,8 +29,7 @@ describe("AgentMarketplace", function () {
 
     await (await contract.connect(operator).setPrice(
       1,
-      ethers.parseEther("0.01"), // pricePerDay
-      ethers.parseEther("1")     // buyPrice
+      ethers.parseEther("0.01") // pricePerDay
     )).wait();
 
     const pricing = await contract.getPricing(1);
@@ -50,26 +49,14 @@ describe("AgentMarketplace", function () {
     const record = await contract.getAccessRecord(1, 0);
     assert.strictEqual(Number(record.tokenId), 1);
     assert.strictEqual(record.buyer, buyer1.address);
-    assert.strictEqual(record.isRental, true);
+    assert.strictEqual(Number(record.durationDays), 5);
     assert.strictEqual(record.amountPaid.toString(), ethers.parseEther("0.05").toString());
     assert.ok(Number(record.expiresAt) > 0);
   });
 
-  it("allows permanent purchase", async function () {
-    const { contract, operator, buyer1 } = await deployMarketplace();
-
-    await (await contract.connect(operator).setPrice(
-      1,
-      ethers.parseEther("0.01"),
-      ethers.parseEther("1")
-    )).wait();
-
-    await (await contract.connect(buyer1).buyAgent(1, {
-      value: ethers.parseEther("1")
-    })).wait();
-
-    const hasAccess = await contract.hasAccess(1, buyer1.address);
-    assert.strictEqual(hasAccess, true);
+  it("does not expose a permanent purchase path", async function () {
+    const { contract } = await deployMarketplace();
+    assert.strictEqual(contract.interface.hasFunction("buyAgent"), false);
   });
 
   it("rejects non-exact payment for rental", async function () {
@@ -77,8 +64,7 @@ describe("AgentMarketplace", function () {
 
     await (await contract.connect(operator).setPrice(
       1,
-      ethers.parseEther("0.01"),
-      ethers.parseEther("1")
+      ethers.parseEther("0.01")
     )).wait();
 
     try {
@@ -105,8 +91,7 @@ describe("AgentMarketplace", function () {
 
     await (await contract.connect(operator).setPrice(
       1,
-      ethers.parseEther("0.01"),
-      ethers.parseEther("1")
+      ethers.parseEther("0.01")
     )).wait();
 
     await (await contract.connect(buyer1).rentAgent(1, 5, {
@@ -120,27 +105,25 @@ describe("AgentMarketplace", function () {
     assert.strictEqual((after - before).toString(), ethers.parseEther("0.05").toString());
   });
 
-  it("prevents double purchase", async function () {
+  it("extends an active rental without creating permanent access", async function () {
     const { contract, operator, buyer1 } = await deployMarketplace();
 
     await (await contract.connect(operator).setPrice(
       1,
-      ethers.parseEther("0.01"),
-      ethers.parseEther("1")
+      ethers.parseEther("0.01")
     )).wait();
 
-    await (await contract.connect(buyer1).buyAgent(1, {
-      value: ethers.parseEther("1")
+    await (await contract.connect(buyer1).rentAgent(1, 2, {
+      value: ethers.parseEther("0.02")
     })).wait();
+    const first = await contract.getAccessRecord(1, 0);
+    await (await contract.connect(buyer1).rentAgent(1, 3, {
+      value: ethers.parseEther("0.03")
+    })).wait();
+    const second = await contract.getAccessRecord(1, 1);
 
-    try {
-      await contract.connect(buyer1).buyAgent(1, {
-        value: ethers.parseEther("1")
-      });
-      assert.fail("Should revert");
-    } catch (error) {
-      assert.ok(error.message.includes("ALREADY_PURCHASED"));
-    }
+    assert.strictEqual(Number(second.durationDays), 3);
+    assert.strictEqual(Number(second.expiresAt), Number(first.expiresAt) + 3 * 24 * 60 * 60);
   });
 
   it("hasAccess returns false for non-buyer", async function () {

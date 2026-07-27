@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.agentlens.example/agentlens-build-manifest.v1.schema.json",
+  "title": "AgentLens Build Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "releaseId",
+    "status",
+    "source",
+    "configContracts",
+    "images",
+    "packagedAt",
+    "contentSha256"
+  ],
+  "properties": {
+    "contractVersion": {
+      "const": "agentlens.build-manifest.v1"
+    },
+    "releaseId": {
+      "type": "string",
+      "pattern": "^release-[a-f0-9]{24}$"
+    },
+    "status": {
+      "enum": ["source_sealed", "runtime_built"]
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "configContracts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1000,
+      "items": {
+        "$ref": "#/$defs/fileRef"
+      }
+    },
+    "images": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/$defs/imageRef"
+      }
+    },
+    "packagedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "builtAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "contentSha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": { "const": "source_sealed" }
+        },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "images": { "maxItems": 0 }
+        },
+        "not": {
+          "required": ["builtAt"]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": { "const": "runtime_built" }
+        },
+        "required": ["status"]
+      },
+      "then": {
+        "required": ["builtAt"],
+        "properties": {
+          "images": {
+            "minItems": 2
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gitCommitSha", "gitDirty", "treeSha256", "fileCount"],
+      "properties": {
+        "gitCommitSha": {
+          "type": "string",
+          "pattern": "^(?:[a-f0-9]{40}|uncommitted)$"
+        },
+        "gitDirty": {
+          "type": "boolean"
+        },
+        "treeSha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "fileCount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000
+        }
+      }
+    },
+    "fileRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "imageRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "tag", "imageId", "repoDigests"],
+      "properties": {
+        "role": {
+          "enum": ["runtime", "artifact_inspector", "frontend"]
+        },
+        "tag": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "imageId": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "repoDigests": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "pattern": "^.+@sha256:[a-f0-9]{64}$"
+          }
+        }
+      }
+    }
+  }
+}
