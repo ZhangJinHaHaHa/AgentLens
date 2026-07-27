@@ -124,10 +124,9 @@ for (const expectedOid of blobOids) {
   }
 
   for (const file of pathsByOid.get(oid) ?? []) {
-    if (path.posix.extname(file).toLowerCase() !== ".md") continue;
     for (const match of text.matchAll(/(?<![A-Za-z0-9])(?:[0-9]{1,3}\.){3}[0-9]{1,3}(?![A-Za-z0-9])/g)) {
       if (!isExampleIpv4(match[0])) {
-        findings.push({ rule: "public-ip-in-documentation", oid, path: file });
+        findings.push({ rule: "public-ip-in-public-source", oid, path: file });
       }
     }
   }

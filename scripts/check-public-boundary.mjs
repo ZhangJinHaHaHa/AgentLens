@@ -83,10 +83,8 @@ async function inspectFile(absolutePath, relativePath) {
     if (pattern.test(text)) findings.push({ rule, path: publicPath });
   }
 
-  if (path.extname(relativePath).toLowerCase() === ".md") {
-    for (const match of text.matchAll(/(?<![A-Za-z0-9])(?:[0-9]{1,3}\.){3}[0-9]{1,3}(?![A-Za-z0-9])/g)) {
-      if (!isExampleIpv4(match[0])) findings.push({ rule: "public-ip-in-documentation", path: publicPath });
-    }
+  for (const match of text.matchAll(/(?<![A-Za-z0-9])(?:[0-9]{1,3}\.){3}[0-9]{1,3}(?![A-Za-z0-9])/g)) {
+    if (!isExampleIpv4(match[0])) findings.push({ rule: "public-ip-in-public-source", path: publicPath });
   }
 }
 
