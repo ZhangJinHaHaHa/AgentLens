@@ -17,6 +17,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Test the public boundary policy
+        run: node --test scripts/check-public-boundary.test.mjs
       - name: Reject private or sensitive public content
         run: node scripts/check-public-boundary.mjs
       - name: Reject private or sensitive historical content

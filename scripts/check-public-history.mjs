@@ -1,9 +1,19 @@
 import { spawnSync } from "node:child_process";
+import { lstatSync, readFileSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import {
+  MAX_TEXT_BLOB_BYTES,
+  boundaryPolicyFiles,
+  computeGitBlobOid,
+  isManagedTextPath,
+  isSafeFileMode,
+  inspectPublicPath,
+  inspectTextContent,
+  normalizePublicPath
+} from "./public-boundary-policy.mjs";
 
 const root = process.cwd();
-const MAX_TEXT_BLOB_BYTES = 2 * 1024 * 1024;
 
 function git(args, input) {
   const result = spawnSync("git", args, {
@@ -18,116 +28,164 @@ function git(args, input) {
   return result.stdout;
 }
 
-function normalize(relativePath) {
-  return relativePath.split(path.sep).join("/");
+function inspectPolicyIndexConsistency() {
+  const records = git(["ls-files", "--stage", "-z", "--", ...boundaryPolicyFiles])
+    .toString("utf8")
+    .split("\0")
+    .filter(Boolean);
+  const entriesByPath = new Map();
+  for (const record of records) {
+    const separator = record.indexOf("\t");
+    if (separator === -1) throw new Error("Unexpected protected git index record");
+    const [mode, oid, stage] = record.slice(0, separator).split(" ");
+    entriesByPath.set(normalizePublicPath(record.slice(separator + 1)), { mode, oid, stage });
+  }
+
+  const policyFindings = [];
+  for (const policyFile of boundaryPolicyFiles) {
+    const entry = entriesByPath.get(policyFile);
+    let workingOid;
+    try {
+      const absolutePath = path.join(root, policyFile);
+      if (lstatSync(absolutePath).isFile()) {
+        workingOid = computeGitBlobOid(readFileSync(absolutePath), entry?.oid);
+      }
+    } catch (error) {
+      if (error?.code !== "ENOENT") throw error;
+    }
+
+    if (!entry || entry.stage !== "0" || !isSafeFileMode(entry.mode) || workingOid !== entry.oid) {
+      policyFindings.push({
+        rule: "boundary-policy-index-divergence",
+        oid: entry?.oid ?? "000000000000",
+        path: policyFile
+      });
+    }
+  }
+  return policyFindings;
 }
 
-function isEnvironmentFile(relativePath) {
-  const base = path.posix.basename(normalize(relativePath));
-  return base === ".env" || (base.startsWith(".env.") && !base.endsWith(".example"));
-}
-
-const forbiddenPathRules = [
-  ["production-infrastructure", (file) => /^infra\/production(?:\/|$)/i.test(file)],
-  ["private-workspace-control-plane", (file) => /^frontend\/src\/workspace(?:\/|$)/i.test(file)],
-  ["private-platform-control-plane", (file) => /^sandbox\/src\/platform(?:\/|$)/i.test(file)],
-  ["production-worker", (file) => /^sandbox\/src\/workers?(?:\/|$)/i.test(file)],
-  ["private-source-tree", (file) => /^(?:private|internal)(?:\/|$)/i.test(file)],
-  ["environment-file", isEnvironmentFile],
-  ["credential-directory", (file) => /(^|\/)(?:credentials?|secret-dumps?)(?:\/|$)/i.test(file)],
-  ["private-key-file", (file) => /\.(?:pem|key|p12|pfx|keystore|jks)$/i.test(file)],
-  ["runtime-database", (file) => /\.(?:sqlite3?|db|dump|backup|bak)$/i.test(file)]
-];
-
-const contentRules = [
-  ["private-key", /-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----/],
-  ["credential-in-url", /https?:\/\/[^\s/:]+:[^\s/@]+@/i],
-  ["cloud-access-key", /\bAKIA[0-9A-Z]{16}\b/],
-  ["google-api-key", /\bAIza[0-9A-Za-z_-]{20,}\b/],
-  ["github-token", /\bgh[pousr]_[A-Za-z0-9_]{20,}\b/],
-  ["model-or-search-key", /(?:^|[^A-Za-z0-9])(?:sk-[A-Za-z0-9_-]{20,}|tvly-(?:dev-|prod-)?[A-Za-z0-9_-]{16,}|ydc-sk-[A-Za-z0-9_-]{16,})/m],
-  ["root-login", /\broot@[A-Za-z0-9.<>{}_-]+/i],
-  ["local-user-path", /\/(?:Users\/(?!demo\/|example\/)[^/\s]+|home\/(?!demo\/|example\/)[^/\s]+)\//]
-];
-
-function isExampleIpv4(value) {
-  const parts = value.split(".").map(Number);
-  if (parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)) return true;
-  const [a, b, c] = parts;
-  if (a === 0 || a === 10 || a === 127) return true;
-  if (a === 169 && b === 254) return true;
-  if (a === 172 && b >= 16 && b <= 31) return true;
-  if (a === 192 && b === 168) return true;
-  if (a === 192 && b === 0 && c === 2) return true;
-  if (a === 198 && b === 51 && c === 100) return true;
-  if (a === 203 && b === 0 && c === 113) return true;
-  return ["1.1.1.1", "8.8.8.8", "8.8.4.4", "93.184.216.34"].includes(value);
-}
-
-const objectLines = git(["rev-list", "--objects", "--all"])
+const objectOids = git(["rev-list", "--objects", "--all", "--no-object-names"])
   .toString("utf8")
   .trim()
   .split("\n")
   .filter(Boolean);
 
-const pathsByOid = new Map();
-for (const line of objectLines) {
-  const split = line.indexOf(" ");
-  const oid = split === -1 ? line : line.slice(0, split);
-  const file = split === -1 ? "<unknown>" : normalize(line.slice(split + 1));
-  const paths = pathsByOid.get(oid) ?? new Set();
-  paths.add(file);
-  pathsByOid.set(oid, paths);
-}
+const pathsByOid = new Map(objectOids.map((oid) => [oid, new Set()]));
+const historicalEntries = new Map();
+const commitOids = git(["rev-list", "--all"])
+  .toString("utf8")
+  .trim()
+  .split("\n")
+  .filter(Boolean);
 
-const findings = [];
-for (const [oid, paths] of pathsByOid) {
-  for (const file of paths) {
-    for (const [rule, matches] of forbiddenPathRules) {
-      if (matches(file)) findings.push({ rule, oid, path: file });
+// 每个提交都独立展开完整文件树；同一 blob 出现在多个路径或后来被删除时，
+// 其所有历史路径仍会进入边界检查，不能被 Git 的对象去重行为隐藏。
+for (const commitOid of commitOids) {
+  const records = git(["ls-tree", "-r", "-z", "--full-tree", commitOid])
+    .toString("utf8")
+    .split("\0")
+    .filter(Boolean);
+
+  for (const record of records) {
+    const separator = record.indexOf("\t");
+    if (separator === -1) throw new Error("Unexpected git ls-tree record");
+    const [mode, type, oid] = record.slice(0, separator).split(" ");
+    if (!mode || !type || !oid) throw new Error("Incomplete git tree record");
+    const file = normalizePublicPath(record.slice(separator + 1));
+    historicalEntries.set(`${mode}\0${oid}\0${file}`, { mode, oid, path: file });
+    if (type === "blob") {
+      const paths = pathsByOid.get(oid) ?? new Set();
+      paths.add(file);
+      pathsByOid.set(oid, paths);
     }
   }
 }
 
-const oids = [...pathsByOid.keys()];
 const checks = git(
   ["cat-file", "--batch-check=%(objectname) %(objecttype) %(objectsize)"],
-  `${oids.join("\n")}\n`
+  `${objectOids.join("\n")}\n`
 ).toString("utf8").trim().split("\n");
 
-const blobOids = checks.flatMap((line) => {
+const textObjectMetadata = checks.flatMap((line) => {
   const [oid, type, rawSize] = line.split(" ");
   const size = Number(rawSize);
-  return type === "blob" && Number.isFinite(size) && size <= MAX_TEXT_BLOB_BYTES ? [oid] : [];
+  return ["blob", "commit", "tag"].includes(type) && Number.isFinite(size) ? [{ oid, type, size }] : [];
 });
 
-const batch = git(["cat-file", "--batch"], `${blobOids.join("\n")}\n`);
+const findings = inspectPolicyIndexConsistency();
+for (const { mode, oid, path: file } of historicalEntries.values()) {
+  for (const rule of inspectPublicPath(file, { includeHistorical: true })) {
+    findings.push({ rule, oid, path: file });
+  }
+  if (!isSafeFileMode(mode)) {
+    findings.push({ rule: "unsafe-file-mode", oid, path: file });
+  }
+}
+
+for (const { oid, type, size } of textObjectMetadata) {
+  if (type === "blob") {
+    const paths = pathsByOid.get(oid) ?? new Set();
+    if (paths.size === 0) {
+      findings.push({ rule: "unmapped-reachable-blob", oid, path: "<unknown>" });
+    }
+    if (size > MAX_TEXT_BLOB_BYTES) {
+      for (const file of paths) {
+        if (isManagedTextPath(file)) {
+          findings.push({ rule: "oversized-text-blob", oid, path: file });
+        }
+      }
+    }
+  } else if (size > MAX_TEXT_BLOB_BYTES) {
+    const label = type === "commit" ? "<commit-message>" : "<tag-message>";
+    findings.push({ rule: "oversized-history-metadata", oid, path: label });
+  }
+}
+
+const scannableObjectOids = textObjectMetadata
+  .filter(({ size }) => size <= MAX_TEXT_BLOB_BYTES)
+  .map(({ oid }) => oid);
+
+const batch = git(["cat-file", "--batch"], `${scannableObjectOids.join("\n")}\n`);
 let offset = 0;
-for (const expectedOid of blobOids) {
+for (const expectedOid of scannableObjectOids) {
   const headerEnd = batch.indexOf(10, offset);
   if (headerEnd === -1) throw new Error("Unexpected end of git cat-file header");
   const header = batch.subarray(offset, headerEnd).toString("utf8");
   const [oid, type, rawSize] = header.split(" ");
-  if (oid !== expectedOid || type !== "blob") throw new Error(`Unexpected batch object ${header}`);
+  if (oid !== expectedOid || !["blob", "commit", "tag"].includes(type)) {
+    throw new Error(`Unexpected batch object ${header}`);
+  }
   const size = Number(rawSize);
   const start = headerEnd + 1;
   const content = batch.subarray(start, start + size);
   offset = start + size + 1;
-  if (content.includes(0)) continue;
+  if (content.includes(0)) {
+    if (type === "blob") {
+      for (const file of pathsByOid.get(oid) ?? []) {
+        if (isManagedTextPath(file)) {
+          findings.push({ rule: "binary-content-in-text-file", oid, path: file });
+        }
+      }
+    } else {
+      const label = type === "commit" ? "<commit-message>" : "<tag-message>";
+      findings.push({ rule: "binary-content-in-history-metadata", oid, path: label });
+    }
+    continue;
+  }
   const text = content.toString("utf8");
 
-  for (const [rule, pattern] of contentRules) {
-    if (!pattern.test(text)) continue;
-    for (const file of pathsByOid.get(oid) ?? ["<unknown>"]) {
+  for (const rule of inspectTextContent(text)) {
+    const knownPaths = pathsByOid.get(oid);
+    const displayPaths = type === "commit"
+      ? ["<commit-message>"]
+      : type === "tag"
+        ? ["<tag-message>"]
+        : knownPaths && knownPaths.size > 0
+          ? knownPaths
+          : ["<unknown>"];
+    for (const file of displayPaths) {
       findings.push({ rule, oid, path: file });
-    }
-  }
-
-  for (const file of pathsByOid.get(oid) ?? []) {
-    for (const match of text.matchAll(/(?<![A-Za-z0-9])(?:[0-9]{1,3}\.){3}[0-9]{1,3}(?![A-Za-z0-9])/g)) {
-      if (!isExampleIpv4(match[0])) {
-        findings.push({ rule: "public-ip-in-public-source", oid, path: file });
-      }
     }
   }
 }
@@ -144,4 +202,4 @@ if (unique.length > 0) {
   process.exit(1);
 }
 
-console.log(`Public history check passed (${pathsByOid.size} reachable objects).`);
+console.log(`Public history check passed (${objectOids.length} reachable objects).`);

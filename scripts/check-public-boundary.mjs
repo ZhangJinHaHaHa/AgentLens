@@ -1,101 +1,169 @@
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { lstat, readFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
+import {
+  MAX_TEXT_BLOB_BYTES,
+  boundaryPolicyFiles,
+  computeGitBlobOid,
+  isManagedTextPath,
+  isSafeFileMode,
+  inspectPublicPath,
+  inspectTextContent,
+  normalizePublicPath
+} from "./public-boundary-policy.mjs";
 
 const root = process.cwd();
-const forbiddenPathRules = [
-  ["production-infrastructure", /^infra\/production(?:\/|$)/i],
-  ["private-workspace-control-plane", /^frontend\/src\/workspace(?:\/|$)/i],
-  ["private-platform-control-plane", /^sandbox\/src\/platform(?:\/|$)/i],
-  ["production-worker", /^sandbox\/src\/workers?(?:\/|$)/i],
-  ["private-source-tree", /^(?:private|internal)(?:\/|$)/i],
-  ["environment-file", /(^|\/)\.env(?:\.|$)/i],
-  ["credential-directory", /(^|\/)(?:credentials?|secret-dumps?)(?:\/|$)/i],
-  ["private-key-file", /\.(?:pem|key|p12|pfx|keystore|jks)$/i],
-  ["runtime-database", /\.(?:sqlite3?|db|dump|backup|bak)$/i]
-];
-
-const contentRules = [
-  ["private-key", /-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----/],
-  ["credential-in-url", /https?:\/\/[^\s/:]+:[^\s/@]+@/i],
-  ["cloud-access-key", /\bAKIA[0-9A-Z]{16}\b/],
-  ["google-api-key", /\bAIza[0-9A-Za-z_-]{20,}\b/],
-  ["github-token", /\bgh[pousr]_[A-Za-z0-9_]{20,}\b/],
-  ["model-or-search-key", /(?:^|[^A-Za-z0-9])(?:sk-[A-Za-z0-9_-]{20,}|tvly-(?:dev-|prod-)?[A-Za-z0-9_-]{16,}|ydc-sk-[A-Za-z0-9_-]{16,})/m],
-  ["root-login", /\broot@[A-Za-z0-9.-]+/i],
-  ["local-user-path", /\/(?:Users\/(?!demo\/|example\/)[^/\s]+|home\/(?!demo\/|example\/)[^/\s]+)\//]
-];
-
-const textExtensions = new Set([
-  "",
-  ".cjs",
-  ".css",
-  ".env",
-  ".html",
-  ".js",
-  ".json",
-  ".jsx",
-  ".md",
-  ".mjs",
-  ".sh",
-  ".sol",
-  ".svg",
-  ".ts",
-  ".tsx",
-  ".txt",
-  ".yaml",
-  ".yml"
-]);
 
 const findings = [];
+const indexedTextByPath = new Map();
+const workingTextByPath = new Map();
 
-function normalize(relativePath) {
-  return relativePath.split(path.sep).join("/");
-}
-
-function isExampleIpv4(value) {
-  const parts = value.split(".").map(Number);
-  if (parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)) return true;
-  const [a, b, c] = parts;
-  if (a === 0 || a === 10 || a === 127) return true;
-  if (a === 169 && b === 254) return true;
-  if (a === 172 && b >= 16 && b <= 31) return true;
-  if (a === 192 && b === 168) return true;
-  if (a === 192 && b === 0 && c === 2) return true;
-  if (a === 198 && b === 51 && c === 100) return true;
-  if (a === 203 && b === 0 && c === 113) return true;
-  return ["1.1.1.1", "8.8.8.8", "8.8.4.4", "93.184.216.34"].includes(value);
-}
-
-async function inspectFile(absolutePath, relativePath) {
-  const publicPath = normalize(relativePath);
-  for (const [rule, pattern] of forbiddenPathRules) {
-    if (pattern.test(publicPath)) findings.push({ rule, path: publicPath });
+function inspectPath(relativePath) {
+  const publicPath = normalizePublicPath(relativePath);
+  for (const rule of inspectPublicPath(publicPath)) {
+    findings.push({ rule, path: publicPath });
   }
+  return publicPath;
+}
 
-  if (!textExtensions.has(path.extname(relativePath).toLowerCase())) return;
-  const content = await readFile(absolutePath);
-  if (content.length > 2 * 1024 * 1024 || content.includes(0)) return;
+function inspectManagedContent(content, publicPath) {
+  if (!isManagedTextPath(publicPath)) return undefined;
+  if (content.length > MAX_TEXT_BLOB_BYTES) {
+    findings.push({ rule: "oversized-text-blob", path: publicPath });
+    return undefined;
+  }
+  if (content.includes(0)) {
+    findings.push({ rule: "binary-content-in-text-file", path: publicPath });
+    return undefined;
+  }
   const text = content.toString("utf8");
 
-  for (const [rule, pattern] of contentRules) {
-    if (pattern.test(text)) findings.push({ rule, path: publicPath });
+  for (const rule of inspectTextContent(text)) {
+    findings.push({ rule, path: publicPath });
   }
+  return text;
+}
 
-  for (const match of text.matchAll(/(?<![A-Za-z0-9])(?:[0-9]{1,3}\.){3}[0-9]{1,3}(?![A-Za-z0-9])/g)) {
-    if (!isExampleIpv4(match[0])) findings.push({ rule: "public-ip-in-public-source", path: publicPath });
+function git(args, options = {}) {
+  return execFileSync("git", args, {
+    cwd: root,
+    maxBuffer: 512 * 1024 * 1024,
+    ...options
+  });
+}
+
+const indexRecords = git(["ls-files", "--stage", "-z"], { encoding: "utf8" })
+  .split("\0")
+  .filter(Boolean);
+const indexTextPathsByOid = new Map();
+const indexEntriesByPath = new Map();
+
+for (const record of indexRecords) {
+  const separator = record.indexOf("\t");
+  if (separator === -1) throw new Error("Unexpected git ls-files --stage record");
+  const [mode, oid, stage] = record.slice(0, separator).split(" ");
+  const publicPath = inspectPath(record.slice(separator + 1));
+  if (!mode || !oid || !stage) throw new Error("Incomplete git index record");
+  indexEntriesByPath.set(publicPath, { mode, oid, stage });
+  if (stage !== "0") {
+    findings.push({ rule: "unmerged-index-entry", path: publicPath });
+    continue;
+  }
+  if (!isSafeFileMode(mode)) {
+    findings.push({ rule: "unsafe-file-mode", path: publicPath });
+    continue;
+  }
+  if (!isManagedTextPath(publicPath)) continue;
+  const paths = indexTextPathsByOid.get(oid) ?? new Set();
+  paths.add(publicPath);
+  indexTextPathsByOid.set(oid, paths);
+}
+
+// 发布策略必须与 proposed index 完全一致；否则工作树中的宽松策略可能掩盖
+// 实际将被提交的严格清单或旧检查器，造成本地发布门误判。
+for (const policyFile of boundaryPolicyFiles) {
+  const entry = indexEntriesByPath.get(policyFile);
+  try {
+    const fileStatus = await lstat(path.join(root, policyFile));
+    const content = fileStatus.isFile() ? await readFile(path.join(root, policyFile)) : undefined;
+    const workingOid = content ? computeGitBlobOid(content, entry?.oid) : undefined;
+    if (!entry || entry.stage !== "0" || !isSafeFileMode(entry.mode) || workingOid !== entry.oid) {
+      findings.push({ rule: "boundary-policy-index-divergence", path: policyFile });
+    }
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+    findings.push({ rule: "boundary-policy-index-divergence", path: policyFile });
   }
 }
 
-const publicFiles = execFileSync(
-  "git",
+const indexOids = [...indexTextPathsByOid.keys()];
+if (indexOids.length > 0) {
+  const metadataLines = git(
+    ["cat-file", "--batch-check=%(objectname) %(objecttype) %(objectsize)"],
+    { input: `${indexOids.join("\n")}\n`, encoding: "utf8" }
+  ).trim().split("\n");
+  const readableOids = [];
+
+  for (let index = 0; index < indexOids.length; index += 1) {
+    const expectedOid = indexOids[index];
+    const [oid, type, rawSize] = (metadataLines[index] ?? "").split(" ");
+    const size = Number(rawSize);
+    const paths = indexTextPathsByOid.get(expectedOid) ?? [];
+    if (oid !== expectedOid || type !== "blob" || !Number.isFinite(size)) {
+      for (const publicPath of paths) findings.push({ rule: "unreadable-index-blob", path: publicPath });
+      continue;
+    }
+    if (size > MAX_TEXT_BLOB_BYTES) {
+      for (const publicPath of paths) findings.push({ rule: "oversized-text-blob", path: publicPath });
+      continue;
+    }
+    readableOids.push(oid);
+  }
+
+  if (readableOids.length > 0) {
+    const batch = git(["cat-file", "--batch"], { input: `${readableOids.join("\n")}\n` });
+    let offset = 0;
+    for (const expectedOid of readableOids) {
+      const headerEnd = batch.indexOf(10, offset);
+      if (headerEnd === -1) throw new Error("Unexpected end of git cat-file header");
+      const header = batch.subarray(offset, headerEnd).toString("utf8");
+      const [oid, type, rawSize] = header.split(" ");
+      if (oid !== expectedOid || type !== "blob") throw new Error(`Unexpected batch object ${header}`);
+      const size = Number(rawSize);
+      const start = headerEnd + 1;
+      const content = batch.subarray(start, start + size);
+      offset = start + size + 1;
+
+      for (const publicPath of indexTextPathsByOid.get(oid) ?? []) {
+        const text = inspectManagedContent(content, publicPath);
+        if (text !== undefined) indexedTextByPath.set(publicPath, text);
+      }
+    }
+  }
+}
+
+// 同时扫描工作树，既覆盖未跟踪文件，也保留对尚未暂存修改的即时反馈。
+const workingTreeFiles = git(
   ["ls-files", "--cached", "--others", "--exclude-standard", "-z"],
-  { cwd: root, encoding: "utf8" }
+  { encoding: "utf8" }
 ).split("\0").filter(Boolean);
 
-for (const relativePath of publicFiles) {
-  await inspectFile(path.join(root, relativePath), relativePath);
+for (const relativePath of workingTreeFiles) {
+  const publicPath = inspectPath(relativePath);
+  try {
+    const fileStatus = await lstat(path.join(root, relativePath));
+    if (!fileStatus.isFile()) {
+      findings.push({ rule: "unsafe-file-mode", path: publicPath });
+      continue;
+    }
+    if (!isManagedTextPath(publicPath)) continue;
+    const content = await readFile(path.join(root, relativePath));
+    const text = inspectManagedContent(content, publicPath);
+    if (text !== undefined) workingTextByPath.set(publicPath, text);
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+  }
 }
 
 const requiredLinks = [
@@ -103,8 +171,8 @@ const requiredLinks = [
   ["README_CN.md", "https://agentlens.chat/zh"]
 ];
 for (const [file, expected] of requiredLinks) {
-  const text = await readFile(path.join(root, file), "utf8");
-  if (!text.includes(expected)) findings.push({ rule: "missing-live-platform-link", path: file });
+  const text = indexedTextByPath.get(file) ?? workingTextByPath.get(file);
+  if (!text?.includes(expected)) findings.push({ rule: "missing-live-platform-link", path: file });
 }
 
 const unique = [...new Map(findings.map((finding) => [`${finding.rule}:${finding.path}`, finding])).values()]
