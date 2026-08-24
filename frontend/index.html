@@ -1,4 +1,8 @@
 <!doctype html>
+<!--
+  这是 Vite/React 应用的公开文档壳：负责首屏元数据、挂载点、主题预置和旧 PWA 状态迁移，
+  不负责路由、鉴权或业务数据渲染。所有内联逻辑必须在主模块加载前完成且失败时不阻塞应用启动。
+-->
 <html lang="zh">
   <head>
     <meta charset="UTF-8" />
@@ -13,6 +17,7 @@
     <link rel="apple-touch-icon" href="/popo-mascot.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <script>
+      // localStorage 与媒体查询都属于浏览器输入；只接受两个已知主题值，并在访问受限时回退到默认首屏。
       // Apply persisted theme before React mounts so the first paint matches.
       (function () {
         try {
@@ -33,6 +38,8 @@
     <script>
       // Clear the old offline shell cache. Mobile in-app browsers can keep a stale
       // service worker after deploys, which makes menus and route chunks look blank.
+      // 迁移期会注销本源下全部 registration，因此部署约定该 origin 专用于 AgentLens；
+      // 仅删除带既有 shell 前缀的 Cache Storage，且清理失败被降级为非阻塞，网络版应用仍可启动。
       (function () {
         if (!("serviceWorker" in navigator)) return;
 
@@ -70,6 +77,7 @@
     </script>
   </head>
   <body>
+    <!-- root 是 React 唯一拥有的 DOM 挂载边界；静态壳不预渲染可能与客户端状态冲突的业务内容。 -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -2,6 +2,9 @@ import { spawn } from "node:child_process";
 import net from "node:net";
 import process from "node:process";
 
+// A 线 smoke 通过真实 Vite 进程验证关键公开路由都回落到同一 SPA 壳；
+// 它不执行浏览器交互、链上读取或页面业务断言，因此通过只证明路由 HTTP 可达与入口完整。
+// 输入由环境变量提供监听/访问地址和起始端口，成功输出可机读摘要，任何路由或进程错误均令命令失败。
 const A_FLOW_ROUTES = [
   "/zh/agents",
   "/zh/compare?ids=claude-code,cursor,aider,v0,extra",
@@ -38,6 +41,7 @@ export async function runAFlowSmoke(config = buildAFlowSmokeConfig(), dependenci
   const server = await startFrontendDevServer(resolvedConfig);
   const baseUrl = `http://${formatHostForUrl(host)}:${port}`;
 
+  // 服务启动后的所有断言都置于 finally 保护内；无论就绪超时还是某一路由失败，都尝试回收子进程。
   try {
     await waitForFrontendReady(baseUrl);
 
@@ -59,6 +63,7 @@ export async function runAFlowSmoke(config = buildAFlowSmokeConfig(), dependenci
 }
 
 export async function findAvailablePort(startPort, isPortBusy = defaultIsPortBusy, maxAttempts = 20) {
+  // 有界向后探测避免与并行任务争用默认端口；耗尽窗口时显式失败，不随机选择不可复现的端口。
   for (let offset = 0; offset < maxAttempts; offset += 1) {
     const candidatePort = startPort + offset;
     if (!(await isPortBusy(candidatePort))) {
@@ -179,6 +184,7 @@ async function defaultIsPortBusy(port, host = "127.0.0.1") {
 }
 
 function normalizeBrowserHost(host) {
+  // 通配监听地址不能作为浏览器目的地址；保留独立 bindHost，同时将访问端规范到本机回环。
   if (host === "0.0.0.0" || host === "::" || host === "[::]") {
     return "127.0.0.1";
   }

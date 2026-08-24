@@ -1,3 +1,10 @@
+/**
+ * 该模块统一动态问题生成所需的 OpenAI Chat/Responses、MiniMax 兼容接口、Anthropic 与确定性 mock provider。
+ * endpoint、模型和 API key 来自受控配置，agent 上下文会进入外部提示词，而 HTTP 响应必须视为不可信并经过 provider 形态提取与问题 schema 校验。
+ * 不同 wire format 只在适配器内部消化，调用方始终得到同一 `AuditQuestion[]`；provider/格式枚举和默认 URL 是部署兼容边界。
+ * 非成功状态、响应体 JSON 或内容块异常均失败，不返回半解析题集；此层不实施超时、重试、限流，也不保存或记录密钥。
+ * mock 仅用于离线可重复流程，不能证明真实模型覆盖；客户端本身不执行问题、不评分且无持久化回滚。
+ */
 import type {
   AuditQuestion,
   AuditQuestionConfig,

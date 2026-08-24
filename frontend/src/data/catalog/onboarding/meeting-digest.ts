@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * MeetingDigest 是 AgentLens 自营的文本整理指南，输入限定为用户主动粘贴的纪要、访谈、聊天或邮件串，
+ * 输出契约是摘要、决议、行动项表格和待确认问题，而不是企业通信系统集成说明。
+ * meeting-digest 同时标识精选卡、平台路由和本指南，属于持久产品键；内部实现或模型网关更换不应改 id。
+ * “保留原始上下文→指定输出结构→人工确认行动项”的数组顺序直接成为详情页编号，确保展示不把
+ * 推断内容当作已确认事实。这里不读取邮箱/日历/录音，不发送通知，也不创建真实待办或截止日期。
+ * 原文缺少负责人、时间或决策时必须输出待确认；模型网关失败或文本不可用时应让运行记录失败，
+ * 不能由静态示例补齐不存在的信息。
+ */
 export const guide: OnboardingGuide = {
   agentId: "meeting-digest",
   prerequisites: [

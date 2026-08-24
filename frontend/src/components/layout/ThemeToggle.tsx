@@ -1,3 +1,10 @@
+/**
+ * 外观控制器提供独立的明暗切换和受支持艺术主题菜单；它不定义主题 token、不写 DOM，也不参与业务偏好或账户资料管理。
+ * 输入为布局样式和是否显示文字，输出为两个操作入口；当前模式、主题值和变更函数全部来自 `ThemeProvider`。
+ * 点击会更新全局主题状态并由 Provider 承担 DOM/localStorage 副作用，菜单开合与焦点管理则委托 Popover 组件。
+ * 持久化主题值属于可篡改浏览器边界，但此处只遍历封闭的 `ART_THEMES` 集合；视觉色板不构成任何安全或内容状态。
+ * 两个按钮均有本地化 `aria-label`，文字隐藏时仍可识别；当前主题必须同时以菜单选中样式和可见名称表达，新增主题时色板、翻译与 Provider 映射需保持一致。
+ */
 import { Moon, Sun, Palette } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

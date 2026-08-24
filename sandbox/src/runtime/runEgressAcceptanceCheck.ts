@@ -1,3 +1,9 @@
+/**
+ * 出口验收运行器在短生命周期容器中同时验证健康、期望规则、一个声明目标可达及一个未声明目标受阻，并用合取条件产生 accepted；不覆盖全部目的地或长期 DNS 变化。
+ * manifest、镜像、daemon、两个 URL 和容器网络均跨越信任边界；accepted 只有在两次探针工具都可用且正反路径均符合预期时才可为 true。
+ * manifest/daemon 预检可返回结构化失败，拉取、启动及运行期未分类异常按 Promise 传播；容器成功创建后 finally 必须 stop/remove，不因验收失败遗留资源。
+ * 各阶段串行作用于同一容器以保留策略上下文，函数本身不支持并发共享容器；结果是一次时点证据，不能当作后续运行的持续网络保证。
+ */
 import {
   pullImage as defaultPullImage,
   removeContainer as defaultRemoveContainer,

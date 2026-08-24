@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * 本指南把 ChatGPT 消费者入口与 OpenAI API 评估放在同一通用助手路径中，资料来自官方帮助中心和
+ * Platform 文档，输出用于说明 Project、文件工具与隐私检查的上手次序，而非定义模型路由。
+ * openai-gpt5 是目录既有产品族 id；具体模型、套餐和功能名称可迭代，但不能据此频繁改动连接键，
+ * 否则精选卡和指南 Map 会失配。步骤数组的顺序与详情页编号绑定，先建立上下文再试工具并检查数据控制。
+ * 这里不登录账号、不创建 Project、不选择模型、不上传文件，也不执行 API 或下游工具动作。
+ * 模型不可用、工具输出错误或隐私设置不满足组织要求时，真实服务必须失败/停用；模型名称和界面路径
+ * 是需人工复核的时效信息，静态指南不得被当作能力发现或合规证明。
+ */
 export const guide: OnboardingGuide = {
   agentId: "openai-gpt5",
   prerequisites: [

@@ -1,3 +1,11 @@
+/**
+ * 用固定六维阈值生成优势、弱项和五类场景适用性，同时复用信誉分级作为总体风险，输出可直接展示的解释性摘要。
+ * 输入 scores 应已规范化为 0..100；本模块不夹值，阈值满足、十点容差和明显不足分别映射 recommended/acceptable/not-recommended。
+ * 计算纯本地，不修改分数、不访问网络或缓存，也没有失败重试；scores 缺失时只保留总体风险并返回空维度/场景数组。
+ * 分数与信誉通常源自不可信 RPC，推荐只是静态启发式，不可替代人工安全评估、服务端准入或高价值操作授权。
+ * `auditCount` 与 `attestationVerified` 当前为接口兼容/后续规则预留，并不改变输出；调用方不得从传入这两个值推断结果已经考虑审计充分性。
+ * 场景名称、阈值、strength 70 与 weakness 40 是报告解释兼容契约，调整时应同步产品文案和历史快照预期。
+ */
 import type { RiskClassification } from "./riskLevel";
 import { classifyRisk } from "./riskLevel";
 

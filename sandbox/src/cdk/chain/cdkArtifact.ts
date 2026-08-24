@@ -1,3 +1,9 @@
+/**
+ * 该适配器从仓库内构建产物加载 V2/V3 ABI，并为 CDK 读写路径提供惰性缓存的 ethers Interface；不负责编译合约或选择部署地址。
+ * 文件系统中的 artifact 是构建时信任边界：JSON 可解析后仍须核对 contractName，错误版本必须立即拒绝，不能用相似 ABI 继续运行。
+ * 成功输出为只读使用的 artifact 或进程内 Interface；副作用仅是同步读文件与首次访问时写入模块级缓存，不产生网络或链上操作。
+ * Node 模块初始化在单线程事件循环中保证缓存发布不跨 await；路径和合约名称是兼容不变量，产物移动或重命名应显式更新这里。
+ */
 import fs from "node:fs";
 import path from "node:path";
 

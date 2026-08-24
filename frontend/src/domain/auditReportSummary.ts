@@ -1,3 +1,11 @@
+/**
+ * 把链上审计记录、可选详细报告及前端证明配置压缩成判定、严重度、分数、风险提示和徽标，供报告摘要组件一次性渲染。
+ * 已知链上状态优先于报告自由文本；哈希不匹配无条件提升为危险级别，缺少报告则保留链上摘要并明确证据不可用。
+ * 本文件不抓取报告、不计算哈希、不缓存状态，输入中的 `hashVerified` 必须来自调用方完成的原文校验，重试也由报告客户端负责。
+ * 网关 JSON、reason/flags 及证明哈希均跨越外部信任边界；非零哈希只表示“存在”，徽标和摘要绝不能替代服务端验签或授权决策。
+ * 无详细评分时回退链上分数，非有限数返回 `null`；未知状态保持中性，确保旧合约新增状态不会被误报为通过。
+ * 输出是展示模型且不修改输入，消费端仍须转义外部文案，并保持“mismatch 优先于业务 verdict”的安全不变量。
+ */
 import type { AppConfig } from "@/config/appConfig";
 import type { AuditRecord } from "@/lib/agentAuditRegistryClient";
 import type { DetailedAuditReport } from "@/lib/auditReportClient";

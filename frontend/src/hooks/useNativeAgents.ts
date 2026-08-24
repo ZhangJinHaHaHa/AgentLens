@@ -1,3 +1,11 @@
+/**
+ * 从链上 registry 顺序发现原生代理：自 token 1 起最多扫描十二个 ID，连续五个不存在时停止，并为每个档案尽力附加最新审计证据。
+ * 输出是最小化 `AgentCatalogEntry[]` 与 idle/loading/ready/error 状态；档案不存在可跳过，审计缺失或失败保留代理，其他档案读取错误终止本轮。
+ * 未注入客户端时动态创建并保存在 ref 中复用；effect 取消信号只阻止状态提交，不会取消已发 JSON-RPC，也没有结果缓存、轮询或自动重试。
+ * 扫描上限和连续空洞规则是性能兼容取舍，稀疏或更大 token 空间可能暂时不可见，不能把空结果解释为链上绝对不存在。
+ * RPC 档案与哈希属于外部信任边界，映射出的默认中风险、开发者缩写和“链上”标签只用于目录展示；证明有效性和工作区准入仍须服务端验证。
+ * 依赖变化会复位并从 token 1 重扫；内部 ref 复用首次创建的客户端，切换网络/合约时调用方应提供新 client 或重新挂载，避免沿用旧连接。
+ */
 import { useEffect, useRef, useState } from "react";
 
 import type { AgentCatalogEntry } from "@/domain/catalog";

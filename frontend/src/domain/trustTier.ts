@@ -1,3 +1,11 @@
+/**
+ * 依据编辑观察与链上证据计算可解释的 0..3 信任层级，同时输出原因和可展示证据；可选 override 用于详情页注入更新鲜的链快照。
+ * 计算完全本地且不修改条目，不访问 RPC、不缓存也不重试；链读取失败和刷新策略由上层 hook/client 管理。
+ * 非零报告/证明哈希在这里仅代表字段存在，并未验证原文、签名或证明有效性；所有链字段仍须来自受信 RPC/合约，层级不能充当服务端授权。
+ * Tier 3 必须同时满足审计通过、两类非零哈希和信誉阈值，Tier 2 需要审计通过或证明哈希，只有编辑观察时最多为 Tier 1。
+ * `trustTierHint` 只允许降级，绝不允许编辑内容提升链证据等级；无任何证据固定输出 Tier 0 与 `noEvidence`，这是防止虚假背书的核心不变量。
+ * 标签函数只生成稳定 i18n key；新增层级或调整阈值属于跨数据版本的兼容变更，须与合约量纲和翻译资源同步。
+ */
 import type { AgentCatalogEntry, AgentChainEvidence, TrustTier } from "./catalog";
 import { isNonZeroHash } from "@/lib/chainEvidence";
 

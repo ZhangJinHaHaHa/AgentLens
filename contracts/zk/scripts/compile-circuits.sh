@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+# 本脚本是两条 Groth16/BN128 电路的完整构建边界：编译约束与 witness 生成器、执行电路专用 setup、导出验证密钥，并覆盖生成 Solidity verifier。
+# 输入包括固定 Circom 源码、circomlib、系统随机源、circom/snarkjs 版本及可复用的 ptau；输出分布在 `zk/build` 和 `contracts/src/*_Groth16.sol`。
+# 可信设置是证明安全边界而非普通缓存：本流程只有本机贡献且按“文件存在”复用 ptau，未校验来源、校验和或独立参与者，生产采用前必须另行审计仪式材料。
+# 每个 proving key 必须与其 R1CS、verification key 和生成 verifier 成套发布；文件名中的版本提示不能替代对实际约束数、公共输入顺序与 zkey 哈希的核对。
+# `set -euo pipefail` 使大多数失败立即停止，但 npm 安装、setup 或导出中断仍会留下部分目录；无事务回滚，恢复时应清点配套文件而不是只看最终提示。
+# 生成 verifier 的 ABI 受 snarkjs 版本及公共输入数量约束，并由 `ZkAuditVerifier` 动态调用；升级 circom/circomlib/snarkjs 后必须重新验证 8/3 输入签名兼容性。
 # Compile circom circuits → R1CS + WASM + generate Groth16 verifier contracts
 #
 # Prerequisites:

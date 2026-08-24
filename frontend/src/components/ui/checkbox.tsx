@@ -1,3 +1,10 @@
+/**
+ * Checkbox 用原生 checkbox 输入、可点击 label 和装饰勾选图标封装一致的选择控件；它不拥有筛选状态、不校验业务组合，也不持久化选值。
+ * 输入为除 type 外的原生 input 属性、可选 label/id 与 ref，输出为显式关联的标签和输入；无 id 时使用 `useId` 生成同一渲染树内稳定标识。
+ * 受控/非受控状态与 change 副作用完全由浏览器和调用方管理，本组件只根据 disabled/checked CSS 状态呈现。
+ * value、checked 和事件来自调用边界，前端勾选绝不等于权限或服务器接受；label 应是安全 React 节点且不得嵌入破坏原生点击语义的交互控件。
+ * 输入本身保持键盘焦点和表单语义，视觉图标不可截获指针；label 可省略时调用方必须另给 aria-label/aria-labelledby，禁用态也须由原生属性表达。
+ */
 import * as React from "react";
 import { Check } from "lucide-react";
 

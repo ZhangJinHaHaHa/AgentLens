@@ -1,9 +1,12 @@
+# 这是公开仓库的发布前边界门：同时约束拟提交的当前文件面与所有可达 Git 历史，
+# 但不负责构建、部署或自动修复命中的内容，任何发现都必须由提交者显式处置。
 name: Public boundary
 
 on:
   push:
   pull_request:
 
+# 作业只需读取仓库对象；保持最小权限可避免边界检查器被误用为仓库写入通道。
 permissions:
   contents: read
 
@@ -13,10 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # 历史检查遍历全部可达对象，浅克隆会把“未发现”误报为“历史安全”。
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      # 先验证策略函数本身，再执行当前态和历史态扫描；前一步失败时不应信任后续门禁结果。
       - name: Test the public boundary policy
         run: node --test scripts/check-public-boundary.test.mjs
       - name: Reject private or sensitive public content

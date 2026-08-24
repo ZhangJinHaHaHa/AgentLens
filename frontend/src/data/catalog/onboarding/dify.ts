@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Dify 指南同时覆盖云端验证与自托管迁移，来源为官方文档和部署指南，输出以连接模型、建立 RAG、
+ * 编排 Workflow、发布 API 的次序帮助用户区分应用生命周期各阶段。
+ * agentId=dify 与精选卡及平台适配器共用，部署在云端或本地不会产生新身份；改键会造成详情指南
+ * 和工作区能力说明脱节。步骤顺序也是展示契约，不能按标题字母排序，双语内容需保持语义对齐。
+ * 这里不运行 docker compose、不创建向量库、不保存 Provider Key，也不承诺平台手机工作区等同
+ * 完整 Dify Studio。模型未配置、文档解析失败、分块质量不佳或自托管版本落后均是运行/运维失败；
+ * 数据文件只能陈述边界，不得模拟成功或代替 Secrets 管理。
+ */
 export const guide: OnboardingGuide = {
   agentId: "dify",
   prerequisites: [

@@ -1,3 +1,11 @@
+/**
+ * V1 外部 Edge 网络部署器：从固定产物创建静态 JSON-RPC provider 与签名钱包，部署注册表并把链上回执整理为网络级元数据文件。
+ * 输入为经本文件解析的 `EDGE_*` 配置及可选依赖注入；输出同时是返回的 deployment 对象和 `<outputDir>/AgentAuditRegistry.json`。
+ * 构造参数顺序固定为服务费、最低保证金、初始操作员；操作员缺省时使用部署钱包，回执中的实际 chainId、地址、交易哈希和区块号构成可追溯结果。
+ * 信任边界跨越本地产物、RPC 节点和私钥签名者：静态网络声明不能替代对目标链与合约字节码的发布前核验，元数据中的 RPC URL 也不应包含凭据。
+ * 配置/产物校验失败会在广播前终止；等待回执或写盘失败则可能发生在合约已经上链之后，因此重试不是幂等操作，必须先按交易哈希或部署者 nonce 查链。
+ * 该文件使用旧版字段 `privateKey` 与 `initialServiceFeeWei`/`initialMinimumBondWei`，不可把 `deployConfig.js` 的 V2/V3 对象未经适配直接传入。
+ */
 const fs = require("fs");
 const path = require("path");
 

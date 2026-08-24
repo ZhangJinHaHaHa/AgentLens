@@ -1,3 +1,10 @@
+/**
+ * 发布表单到 agent manifest 的第一道客户端收敛：裁剪名称/镜像/URL，拆分 host 与 RPC 列表，并返回规范化对象及去重错误码。
+ * 名称限定安全字符和长度，host 会剥离 HTTP(S) URL 至 host 并拒绝剩余路径、通配符及常见私网地址，RPC/manifest URL 限定 HTTP(S)；过程不联网或重试。
+ * 这是浏览器不可信输入边界而非完整 SSRF 防线：DNS 重绑定、域名解析后的私网 IP、编码变体、镜像真实性和远端内容均须服务端在使用时再次验证。
+ * 即使失败也返回规范化草稿供表单回显，调用方必须以 `ok`/errors 阻止发布，不能因 manifest 对象存在就继续签名或抓取。
+ * 列表允许换行/逗号并保留顺序，URL 采用平台标准序列化；这些输出格式需与服务端 manifest schema 保持兼容。
+ */
 export interface AgentManifest {
   agent_name: string;
   image: string;

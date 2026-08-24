@@ -6,6 +6,10 @@ export interface ReportGatewayConfig {
   fetchTimeoutMs: number;
 }
 
+/**
+ * 环境变量是进程启动时的配置边界。必填 URL 会去除首尾空白后再判空；令牌则在返回对象中
+ * 保持原值，避免无意改变凭据。返回配置是一次快照，运行中的服务不会随 `process.env` 变化。
+ */
 function requireEnvValue(
   env: NodeJS.ProcessEnv | Record<string, string | undefined>,
   key: string
@@ -18,6 +22,7 @@ function requireEnvValue(
   return value;
 }
 
+// 只接受十进制数字，避免 `Number` 对符号、小数、指数或部分字符串的宽松兼容造成误配置。
 function readNonNegativeInteger(
   env: NodeJS.ProcessEnv | Record<string, string | undefined>,
   key: string,
@@ -35,6 +40,11 @@ function readNonNegativeInteger(
   return Number(rawValue);
 }
 
+/**
+ * 在创建监听套接字前完成端口和超时校验，使部署错误以启动失败而不是请求期随机故障呈现。
+ * 端口 0 被有意保留给操作系统分配临时端口（测试/嵌入场景）；上游 URL 与认证令牌属于
+ * 受信任部署配置，后续会被网关用于服务器侧请求，不能由入站请求覆盖。
+ */
 export function readReportGatewayConfig(
   env: NodeJS.ProcessEnv | Record<string, string | undefined>
 ): ReportGatewayConfig {
@@ -64,6 +74,10 @@ export function readReportGatewayConfig(
   };
 }
 
+/**
+ * 网关通过字符串拼接附加经过编码的 CID，统一尾斜杠可避免生成错误路径。
+ * 这是既有配置格式的兼容归一化，不承担协议白名单或 SSRF 校验；部署方仍需约束上游地址。
+ */
 function normalizeBaseUrl(baseUrl: string): string {
   return baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
 }

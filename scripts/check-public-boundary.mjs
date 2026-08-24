@@ -13,6 +13,10 @@ import {
   normalizePublicPath
 } from "./public-boundary-policy.mjs";
 
+// 当前态发布门以 Git index 作为“将要公开”的权威输入，同时扫描工作树和未跟踪文件，
+// 让提交前反馈不遗漏尚未暂存的风险；工作树扫描不会取代对 index blob 的独立校验。
+// 受保护策略文件必须在 index 与磁盘上逐字节一致，否则正在执行的宽松规则可能替拟提交内容背书。
+// 本脚本只读取仓库、聚合稳定的 rule/path 诊断并以退出码阻断发布，不删除、改写或自动暂存文件。
 const root = process.cwd();
 
 const findings = [];
@@ -99,6 +103,8 @@ for (const policyFile of boundaryPolicyFiles) {
 
 const indexOids = [...indexTextPathsByOid.keys()];
 if (indexOids.length > 0) {
+  // 先批量读取对象类型与长度，再读取已通过上限的 blob；这样恶意大对象不会先进入进程内存，
+  // 同一 OID 被多个路径引用时仍会为每个公开路径保留独立诊断归属。
   const metadataLines = git(
     ["cat-file", "--batch-check=%(objectname) %(objecttype) %(objectsize)"],
     { input: `${indexOids.join("\n")}\n`, encoding: "utf8" }
@@ -170,6 +176,7 @@ const requiredLinks = [
   ["README.md", "https://agentlens.chat/en"],
   ["README_CN.md", "https://agentlens.chat/zh"]
 ];
+// README 的线上入口属于公开发布契约；优先检查 index 文本，未暂存的新文件才回退到工作树视图。
 for (const [file, expected] of requiredLinks) {
   const text = indexedTextByPath.get(file) ?? workingTextByPath.get(file);
   if (!text?.includes(expected)) findings.push({ rule: "missing-live-platform-link", path: file });
@@ -179,6 +186,7 @@ const unique = [...new Map(findings.map((finding) => [`${finding.rule}:${finding
   .sort((a, b) => a.rule.localeCompare(b.rule) || a.path.localeCompare(b.path));
 
 if (unique.length > 0) {
+  // 排序和去重使 CI 输出可复现；非零退出是唯一机器接口，调用方不应解析自然语言摘要。
   for (const finding of unique) console.error(`${finding.rule}\t${finding.path}`);
   console.error(`Public boundary check failed with ${unique.length} finding(s).`);
   process.exit(1);

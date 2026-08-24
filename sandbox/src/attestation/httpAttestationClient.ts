@@ -1,3 +1,10 @@
+/**
+ * 本客户端连接独立证明服务，把审计事件、manifest 摘要和 evidence 根编码为 v1 请求，并在本地形成可哈希的证明制品。
+ * 请求字段来自已建立的审计上下文，HTTP 状态与 JSON 响应则跨越服务信任边界；响应字段必须非空，启用 verification 时还必须通过元数据及可选 SGX 绑定校验。
+ * report_data 校验使用当前请求的 eventKey、manifestHash 与 evidenceRoot，防止一个合法 quote 被挪用于另一份审计上下文。
+ * Bearer 令牌和超时属于传输控制；本层不重试、不缓存、不落盘，也不负责远端服务的身份基础设施或证明密钥治理。
+ * 任一网络、状态码、解析或校验错误都会阻止 artifact 构建；`finally` 只回收定时器，调用失败不会留下本地可回滚状态。
+ */
 import {
   createCompositeAttestationQuoteValidator,
   createExpectedAttestationQuoteValidator,

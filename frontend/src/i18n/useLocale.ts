@@ -1,3 +1,10 @@
+/**
+ * 协调路由 locale、i18next、`<html lang>` 与本地语言缓存；路径参数优先，随后读取 pathname，最终回退默认语言。
+ * 返回当前语言、仅改翻译状态的 `setLocale`、同时导航的 `switchLocale` 以及保留查询/片段的本地化路径构造器。
+ * effect 和切换操作会写 localStorage、改变 i18n 状态、DOM 属性及浏览器历史，但不发网络请求；存储受限时静默保留 URL 作为事实来源。
+ * 路由和查询字符串是不可信输入，语言必须通过白名单；`redirect` 只改写单斜杠开头的站内路径并拒绝协议相对地址，避免把语言切换变成开放跳转。
+ * 跳转会保留普通查询项和 hash，已有语言前缀只替换首段；这些规则保证深链兼容，失败不自动重试且导航异常交由路由层处理。
+ */
 import { useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";

@@ -1,3 +1,10 @@
+/**
+ * 这是 `SandboxManifest` 的运行时白名单校验器，把外部 JSON 收敛为仅含 agent 名、镜像和两类网络许可的规范对象。
+ * 顶层额外字段、空字符串、通配 host、非 HTTP(S) RPC，以及命中内置模式的私网/环回/宿主机目标都会 fail closed，防止配置扩权被静默忽略。
+ * 返回值会修剪字符串并创建新数组，输入对象不被修改；字段集合和 agent_name 正则属于 manifest 序列化兼容契约。
+ * host 字符串检查不执行 DNS 解析，image 也只验证非空，因而 DNS 重绑定、公网解析及镜像真实性必须由下载/运行边界继续验证。
+ * 校验失败同步抛错且发生在网络或容器副作用之前，不存在部分接受或回滚状态。
+ */
 import type { SandboxManifest } from "../types/manifest";
 
 export const manifestSchema = {

@@ -1,3 +1,10 @@
+/**
+ * 能力契约卡把目录中已声明的运行模式、端侧支持、输入输出、工具、权限、定价与已知限制组织为决策材料；它不探测设备能力，也不执行或授予任何权限。
+ * 输入是代理目录条目；存在 capability contract 时输出结构化卡片，旧条目缺少该字段时明确返回空节点以保持向后兼容。
+ * 所有值均为本地派生和翻译，无组件状态、网络请求或浏览器写入；支持等级仅控制展示变体。
+ * 契约内容来自发布者/目录边界，应视为声明而非运行时事实，尤其不能用 permissionNeeds 或 trustSignals 替代浏览器、钱包及后端的真实授权检查。
+ * 状态文字、列表和限制必须保持可读而不只依赖徽标颜色；空权限有明确说明，其他空集合也应稳定呈现且不得因长文本破坏键盘阅读顺序。
+ */
 import { Blocks, Fingerprint, Map, ShieldAlert, SlidersHorizontal } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

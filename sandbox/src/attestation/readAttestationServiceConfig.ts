@@ -1,3 +1,10 @@
+/**
+ * 该解析器负责证明服务进程的部署契约：监听地址、鉴权，以及 real-http/command 后端各自必需的连接参数和 quote 期望。
+ * 环境变量属于运维输入；公网通配监听若没有 API token 会被立即拒绝，端口和后端超时也必须是正整数，以免用危险默认值启动服务。
+ * command 参数兼容逗号或换行分隔的既有配置，解析只生成参数数组，不解析 shell、不启动程序；真实 URL 的连通性和网络出口限制必须由部署策略与运行环境另行保证。
+ * 模式专属缺项在启动前失败，未知模式的最终 fail-closed 判断留给 provider factory，从而保持配置解析与实现选择的职责分离。
+ * 函数纯读取传入记录且不写进程状态，失败发生在服务监听或后端副作用之前，无需回滚。
+ */
 export interface AttestationServiceConfig {
   host: string;
   port: number;

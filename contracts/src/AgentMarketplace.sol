@@ -1,6 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+/// @title Agent 按日租赁与访问期限登记市场
+/// @notice 操作员为任意 tokenId 设置日价，租户精确支付原生币后获得按区块时间计算的访问期限，并保留每次购买的追加式历史记录。
+/// @dev 本合约不查询 AgentAuditRegistry，也不验证 tokenId 存在、所有权或黑名单；tokenId 的业务真实性由设置价格的 owner/operator 和链下集成共同保证。
+/// @dev 活跃租赁从原 expiresAt 继续延长，过期租赁从当前 block.timestamp 重新起算；`_accessExpiry` 是实时授权真值，`AccessRecord` 数组只用于不可变历史查询。
+/// @dev 租金必须等于 `pricePerDay * durationDays`，无找零、退款或卖方分账；全部余额由 owner 可提取，operator 地址在构造后没有更新入口。
+/// @dev 时间以链上时间戳和整日秒数表示，duration 必须在 1..uint32.max；价格未配置、付款不精确、索引越界或接收方 ETH call 失败均回滚。
+/// @dev `hasAccess` 是评价合约依赖的同步信任边界；重新部署市场或更换其地址不会自动迁移价格、租赁历史和访问期限。
 contract AgentMarketplace {
     struct PricingInfo {
         uint256 pricePerDay;   // rent cost per day in wei
@@ -59,6 +66,8 @@ contract AgentMarketplace {
         emit PriceSet(tokenId, pricePerDay);
     }
 
+    /// @notice 为调用者购买或延长指定 tokenId 的访问期。
+    /// @dev 成功后资金留在本合约、授权截止时间和购买记录同时更新；交易重放会再次收费并再次延长，不具备业务幂等性。
     function rentAgent(uint256 tokenId, uint256 durationDays) external payable {
         PricingInfo memory pricing = _pricing[tokenId];
         require(pricing.configured, "PRICING_NOT_SET");
@@ -90,6 +99,8 @@ contract AgentMarketplace {
         emit RentalGranted(tokenId, msg.sender, uint32(durationDays), expiresAt, totalCost);
     }
 
+    /// @notice owner 从合约总余额提取指定金额。
+    /// @dev 本合约不按 token、出租方或订单隔离资金；外部 call 失败时交易回滚，成功后余额变化由 EVM 转账结果体现。
     function withdrawPayments(address payable to, uint256 amount) external onlyOwner {
         require(to != address(0), "INVALID_RECIPIENT");
         require(amount <= address(this).balance, "INSUFFICIENT_BALANCE");

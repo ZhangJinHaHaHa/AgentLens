@@ -1,3 +1,10 @@
+/**
+ * Dialog 封装 Radix 的触发、Portal、遮罩、内容、关闭和标题/描述原语，并统一居中层级与动画；它不决定何时打开，也不承载特定业务确认流程。
+ * 输入沿用 Radix/HTML 的受控或非受控属性、子节点、样式和 ref，输出挂载到 document Portal 的模态结构及固定关闭按钮。
+ * 开合状态、Escape、遮罩、焦点捕获与恢复由 Radix 管理，本层仅创建 Portal 和视觉节点，不写应用存储或发送请求。
+ * children 与回调来自调用边界，Dialog 不验证其中表单、URL 或危险操作；Portal 依赖浏览器 DOM，服务端渲染/测试需遵守 Radix 的环境契约。
+ * 每个可见对话框必须包含 `DialogTitle` 和适当的 `DialogDescription`（可视觉隐藏），关闭按钮保留可访问文字，焦点顺序和关闭语义不得被自定义样式破坏。
+ */
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";

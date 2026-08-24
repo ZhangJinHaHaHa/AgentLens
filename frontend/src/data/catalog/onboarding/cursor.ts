@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Cursor 指南记录桌面 AI IDE 的首次迁移与团队约束，输入依据是官方安装、模型和团队管理资料，
+ * 输出按安装登录、选模、单文件读取、Composer 多文件修改的顺序呈现在详情页。
+ * cursor 是目录 URL 与指南 Map 的稳定键，不应跟随公司名 Anysphere、编辑器版本或功能品牌改写。
+ * Privacy Mode、.cursor/rules 与 .cursorignore 是展示给维护者的治理建议，而不是本文件能够验证的状态；
+ * 步骤和风险项的数组顺序必须保留，以免跨文件写入在隐私和上下文范围之前被推荐。
+ * 数据层不得安装扩展、上传仓库、选择模型或批准 diff。账号登录失败、敏感仓库未开启隐私模式、
+ * 索引被生成物污染都应由 Cursor/团队控制面处理；这里只能提供可复核的静态边界。
+ */
 export const guide: OnboardingGuide = {
   agentId: "cursor",
   prerequisites: [

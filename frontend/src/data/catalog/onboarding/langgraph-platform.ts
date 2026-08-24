@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * LangGraph 条目描述可恢复长流程的内部编排底座，来源是官方仓库与文档；面向详情页的输出强调
+ * 状态图、持久化/回放和消费者工作区包装，而不是让买家直接操作状态机。
+ * langgraph-platform 是平台型精选卡的持久标识，区别于具体 LangGraph 应用或运行实例，不能因
+ * SDK 版本变更而迁移。步骤顺序体现“先定义状态契约，再实现恢复，最后包装界面”，是编号展示的一部分。
+ * 本文件不持久化 checkpoint、不创建队列、不执行重试，也不授予工具或人工审批权限。
+ * 节点输入输出不完整、恢复状态丢失或任务队列不可用时必须由运行层显式失败并保留回放证据；
+ * 静态指南不得把一张状态图等同于已具备可靠的长任务能力。
+ */
 export const guide: OnboardingGuide = {
   agentId: "langgraph-platform",
   prerequisites: [

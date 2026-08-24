@@ -1,3 +1,10 @@
+/**
+ * 本文件为服务端出站 GET 建立公网 HTTP(S) SSRF 防线：校验 URL 形态、解析主机地址，并在每次重定向后重新执行同一策略。
+ * 用户信息、受阻主机、字面量私网/保留地址，以及 DNS 结果中任一非公网地址都会被拒绝；手动重定向与上限避免 fetch 自动越过已检查边界。
+ * DNS 结果与实际连接之间仍由底层 fetch 负责，调用方还必须提供超时/取消并限制响应大小和内容类型；本模块也不承担业务 allowlist 或远端身份授权。
+ * `skipDnsLookup` 及注入 lookup/fetch 是测试与受控集成缝隙，不应对不可信生产 URL 任意开启，否则会削弱域名解析检查。
+ * 所有策略失败以 `PublicHttpUrlError` 终止且不重试；函数不持久化状态，已发出的远端请求无法由这里回滚。
+ */
 import { lookup as dnsLookup } from "node:dns/promises";
 import { isIP } from "node:net";
 

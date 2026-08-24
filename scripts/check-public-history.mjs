@@ -13,6 +13,10 @@ import {
   normalizePublicPath
 } from "./public-boundary-policy.mjs";
 
+// 历史发布门覆盖所有 refs 可达的 commit、tag 与 blob，而非只检查 HEAD 的最终文件树；
+// 因而已经删除、改名或被多个历史路径复用的内容仍然属于公开披露面。
+// 不可达对象与本地 reflog 不在这份公开历史契约内，本脚本也不会重写历史或尝试清除对象。
+// 所有发现以稳定的 rule/OID/path 输出并返回非零；扫描过程对仓库保持只读，便于在 CI 中安全复跑。
 const root = process.cwd();
 
 function git(args, input) {
@@ -29,6 +33,8 @@ function git(args, input) {
 }
 
 function inspectPolicyIndexConsistency() {
+  // 检查器从工作树加载策略代码，却审计 index 与历史；策略五件套若未与 index 对齐，
+  // 当前进程所执行的规则就不能代表拟发布版本，因此先产生独立的策略漂移发现。
   const records = git(["ls-files", "--stage", "-z", "--", ...boundaryPolicyFiles])
     .toString("utf8")
     .split("\0")
@@ -113,6 +119,8 @@ const textObjectMetadata = checks.flatMap((line) => {
   return ["blob", "commit", "tag"].includes(type) && Number.isFinite(size) ? [{ oid, type, size }] : [];
 });
 
+// 路径策略按每个历史 tree entry 执行；内容策略则按 OID 批量执行并映射回全部已知路径，
+// commit/tag 消息使用虚拟路径标识，避免与仓库文件的处置流程混淆。
 const findings = inspectPolicyIndexConsistency();
 for (const { mode, oid, path: file } of historicalEntries.values()) {
   for (const rule of inspectPublicPath(file, { includeHistorical: true })) {
@@ -195,6 +203,7 @@ const unique = [...new Map(
 ).values()].sort((a, b) => a.rule.localeCompare(b.rule) || a.path.localeCompare(b.path));
 
 if (unique.length > 0) {
+  // OID 截短仅用于人类诊断，去重键仍保留完整 OID，避免相同路径上的不同历史对象互相吞并。
   for (const finding of unique) {
     console.error(`${finding.rule}\t${finding.oid.slice(0, 12)}\t${finding.path}`);
   }

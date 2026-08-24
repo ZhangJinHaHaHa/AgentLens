@@ -1,5 +1,7 @@
 FROM alpine:3.20
 
+# 这是带 LLM 适配参数的 test-agent 变体，仍只用于受控沙箱；它不提供生产凭据托管、轮换或多租户隔离。
+# 镜像只复制外部预编译的 dist/src，构建阶段不验证源码与产物对应关系，发布流水线必须在进入此边界前完成校验。
 RUN apk add --no-cache nodejs iptables curl
 
 WORKDIR /app
@@ -9,6 +11,8 @@ COPY dist/src /app/dist/src
 EXPOSE 8080
 
 # LLM config is baked in at build time via --build-arg
+# ARG 转 ENV 会把值固化进镜像配置层；为兼容既有测试入口而保留，但真实密钥不得作为 build-arg，
+# 应由运行时秘密注入覆盖空默认值。回滚应切回不含敏感值的旧镜像，而非尝试从历史层删除凭据。
 ARG AGENT_LLM_PROVIDER=openai
 ARG AGENT_LLM_API_KEY=""
 ARG AGENT_LLM_MODEL=""
@@ -19,4 +23,5 @@ ENV AGENT_LLM_API_KEY=$AGENT_LLM_API_KEY
 ENV AGENT_LLM_MODEL=$AGENT_LLM_MODEL
 ENV AGENT_LLM_API_BASE_URL=$AGENT_LLM_API_BASE_URL
 
+# 端口声明和默认命令与基础变体保持一致，确保两种镜像可由同一沙箱编排器替换；运行时能力仍由编排层授予。
 CMD ["node", "/app/dist/src/testAgent/server.js"]

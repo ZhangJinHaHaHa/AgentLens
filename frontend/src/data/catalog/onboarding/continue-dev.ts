@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Continue 指南覆盖 IDE 插件、可替换模型和团队级配置三者的组合，来源是 Continue 文档与 Hub，
+ * 输出给详情页的是一条从试用到自有模型、规则包、权限审计和指标观察的有序迁移路径。
+ * continue-dev 是既有公开 id；它与产品展示名 Continue 解耦，改名会中断 curated 卡到指南 Map 的关联。
+ * YAML codeBlock 作为原始示例显示，字段和步骤次序不可被组件自动排序，否则会先谈指标再完成权限配置。
+ * 这里不解析 config.yaml、不验证 provider endpoint、不存储密钥，也不采集 acceptance rate。
+ * 配置语法漂移、模型端点不可达或本地推理资源不足属于外部失败；尤其不得为了“可用”在数据文件中
+ * 嵌入真实凭证或根据环境动态改写示例。
+ */
 export const guide: OnboardingGuide = {
   agentId: "continue-dev",
   prerequisites: [

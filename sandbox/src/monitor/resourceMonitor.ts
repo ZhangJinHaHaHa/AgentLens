@@ -1,3 +1,9 @@
+/**
+ * 资源监视器对一次 `docker stats --no-stream` 输出进行单位规范化，向审计器提供 CPU 千分单位与 MiB 近似内存值；不持续采样，也不执行 Docker 配额。
+ * containerId 和命令文本跨越宿主进程信任边界，解析仅接受约定的百分比及 KiB/MiB/GiB 格式，非零退出或格式漂移必须显式失败。
+ * cpuAvgMilli 表示该次 Docker 百分比换算，memoryPeakMb 名称沿用结果合同但来源是单点 used memory；调用方不得据此声称掌握真实全程峰值。
+ * 函数无共享状态且每次启动独立子进程，可并发调用；Docker 版本的格式模板与单位换算是兼容不变量，舍入保持整数输出。
+ */
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 

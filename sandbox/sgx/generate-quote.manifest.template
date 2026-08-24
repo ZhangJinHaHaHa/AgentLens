@@ -6,11 +6,14 @@
 # Run:
 #   echo '{"schemaVersion":"audit-attestation-request.v1",...}' | gramine-sgx ./generate-quote
 
+# 该模板定义 quote 生成器的 enclave 文件/设备边界，不定义远端验签策略、允许的 MRENCLAVE 集合或审计授权。
+# 渲染参数来自 Makefile；生成后的 manifest 与签名必须作为同一发布单元审阅，不能单独替换宿主解释器或库目录。
 [loader]
 log_level = "{{ log_level }}"
 argv = ["python3", "/app/generate-quote.py"]
 
 [loader.env]
+# 固定 HOME 只为 Python/运行库提供一致的路径语义，不应在此目录放置凭据或跨会话状态。
 LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}:/usr/lib:/usr/{{ arch_libdir }}"
 HOME = "/home/user"
 
@@ -38,12 +41,14 @@ path = "/app"
 uri = "file:."
 
 [sgx]
+# 发布配置关闭 debug 并要求 DCAP；调整内存、线程或 attestation 模式都会改变运行与测量契约，需重新签名验证。
 enclave_size = "256M"
 max_threads = 4
 debug = false
 remote_attestation = "dcap"
 
 trusted_files = [
+# trusted_files 进入 Gramine 完整性边界；解释器、运行库和脚本内容变化应导致加载失败或新的 enclave 测量。
   "file:{{ entrypoint }}",
   "file:{{ gramine.runtimedir() }}/",
   "file:{{ arch_libdir }}/",
@@ -54,6 +59,7 @@ trusted_files = [
 ]
 
 allowed_files = [
+# allowed_files 由宿主提供且不具备同等完整性保证，仅用于名称解析等环境兼容；审计证据与密钥不得经这些路径输入。
   "file:/etc/nsswitch.conf",
   "file:/etc/host.conf",
   "file:/etc/resolv.conf",

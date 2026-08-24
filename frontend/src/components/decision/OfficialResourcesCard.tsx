@@ -1,3 +1,10 @@
+/**
+ * 官方资源卡只汇集条目声明的主页、文档和定价地址，并在有值时提供离站入口；它不抓取页面、不校验域名所有权，也不缓存远端内容。
+ * 输入是目录条目，输出为可用链接集合及可选定价提示；三类地址都缺失时以明确占位符保留卡片结构。
+ * 本组件不持有状态，唯一副作用发生在用户主动点击后由浏览器打开新标签页。
+ * `officialUrl`、`docsUrl`、`pricingUrl` 是发布者可控的外部导航边界，链接文字不能构成真实性背书，`target=_blank` 必须与 `rel=noreferrer` 一起保留以隔离 opener/referrer。
+ * 每个链接具有可见用途名称且装饰图标不污染读屏；过滤空地址、保持长提示换行以及不自动跳转是失败与兼容不变量。
+ */
 import { ArrowUpRight, BookOpen, ExternalLink, Tag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

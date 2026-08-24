@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * OpenClaw 指南定义多渠道消息 Agent 的最小安全试跑：来源是官方站点/文档，输出先限定测试频道和
+ * 只读摘要，再配置工具白名单，最后才讨论经人工确认的外发。
+ * openclaw 是精选目录与指南注册共用的稳定 id，不能因历史拼写标签、具体消息渠道或部署实例改变。
+ * 步骤原序直接表达 read→draft→send 的权限升级并由详情页编号，任何展示重排都会模糊不可逆发送边界。
+ * 本文件不保存 Telegram/Slack/WhatsApp 凭证、不读取联系人、不调用工具，也绝不发送或转发消息。
+ * 渠道 API 不可用、授权不足、日志缺失或用户拒绝确认时，运行必须停止并保留失败记录；指南内容
+ * 只能教育用户，不能替代服务端权限分层与审计。
+ */
 export const guide: OnboardingGuide = {
   agentId: "openclaw",
   prerequisites: [

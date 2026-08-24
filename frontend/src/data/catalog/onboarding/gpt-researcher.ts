@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * 此文件虽沿用 gpt-researcher 技术 id，面向用户的领域对象是 AgentLens“数据侦查员”：参考官方
+ * GPT Researcher 项目，但输出契约限定为公开政务数字、原始来源、可信度和找不到时的核验路径。
+ * 该 id 已连接精选卡与托管适配器，不应因买家展示名变化而改动；也不能与任意外部研究助手互换。
+ * 步骤按照口径收窄、数字/来源复核、缺失数据转申请路径呈现，顺序保护“证据优先于结论”的展示约束。
+ * 本数据不联网搜索、不判断域名真实性、不穿越登录或付费墙，更不提交政府信息公开申请。
+ * 适配器未配置时卡片应保持待接入；官方页没有具体数字时必须输出未找到和下一步，而不是由指南
+ * 或模型补推一个确定数值，搜索记录缺失同样不能形成可结算的成功结果。
+ */
 export const guide: OnboardingGuide = {
   agentId: "gpt-researcher",
   prerequisites: [

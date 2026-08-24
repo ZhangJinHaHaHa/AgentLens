@@ -1,3 +1,10 @@
+/**
+ * 这是审计证明服务的 HTTP 入口：把健康检查和经过鉴权的 v1 证明请求转交给选定的 TEE provider。
+ * 方法、路径、请求头与 JSON 正文都来自进程外部；本层只接受约定的版本和必填字符串，并在配置了令牌时执行相等性校验。
+ * provider 的返回值会直接序列化为响应，quote 的真实性由 provider/validator 负责；TLS、限流、正文大小和上游身份治理不属于此服务器。
+ * `/health` 不触发证明生成，`/attest` 也绝不能在鉴权或内容类型检查失败后调用 provider，这是路由必须保持的副作用边界。
+ * 解析和 provider 故障统一成为 400，未知路由成为 404；模块自身不持久化状态，因此没有可回滚写入，provider 已发生的外部副作用则不在其控制范围内。
+ */
 import { createServer, type Server } from "node:http";
 
 import type { AttestationRequest, TeeProvider } from "./mockTeeProvider";

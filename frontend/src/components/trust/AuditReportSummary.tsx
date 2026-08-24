@@ -1,3 +1,10 @@
+/**
+ * 报告摘要卡将已经归纳的 verdict、哈希状态、分数、首要风险、安全边界和下一步压缩为首屏结论；它不读取报告，也不重新验证哈希或证明。
+ * 输入为领域层 `AuditReportSummary`，输出为按当前语言与 severity 选择的四项摘要和状态徽标。
+ * 无本地状态、网络或浏览器副作用，语言选择和样式映射均是渲染期纯派生。
+ * summary 可能源自链上记录与远端报告，`hashStatus` 仅反映上游验证结果，组件不得因 success 色调宣称报告、代理或环境绝对安全。
+ * verdict、哈希状态和每项文字均显式可见，图标对辅助技术隐藏；null 分数、未知语言回退到中文以及四种 severity 的穷尽映射是兼容不变量。
+ */
 import { AlertTriangle, CheckCircle2, Clock3, FileWarning, ShieldCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

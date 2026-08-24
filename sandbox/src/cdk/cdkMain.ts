@@ -1,4 +1,10 @@
 #!/usr/bin/env node
+/**
+ * 这是 shenji-cdk 的进程入口，只负责把 argv 路由到 init、validate、register、status 命令并统一映射终端退出状态，不承载各命令的领域规则。
+ * 输入边界是未经解析的命令行参数，输出边界是 stdout/stderr 与 process.exitCode；帮助文本也是用户可依赖的 CLI 合同。
+ * 子命令可能进一步访问文件、Docker、RPC 或签名账户，但本层不自行执行这些副作用，也不吞掉未预期异常。
+ * 命令按单次进程串行调度；缺参或未知命令必须以非零退出码结束，异步失败须保留堆栈信息，避免自动化脚本把失败误判为成功。
+ */
 
 import { runInitCommand } from "./commands/initCommand";
 import { runValidateCommand } from "./commands/validateCommand";

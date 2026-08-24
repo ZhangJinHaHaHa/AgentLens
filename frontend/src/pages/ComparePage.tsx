@@ -1,3 +1,10 @@
+/**
+ * 对比页把共享选择集解析为目录条目，运行领域对比与叙述规则，并以同列矩阵展示差异；它提供辅助决策，不执行购买、租用、安装或安全授权。
+ * 输入为应用配置和最多四个选择 id，输出不足两项的引导空态或包含结论、风险提示、属性矩阵及叙述的页面。
+ * 本页无私有表单状态，目录读取由 Hook 管理；移除/清空会写共享对比选择，站内/官方链接点击分别产生路由或离站导航副作用。
+ * 选择 id、目录声明、运行安全描述和官方 URL 均跨越客户端/发布者边界，比较胜出与信任徽标不能被解释为担保；离站链接必须保持 noreferrer 隔离。
+ * 表格列顺序跟随用户选择且横向滚动不改变语义，移除按钮含代理名称，结论/风险/有无证据均有文字而非只用图标或颜色；缺失目录项与溢出选择需可预测降级。
+ */
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Check, CreditCard, X, ShieldAlert, ShieldCheck, CheckCircle2, Server, Trash2 } from "lucide-react";

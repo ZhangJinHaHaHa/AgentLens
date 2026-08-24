@@ -1,4 +1,6 @@
 # 本清单只登记公开历史中已删除的路径；当前工作树不得借此恢复文件。
+# 历史检查器仍会对这些路径关联的全部可达对象执行模式、名称与内容规则，登记并非风险豁免。
+# 条目必须是历史 tree 中出现过的精确仓库相对路径；重命名后的每个旧路径分别承担审阅责任。
 docs/popo-icon.png
 docs/screenshots/01-homepage-hero.png
 docs/screenshots/02-leaderboard.png

@@ -1,3 +1,10 @@
+/*
+ * 全局样式表拥有 Tailwind 层顺序、五套艺术主题 token、基础排版、共享产品表面、响应式规则及页面动画；组件语义、业务状态和权限判断不在 CSS 中实现。
+ * 输入是 ThemeProvider 写入的根类/`data-theme`、组件稳定 class/data 属性、浏览器 viewport 与交互伪类，输出为全站级联后的颜色、间距、层级和动效。
+ * CSS 本身不持久化应用状态，但字体导入、布局测量、动画和媒体查询会触发浏览器渲染工作；选择器不得反向成为 JavaScript 的领域数据源。
+ * DOM class/data 属性可被用户或扩展篡改，只能控制外观，任何 approved/passed/danger 等状态色都不得充当授权或证据验证边界。
+ * 字体 import 必须先于 Tailwind 层，主题 token 需同时覆盖明暗组合；焦点可见性、文字对比、窄屏可读顺序和无动画时仍可理解内容是可访问性/兼容不变量。
+ */
 @import "./fonts.css";
 
 @tailwind base;

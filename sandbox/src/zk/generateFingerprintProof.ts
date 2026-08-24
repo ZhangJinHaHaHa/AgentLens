@@ -1,3 +1,10 @@
+/**
+ * 本模块为 agent 指纹电路准备私有见证：绑定 tokenId、manifest 原文哈希、镜像摘要、行为特征与开发者秘密，并生成/本地验证 Groth16 证明。
+ * manifest、镜像 digest 和特征由调用方提供，developerSecret 是最敏感输入；这里只在内存中哈希并转成 BN128 域元素，调用方仍须负责秘密来源、清除和日志隔离。
+ * SHA-256 拆分、Poseidon 参数顺序及行为特征编码属于电路的线格式不变量，任意重排都会改变 fingerprintHash/developerHash 并破坏旧 verifier 兼容。
+ * WASM、proving key 与 verification key 是构建供应链信任边界；本层不验证 trusted setup、镜像 digest 的来源或 NFT 所有权。
+ * 制品缺失、输入转换或证明失败会抛出且不产生持久化；返回的 `verified` 必须为真才可被上层视为可接受证明。
+ */
 import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
 import { createHash } from "crypto";

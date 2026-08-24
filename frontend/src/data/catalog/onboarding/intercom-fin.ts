@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Fin 指南面向已有 Intercom 工作区和帮助中心的客服团队，依据官方 Fin/知识库资料整理，
+ * 输出是一条从内容治理、品牌口吻到解答率观察与人工升级的上线顺序。
+ * intercom-fin 是目录与指南注册共用的稳定 id，不能随 Fin 套餐、计费单位或控制台栏目改名。
+ * 详情页会按数组原序编号，因此知识库质量必须先于自动化指标和路由；文中的样本量与解答率只作
+ * 运营评估参考，不是平台 SLA。该数据不读取真实会话、不训练知识库、不配置路由，也不计算费用。
+ * 帮助文章过期、无法回答或升级规则缺失时，真实系统应转人工或失败；若官方指标定义/界面变化，
+ * 应经内容复核更新，不能让前端根据这份快照推断客户问题已被解决。
+ */
 export const guide: OnboardingGuide = {
   agentId: "intercom-fin",
   prerequisites: [

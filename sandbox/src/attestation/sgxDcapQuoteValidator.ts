@@ -1,3 +1,10 @@
+/**
+ * 本模块按 SGX DCAP v3 二进制布局解析 quote，并核对版本、TEE 类型、可选 MRENCLAVE 以及审计上下文的 report_data 绑定。
+ * quote 十六进制字符串来自不可信 provider；所有偏移和长度都是线格式兼容不变量，越界、非十六进制或标识不符通过稳定错误码拒绝。
+ * report_data 的前 32 字节必须等于 `sha256(eventKey + manifestHash + evidenceRoot)`，其余字节保持零填充；拼接与填充规则不可随意变更，否则旧证明将不兼容。
+ * 这里仅做结构和声明绑定校验，不验证 ECDSA 签名、PCK 证书链、TCB/撤销状态或 Intel collateral，调用方不能把成功结果等同于完整 DCAP 远程认证。
+ * mock quote 构造器只生成满足布局的测试载荷且不含认证数据；解析与校验均为内存操作，失败不会留下需要回滚的状态。
+ */
 import { createHash } from "node:crypto";
 
 import type { AttestationQuoteValidator } from "./attestationQuoteValidator";

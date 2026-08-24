@@ -8,6 +8,9 @@ import {
   writePolygonEdgeLocalEnvFile
 } from "./printPolygonEdgeLocalEnv.js";
 
+// 本地全链路 smoke 把部署元数据、Vite、agent-browser 与审计详情页串成一次可观察验证；
+// 它只面向开发网络，不部署合约、不重置链状态，也不把这些断言当作生产可用性监控。
+// 环境变量和部署 JSON 是运行输入；成功返回并可选落盘 URL 摘要，UI 文本/导航不符或外部命令失败即拒绝通过。
 export function buildSmokeConfig(env = process.env) {
   const bindHost = env.LOCAL_FRONTEND_SMOKE_BIND_HOST || env.LOCAL_FRONTEND_SMOKE_HOST || "127.0.0.1";
   const host = normalizeBrowserHost(
@@ -52,6 +55,7 @@ export async function runLocalFrontendSmoke(config = buildSmokeConfig(), depende
   const agentDetailUrl = `${baseUrl}/agent/${resolvedConfig.tokenId}`;
   const auditDetailUrl = `${baseUrl}/agent/${resolvedConfig.tokenId}/audits/${resolvedConfig.auditId}/${resolvedConfig.auditIndex}`;
 
+  // finally 只承诺回收本次启动的 Vite 子进程；.env.local 与可选摘要作为诊断派生物保留，需重跑生成而非回滚业务状态。
   try {
     await waitForFrontendReady(baseUrl);
 
@@ -120,6 +124,7 @@ function assertIncludes(text, expected, context) {
 }
 
 function createAgentBrowserRunner(browserHome) {
+  // 为自动化浏览器注入隔离 HOME，避免复用操作者会话；该覆盖仅作用于子进程，不修改当前 Node 环境。
   return async (...args) => {
     const { execFileSync } = await import("node:child_process");
     return execFileSync("agent-browser", args, {
@@ -238,6 +243,7 @@ async function defaultStopFrontendDevServer(server) {
 }
 
 async function defaultWriteSmokeSummaryFile(summary) {
+  // 未配置输出路径时保持纯 stdout/返回值模式；配置后仅在全部断言完成后写入，避免成功标记半成品运行。
   const outputPath = process.env.LOCAL_FRONTEND_SMOKE_SUMMARY_FILE;
   if (!outputPath) {
     return;

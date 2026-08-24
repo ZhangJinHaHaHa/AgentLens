@@ -1,6 +1,9 @@
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
+// 该配置把组件源码中的实用类、CSS 变量设计令牌与动画插件编译成可发布样式；
+// 它不切换主题，也不读取用户偏好，运行时的 light/dark 类由应用入口负责。
+// content 范围只覆盖 React 应用壳与源码，独立的 public 演示页自带静态 CSS，故不应纳入类名扫描。
 const config: Config = {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
@@ -13,6 +16,7 @@ const config: Config = {
       }
     },
     extend: {
+      // 语义色仅引用全局 CSS 变量，确保暗色模式和品牌调整不需要改动组件类名。
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -61,6 +65,7 @@ const config: Config = {
         }
       },
       fontFamily: {
+        // 字体列表按可用性逐级回退；中文与等宽字符均保留系统兜底，避免字体资源失败阻塞首屏。
         sans: [
           "Geist Sans",
           "Inter",
@@ -97,6 +102,7 @@ const config: Config = {
         sm: "4px"
       },
       keyframes: {
+        // Radix 高度变量是手风琴动画的跨组件契约，不能替换为固定高度，否则动态内容会被裁剪。
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" }

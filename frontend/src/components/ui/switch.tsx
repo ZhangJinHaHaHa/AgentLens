@@ -1,3 +1,10 @@
+/**
+ * Switch 封装 Radix 二态开关与滑块外观，提供一致的焦点、禁用和 checked/unchecked 状态样式；它不拥有偏好值、不保存设置，也不执行受保护操作。
+ * 输入沿用 Radix 的 checked/defaultChecked、change 回调、disabled、样式和 ref，输出一个可聚焦 Root 及纯视觉 Thumb。
+ * 受控或非受控状态与变更副作用由 Radix和调用方管理，本层无网络、存储或业务回滚逻辑。
+ * checked 值是客户端交互状态而非服务器授权，调用方必须在持久化或执行前再次验证；透传事件和属性也不能绕过真实权限边界。
+ * 每个开关必须由外部 Label 或 aria 属性命名，键盘切换、禁用和焦点环需保留；Thumb 不接收指针，既有尺寸/位移是主题兼容不变量。
+ */
 import * as React from "react";
 import * as SwitchPrimitive from "@radix-ui/react-switch";
 

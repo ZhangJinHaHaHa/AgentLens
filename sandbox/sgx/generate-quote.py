@@ -17,6 +17,9 @@ import sys
 import hashlib
 
 
+# 进程边界严格保持 stdin 单请求、stdout 单 JSON 响应；诊断只写 stderr，便于调用方把 stdout 当作协议载荷。
+# 本程序负责向 Gramine 设备请求 quote，但不验证 quote、平台证书链或调用者权限，验证与授权属于远端 verifier。
+# 设备访问、JSON 解析或 schema 校验任一失败均以非零退出，不生成占位证明，也没有需要补偿的持久状态。
 SCHEMA_VERSION = "audit-attestation-request.v1"
 QUOTE_FORMAT = "sgx-dcap-v3"
 REPORT_DATA_SIZE = 64  # SGX report_data is 64 bytes
@@ -30,6 +33,7 @@ def require_string(obj, field):
 
 
 def parse_request(raw):
+    # 此处只锁定协议版本和必填字符串；哈希编码、token 语义与 manifest 可访问性由上游协议层验证。
     parsed = json.loads(raw)
     if parsed.get("schemaVersion") != SCHEMA_VERSION:
         raise ValueError(f"schemaVersion must be {SCHEMA_VERSION}")
@@ -49,6 +53,7 @@ def compute_report_data(request):
     First 32 bytes = SHA-256(eventKey + manifestHash + evidenceRoot)
     Last 32 bytes = zeros (reserved)
     """
+    # 无分隔拼接和尾部零填充是既有验签兼容格式；任何字段编码调整都必须与远端重算逻辑同步发布。
     payload = request["eventKey"] + request["manifestHash"] + request["evidenceRoot"]
     digest = hashlib.sha256(payload.encode("utf-8")).digest()
     return digest + b"\x00" * (REPORT_DATA_SIZE - len(digest))
@@ -93,6 +98,7 @@ def main():
     mrenclave = read_mrenclave()
 
     # 5. Output response
+    # sessionPublicKey 字段为兼容现有响应协议承载绑定摘要；本程序并未生成会话密钥，调用方不得据此推断密钥所有权。
     response = {
         "measurement": mrenclave,
         "quoteFormat": QUOTE_FORMAT,
@@ -104,6 +110,7 @@ def main():
 
 
 if __name__ == "__main__":
+    # 顶层统一失败通道保证异常不会混入 stdout 的成功 JSON；原始输入也不会回显到日志。
     try:
         main()
     except Exception as e:

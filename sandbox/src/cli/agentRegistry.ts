@@ -1,3 +1,9 @@
+/**
+ * 这是面向脚本的代理注册表查询入口，统一提供单报告、历史分页、顺序搜索及三类持久证据验证；不提交链上交易，也不把查询结果缓存为权威状态。
+ * argv/env 是外部输入，stdout 上“一次调用一条 JSON”与数值退出码是机器可读输出合同；RPC 响应、合约错误和本地验证文件均跨越信任边界。
+ * token 不存在与 audit 不存在被规范化为结构化业务结果，其余网络、ABI 或配置错误必须向上传播，避免把基础设施故障伪装成空数据。
+ * 搜索和历史读取均刻意串行，跨多个 latest 调用不提供区块级一致性；扫描游标、连续缺失阈值、latest-first 分页和 bigint 字符串化是兼容不变量。
+ */
 import {
   readListenerRuntimeConfigFromEnv,
   type ListenerRuntimeConfig

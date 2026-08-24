@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Microsoft Copilot 指南聚焦 Microsoft 365 租户内的办公知识使用，依据官方产品与支持资料，
+ * 输出顺序把权限治理放在文档总结、邮件草稿等高频低风险试用之前，并最终要求人工复核。
+ * microsoft-copilot 是目录长期 id，不随授权 SKU、Teams 入口或具体模型版本变化；指南 Map 和详情
+ * 路由均依赖它。数组次序属于安全展示契约，不能因 UI 紧凑而省略或重排权限审计。
+ * 本文件不读取 SharePoint/OneDrive/Teams、不分配许可证、不修复过度共享，也不自动发送办公内容。
+ * 租户授权不足、引用不准确或资料越权时应由 Microsoft 控制面和组织策略阻止；静态指南可见
+ * 绝不意味着平台获得了企业数据访问权。
+ */
 export const guide: OnboardingGuide = {
   agentId: "microsoft-copilot",
   prerequisites: [

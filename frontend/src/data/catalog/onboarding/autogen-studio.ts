@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * AutoGen 条目服务于多 Agent 研究验证，而非终端用户的一键成品：内容从官方仓库/文档抽取，
+ * 输出重点是角色边界、逐轮日志和产品化包装的先后关系。autogen-studio 沿用目录历史 id，
+ * 即使产品名称简写为 AutoGen 也不能单独改键，否则精选卡会显示“无指南”。
+ * steps 的输入顺序就是详情页编号顺序，先约束任务和轮次、再留痕、最后包装是这里的展示契约；
+ * 双语对象也必须成对维护。该静态数据不创建 Agent、不限制循环、不核算 token，也不授予工具权限。
+ * 若模型、服务端或日志设施尚未准备，指南仍可展示但执行应在真实运行边界失败；官方架构变化
+ * 应通过编辑复核更新，而不能让前端据此推断某个实验已可生产运行。
+ */
 export const guide: OnboardingGuide = {
   agentId: "autogen-studio",
   prerequisites: [

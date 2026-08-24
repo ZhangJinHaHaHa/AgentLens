@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Coze 指南面向 Bot、知识库与多渠道发布的渐进接入，综合官方 SaaS 入口和 Coze Studio 开源仓库，
+ * 输出的是“公开 FAQ 测试 Bot→工作流边界→生产渠道”的详情页阅读路线。
+ * coze 是目录中的稳定产品键，云端版、自托管版和品牌展示共享这一个指南连接点；不得因部署形态
+ * 另起 id 而造成卡片与教程分裂。数组顺序有意把知识质量与人工转接放在发布之前，双语文本需同步展示。
+ * 该文件不创建 Bot、不上传知识库、不复制官方账号权限，也不决定插件可调用范围。
+ * 若账号、服务或渠道授权不可用，执行必须留在官方/运行层失败；生产渠道尚未完成隐私、日志和接管
+ * 配置时，只能停留在测试 Bot，不能由前端根据指南内容自动放行。
+ */
 export const guide: OnboardingGuide = {
   agentId: "coze",
   prerequisites: [

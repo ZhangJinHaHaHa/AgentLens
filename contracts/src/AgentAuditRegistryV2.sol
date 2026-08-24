@@ -1,6 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+/// @title 带六维评分、申诉记录和声誉增量的 Agent 审计登记表（V2）
+/// @notice 在 V1 的身份、质押和审计流水上新增维度分、申诉生命周期以及成功/失败申诉计数，所有状态均保存在这一独立部署实例中。
+/// @dev V1 `recordAuditResult` 入口仍可调用并把六维分写为全零；V2 入口接收六个 `uint16` 原值。合约不强制 0–10000 范围，也不从报告重新计算得分。
+/// @dev owner 负责资金与操作员治理，operator/owner 独占审计、罚没和申诉写入；证据哈希、CID、评分与 outcome 都是该受信角色的链上声明，而非合约验证结论。
+/// @dev token/audit/appeal ID 均按数组长度从 1 连续生成，审计只结算最新 Pending 项，申诉只能从 Pending 解析一次；读取函数依赖 ID 与 `index + 1` 的对应关系。
+/// @dev 通过申诉只把 Slashed 审计标为 Compensated，不恢复 `totalBond`；显式 `compensateBond` 才增加账面保证金且同样不会向合约注资，释放时仍可能受实际余额限制。
+/// @dev `getAverageScores` 排除六维全零记录后做整数向下取平均；历史 V1 写入因此不进入分母，这是前端和索引器必须保持的版本兼容语义。
+/// @dev 本合约不是 V1 的代理实现或存储升级，旧事件签名虽保留但地址和状态不继承；转账、外部接收方回退或任一 require 失败会使整笔交易回滚。
 contract AgentAuditRegistryV2 {
     string public constant name = "Agent Audit Identity V2";
     string public constant symbol = "AAI2";
@@ -251,6 +259,8 @@ contract AgentAuditRegistryV2 {
     }
 
     // V1-compatible audit result recording (no dimensional scores)
+    /// @notice 使用 V1 参数形状结算审计，供尚未发送六维评分的调用方继续工作。
+    /// @dev 兼容调用会明确落入六维全零哨兵；消费者应通过入口版本或全零约定区分“未提供”与真实零分。
     function recordAuditResult(
         uint256 tokenId,
         uint32 auditScore,
@@ -275,6 +285,8 @@ contract AgentAuditRegistryV2 {
     }
 
     // V2: audit result with dimensional scores
+    /// @notice 结算审计并保存调用方给出的六维评分。
+    /// @dev 这里只校验 token 存在、目标是最新 Pending 项且 status 非 Pending；分值尺度、报告一致性和哈希来源均由操作员信任域保证。
     function recordAuditResultV2(
         uint256 tokenId,
         uint32 auditScore,
@@ -345,6 +357,8 @@ contract AgentAuditRegistryV2 {
 
     // ── Appeal management (V2) ────────────────────────────────────
 
+    /// @notice 为既有审计追加一条待处理申诉并锚定证据摘要与 CID。
+    /// @dev 同一 audit 可被多次立案，本函数不检查审计状态或去重；`appealId` 仅在该 token 的申诉数组内从 1 编号。
     function fileAppeal(
         uint256 tokenId,
         uint64 auditId,
@@ -372,6 +386,8 @@ contract AgentAuditRegistryV2 {
         emit AppealFiled(tokenId, auditId, appealId);
     }
 
+    /// @notice 一次性解析 Pending 申诉，并更新成功/失败计数和有符号声誉增量。
+    /// @dev Approved 只在原审计仍为 Slashed 时修改其状态/标志，不返还资金账面；Rejected 仅递减 reputationDelta，结果为链上操作员裁决。
     function resolveAppeal(
         uint256 tokenId,
         uint64 appealId,

@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * 此指南对应 curated 中可自行部署的官方 OpenHands 工具，来源为官方文档和 GitHub 仓库；它输出
+ * Docker 冒烟、模型/工具选择、停止条件和评估基线的本地部署顺序。
+ * agentId=openhands 不得与 marketplace 的 platform-openhands 托管候选混用：前者是外部官方卡，
+ * 后者是平台未来运行实例；二者身份和准入证据不同。codeBlock 原样展示镜像命令，步骤顺序体现
+ * 先隔离运行再开放工具和做评估。本数据不拉镜像、不挂载目录、不读取 Key、不分配 GPU，也不执行 shell。
+ * 镜像标签过期、网络策略不足、任务不收敛或评估未达基线时应在部署/运行层失败；静态命令可见
+ * 不代表沙箱安全，更不能被用于自动提升平台候选的可运行状态。
+ */
 export const guide: OnboardingGuide = {
   agentId: "openhands",
   prerequisites: [

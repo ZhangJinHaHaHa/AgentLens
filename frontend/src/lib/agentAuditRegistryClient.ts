@@ -1,3 +1,11 @@
+/**
+ * AgentAuditRegistry 的只读适配层：用部署配置/ABI 构造 v1、v2、v3 客户端，并把合约元组转换为前端使用的档案、审计、信誉、申诉和六维分数。
+ * 工厂输入包括合约地址、RPC、chainId 与 token/index；返回的方法均可能发起 JSON-RPC，基础版本允许注入只读 contract 作为测试边界。
+ * 客户端不保存业务状态、不缓存响应、不设置超时或重试，provider/合约构造及调用错误会原样拒绝，调用方负责取消陈旧展示和恢复策略。
+ * RPC 节点、地址、ABI 与返回元组均跨越外部信任边界，TypeScript 断言不做运行时验真；用于授权或结算时必须由服务端连接权威网络复核。
+ * 多处 bigint 转 number 依赖合约字段处于设计量纲内，超大值可能失真；扩展合约升级必须保持字段顺序和数值范围兼容。
+ * V3 当前复用 V2 读取接口，未知申诉 outcome 为兼容旧/新枚举回退 Pending，而不是擅自判为通过或拒绝。
+ */
 import { Contract, JsonRpcProvider, type InterfaceAbi } from "ethers";
 
 import artifact from "../../../contracts/artifacts/AgentAuditRegistry.json";

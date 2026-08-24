@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * 这份 Codex 指南描述 AgentLens 代码工作区的接入前置：模型额度、仓库沙箱、临时分支、diff 与测试
+ * 证据共同构成输出，而不把一次 API 调用包装成完整官方客户端。agentId=codex 是精选条目和工作区
+ * 选择的稳定连接键，必须与同名目录卡一致，不能挪用 marketplace 候选的命名空间。
+ * 步骤按“连接额度—限定沙箱—保存证据”展示，顺序表达先建控制面再开放写入的兼容约束；
+ * 中转额度与官方 Key 的文案是人工维护的接入快照。本数据不调用模型、不授权 Git、不执行命令，
+ * 也不能把 hasOnboardingGuide 解释为运行器已就绪。沙箱、测试或审计任一缺失时执行应停止，
+ * 由运行层报告失败；指南只能解释边界，不能替代权限门禁。
+ */
 export const guide: OnboardingGuide = {
   agentId: "codex",
   prerequisites: [

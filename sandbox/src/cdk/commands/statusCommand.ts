@@ -1,3 +1,9 @@
+/**
+ * `status` 命令把代理档案、最新审计及可选 V3 信誉聚合成面向人的终端视图，并可在待审计状态下轮询；它不修改链状态或缓存查询结果。
+ * tokenId、watch 标志和 CDK 配置决定 RPC 输入，彩色文本与持续进程生命周期是输出；各次 latest 查询跨越不可信节点边界且不保证同一区块快照。
+ * V3 信誉读取失败按兼容策略仅隐藏信誉区块，核心 V2 档案或报告失败仍向上传播；未知审计状态必须显示而不能误着色为成功。
+ * watch 模式严格串行、每十秒一次，并只在状态离开 Pending 后退出；本模块不实现取消、超时或重试退避，进程信号处理由调用环境负责。
+ */
 import { loadCdkConfig } from "../cdkConfig";
 import { readAgentProfile, readLatestAuditReport, readReputation } from "../chain/cdkRegistryReader";
 import { auditStatusLabel } from "../cdkTypes";

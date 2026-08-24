@@ -1,3 +1,10 @@
+/**
+ * 这是动态问题生成的环境配置边界，负责 provider 白名单、API key 要求、模型/基础 URL 默认值以及题目数量的有界归一化。
+ * 真实 provider 缺少密钥会在联网前失败；mock 明确返回空凭据，保证本地流程不会意外依赖外部秘密。
+ * 题数被限制在 1–20，非整数回到 5；只有显式 `responses` 才选择 Responses API，其余值沿用 chat 默认，以兼容既有部署。
+ * 本解析器不测试密钥、不请求 endpoint，也不判断自定义 base URL 是否可信，出站治理必须在部署和网络层完成。
+ * 返回新配置对象且不会修改传入环境记录，所有校验故障都发生在外部副作用之前。
+ */
 import type { AuditLlmProvider, AuditQuestionConfig } from "./auditQuestionTypes";
 
 const VALID_PROVIDERS = new Set<AuditLlmProvider>(["openai", "anthropic", "minimax", "mock"]);

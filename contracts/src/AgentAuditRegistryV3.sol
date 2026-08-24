@@ -1,6 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+/// @title 引入时间衰减当前声誉分的 Agent 审计登记表（V3/MDDRM）
+/// @notice 独立保存身份、质押、审计和申诉，并在通过审计或解析申诉时惰性衰减后更新 0–10000 的当前声誉分。
+/// @dev 审计通过按 `50 * auditScore / 100` 增分并封顶；申诉通过加 100、失败减 200。`auditScore` 与六维分本身没有链上范围验证，输入权威仍是 operator/owner。
+/// @dev 衰减只在 `_accumulateAuditReputation` 和 `resolveAppeal` 触发，`getReputation` 返回已落盘值而不会按当前时间投影；30 天、1% 的线性公式使用整数除法。
+/// @dev `slashBond` 先设置 blacklist 再执行分支，因此当前实现的罚没总会把 currentReputationScore 清零；罚没金额留在合约余额中但不再属于档案账面。
+/// @dev ID 与数组索引继续保持 1 起始映射，审计只结算最新 Pending 项、申诉只解析一次；哈希/CID/评分/裁决均不在链上重算或验证。
+/// @dev V1 形状的审计入口将六维分保存为全零；V3 的 `ReputationUpdated` 比 V2 多一个 currentScore 参数，按旧事件 topic 解码的索引器必须升级。
+/// @dev 该合约不是 V2 的原位升级且不会迁移旧状态。外部 ETH call、算术检查或 require 失败会整笔回滚，账面补偿不自动补充合约实际余额。
 contract AgentAuditRegistryV3 {
     string public constant name = "Agent Audit Identity V3";
     string public constant symbol = "AAI3";
@@ -263,6 +271,8 @@ contract AgentAuditRegistryV3 {
     }
 
     // V1-compatible audit result recording (no dimensional scores)
+    /// @notice 以 V1 参数集合结算最新待审计项，并按兼容约定写入全零六维分。
+    /// @dev `_recordAuditCore` 在 `_fillAuditRecord` 之前发出事件，因此当前事件中的 reportHash/reportCID 是填充前值；权威完整记录应在确认后从 getter 读取。
     function recordAuditResult(
         uint256 tokenId,
         uint32 auditScore,
@@ -286,6 +296,8 @@ contract AgentAuditRegistryV3 {
     }
 
     // V2: audit result with dimensional scores
+    /// @notice 保存带六维分的审计结论，并在 Passed 时累计当前声誉。
+    /// @dev 分值和链下摘要由授权操作员提供；与 V1 入口相同，`AuditRecorded` 早于详情填充，事件消费者不能假定其中报告字段已反映本次参数。
     function recordAuditResultV2(
         uint256 tokenId,
         uint32 auditScore,
@@ -309,6 +321,8 @@ contract AgentAuditRegistryV3 {
             scores);
     }
 
+    /// @notice 对指定审计执行账面罚没、永久黑名单标记和当前声誉清零。
+    /// @dev 不转移罚没资金，也不改变 accruedServiceFees；重复对同一记录罚没仍由余额检查而非审计状态限制。
     function slashBond(
         uint256 tokenId,
         uint64 auditId,
@@ -392,6 +406,8 @@ contract AgentAuditRegistryV3 {
         emit AppealFiled(tokenId, auditId, appealId);
     }
 
+    /// @notice 解析申诉并在应用截至当前区块时间的衰减后调整声誉与审计状态。
+    /// @dev 结果不可再次修改；Approved 的自动补偿只改状态而不增加 totalBond，显式资金账面补偿仍是另一条操作员路径。
     function resolveAppeal(
         uint256 tokenId,
         uint64 appealId,
@@ -538,6 +554,7 @@ contract AgentAuditRegistryV3 {
 
     // ── Internal helpers ──────────────────────────────────────────
 
+    /// @dev 衰减以最后更新时间为起点一次性落盘；长时间间隔可把分数归零，零分或首次更新只推进时间戳。
     function _applyTimeDecay(ReputationRecord storage rep) internal {
         if (rep.lastReputationUpdateAt == 0 || rep.currentReputationScore == 0) {
             rep.lastReputationUpdateAt = uint64(block.timestamp);

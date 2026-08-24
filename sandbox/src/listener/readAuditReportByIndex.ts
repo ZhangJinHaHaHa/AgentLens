@@ -16,6 +16,11 @@ interface JsonRpcErrorResult {
   };
 }
 
+/**
+ * 这是合约 `AuditRecord` 在 listener 侧的稳定投影。链上注册表拥有记录状态；本类型只承载
+ * 一次 `eth_call` 的解码结果，不代表本地缓存或最终性证明。可选证据字段保留了旧记录/旧消费方
+ * 不提供扩展证据时的兼容形态，调用方不得因字段存在就推断证据已经过独立验证。
+ */
 export interface AuditReportByIndex {
   auditId: number;
   timestamp: number;
@@ -62,6 +67,12 @@ type DecodedAuditRecord = {
   appealApproved: boolean;
 };
 
+/**
+ * RPC 节点是外部信任边界：这里仅校验 HTTP 成功、JSON-RPC error 与 result 的存在，
+ * TypeScript 类型断言不会在运行时验证 `jsonrpc`、`id` 或 result 的字节结构。ABI 解码错误、
+ * 网络错误和节点返回的合约 revert 均原样向上抛出，由调用方统一决定告警或重试；读适配器自身
+ * 不缓存、不落盘，也不隐藏节点分叉或暂时不可用。
+ */
 async function jsonRpcRequest<T>(
   rpcUrl: string,
   method: string,
@@ -98,6 +109,8 @@ async function jsonRpcRequest<T>(
 export async function readAuditReportByIndex(
   options: ReadAuditReportByIndexOptions
 ): Promise<AuditReportByIndex> {
+  // index 遵循合约数组的零基下标；链上的 auditId 则从 1 开始。重试斩罚流程依赖
+  // `index === auditId - 1` 这一合约兼容约束，因此这里不对两者做隐式换算。
   const fetchImpl = options.fetchImpl ?? fetch;
   const callData = getAuditRegistryInterface().encodeFunctionData("getAuditReportByIndex", [
     options.tokenId,
@@ -120,6 +133,8 @@ export async function readAuditReportByIndex(
     result
   )[0] as DecodedAuditRecord;
 
+  // ABI 解码值仍来自不可信 RPC。所有整数在跨入 JavaScript number 边界时统一检查安全整数，
+  // 防止大整数被静默舍入；哈希、CID 与 URL 保持链上原值，完整性/可访问性验证属于更上层。
   return {
     auditId: decodedIntegerToNumber(decoded.auditId, "auditId"),
     timestamp: decodedIntegerToNumber(decoded.timestamp, "timestamp"),

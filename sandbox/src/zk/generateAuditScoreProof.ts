@@ -1,3 +1,10 @@
+/**
+ * 该模块把六维审计分数及其原始评价汇总转换为 AuditScoreVerifier 电路输入，生成 Groth16 证明并用同目录 verification key 本地复核。
+ * 分数/计数来自审计流水线，WASM、zkey 和 vkey 属于构建供应链信任边界；这里加载既有制品，但不证明 trusted setup、密钥来源或电路版本本身可信。
+ * 每类题目固定补齐/截断到 10 个，维度与计数必须遵循六槽布局；Poseidon commitment 的输入顺序是电路兼容不变量，改变会使既有 verifier 无法复现。
+ * 缺少构建制品、字段无法转换、见证/证明或读取失败会抛错；本函数不自动编译、不重试，也不会写回生成物，因此失败没有本地持久化回滚。
+ * 本地 verify 的布尔结果原样返回而不是被提升为成功声明，调用方必须只在 `verified === true` 时接受证明。
+ */
 import { readFileSync, existsSync } from "fs";
 import { resolve } from "path";
 

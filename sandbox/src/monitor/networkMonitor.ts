@@ -1,3 +1,9 @@
+/**
+ * 基础网络监视器读取容器 /proc/net 表并提取非监听 TCP/IPv4 连接，生成审计结果所需的目的 IP、计数和可选原始证据；不配置防火墙或确认域名归属。
+ * containerId 与 procfs 文本来自不可信 Docker 边界，解析器跳过未知/IPv6形状、0.0.0.0 和本地审计端口，格式异常只在关键 IPv4 编码不可解释时失败。
+ * 默认采集会执行 docker exec，输出中的 observedAt 是采样时刻；requestedIps 去重排序而 requestCount 保留观测行数量，两者语义不得混用。
+ * 这是一次瞬时、非原子采样，无法证明整个运行期没有短连接；每次调用无共享缓存，可并发但会分别读取同一容器状态。
+ */
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 

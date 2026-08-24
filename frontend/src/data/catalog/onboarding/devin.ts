@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Devin 是受席位和官方控制台约束的封闭式工程 Agent，本指南依据官方文档把接入输出收束为
+ * staging 小任务、受限 GitHub App、可复用 Playbook 和观察窗口，而非宣传“自动交付”。
+ * devin 是已发布目录标识，即使套餐、团队席位或版本名称变化也应保持稳定；步骤数组的顺序让
+ * workspace 命令和分支权限先于规模化观察，是详情页编号展示不可随意重排的安全契约。
+ * 本文件不申请席位、不连接仓库、不开放分支权限、不统计 30 个 PR，也绝不能触发自动合并。
+ * 未获席位、构建/测试命令错误或任务无法自我纠错时，应由官方运行与 PR 流程明确失败；
+ * 这些状态不能从指南存在、文案日期或 hasOnboardingGuide 反推为可用。
+ */
 export const guide: OnboardingGuide = {
   agentId: "devin",
   prerequisites: [

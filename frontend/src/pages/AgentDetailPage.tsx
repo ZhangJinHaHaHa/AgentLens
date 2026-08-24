@@ -1,3 +1,10 @@
+/**
+ * 代理详情页是目录条目的阅读编排器：按 overview/demo/trust/resources 组织决策组件，并仅为原生条目挂载链上与定价视图；各子域的评分、网络客户端和写操作仍由其所有者负责。
+ * 输入为已校验 `AppConfig` 以及路由 id/query/hash，输出覆盖加载、未找到和完整详情三类页面状态。
+ * 本地状态拥有活动标签；两个 effect 分别同步白名单 tab 查询参数与片段滚动，安装按钮只切换 resources 并定位资源区，不执行真实安装。
+ * 路径 id、`tab`、hash 和目录条目均处于浏览器/内容信任边界：tab 必须经枚举收窄，DOM 定位只按 id，原生链上数据和外链继续由专门组件校验或隔离。
+ * URL 与标签状态需双向保持且使用 replace 避免污染历史；加载与缺失必须可区分，Tabs 保留键盘语义，深链片段在面板渲染后再滚动且不得改变信息访问权限。
+ */
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useParams, useSearchParams } from "react-router-dom";

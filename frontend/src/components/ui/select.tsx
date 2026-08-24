@@ -1,3 +1,10 @@
+/**
+ * Select 组合 Radix Root、Trigger、Portal 内容与选项，统一单选控件的焦点、弹层和选中标记样式；它不解释选项值，也不执行筛选或表单提交。
+ * 输入沿用 Radix 的受控/非受控 value、选项子节点、禁用、定位、样式和 ref，输出具备触发器、视口及 ItemText 的单选结构。
+ * 选中状态、键盘导航、开合和 Portal 生命周期由 Radix 管理，value 变更副作用归调用方，本层无持久化或 I/O。
+ * 选项 value/文字跨调用边界传入，React/Radix 负责展示而非业务校验；消费者必须在使用前将字符串收窄到自己的允许集合，不能信任浏览器提交值。
+ * Trigger 需由调用方关联可见 Label/aria 名称，disabled、焦点与选中指示必须保持；弹层宽高依赖 Radix CSS 变量，替换 positioning 模式时不得破坏窄屏可见性。
+ */
 import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown } from "lucide-react";

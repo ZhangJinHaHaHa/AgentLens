@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Claude Code 指南把官方 CLI 安装、认证和权限文档整理为仓库首次试跑路径，详情组件会原样展示
+ * 安装命令，并按数组次序给步骤编号。claude-code 是精选目录、产品类型映射与指南注册表共享的
+ * 稳定标识，不能因 npm 包名或官方登录方式调整而改动。
+ * “安装→认证→缩小权限→小任务验证”的顺序承担安全展示契约；平台建议补充的是分支与 review
+ * 经验，并非 Anthropic 官方保证。本文件不执行 npm、不读取 settings.json、不检测订阅，也不拦截
+ * 越权 shell 命令。Node 版本、登录、网络或许可失败必须在真实 CLI 边界显式报错；若官方命令失效，
+ * 应更新这份人工快照和链接，而不是在渲染层隐藏失败。
+ */
 export const guide: OnboardingGuide = {
   agentId: "claude-code",
   prerequisites: [

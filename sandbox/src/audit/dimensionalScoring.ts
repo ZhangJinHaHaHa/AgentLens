@@ -1,3 +1,10 @@
+/**
+ * 本模块把答案评价、安全边界、健康检查、资源用量和网络对账汇总为六维展示分数及固定权重总分。
+ * 输入来自已经执行完的本地审计结果；类别映射、资源阈值、缺失信号的 50 分基线与维度权重共同构成可比较历史报告的兼容契约。
+ * 每个可用信号先进入对应维度再取平均并四舍五入，总分随后按权重计算；任何扩展都必须避免重复计入同一事实而扭曲跨版本趋势。
+ * 这些启发式分数不替代红线 reasonCode、访问控制或证明验证，也不负责决定 Passed/Failed。
+ * 计算是确定性的纯函数，不改变 LocalAuditResult；异常输入不会触发持久化或需要回滚的副作用。
+ */
 import type { LocalAuditResult } from "../types/manifest";
 import type { AnswerEvaluation } from "./evaluateAuditAnswer";
 import type { SecurityBoundaryResult } from "./securityBoundaryScore";

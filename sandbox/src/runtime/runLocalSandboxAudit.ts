@@ -1,3 +1,10 @@
+/**
+ * 本地审计核心编排 manifest 加载、镜像/容器生命周期、健康与请求、资源/网络取证、动作对账、可选 LLM 评价及最终决策；不实现各适配器的底层 I/O。
+ * manifest/镜像、agent HTTP 响应、进程指标、网络快照和 LLM 评价均跨越不同信任边界，输出 LocalAuditResult 只绑定本次采样与 manifestHash，不能外推为生产认证。
+ * 拉取、启动、探活及可识别请求失败映射为稳定失败结果；容器启动后无论返回或抛错都必须 stop/remove，红线或请求异常还会先 kill 以尽快终止不可信执行。
+ * 资源与网络在同一阶段并发采集但不是原子快照，失败原因按网络、动作、资源顺序裁决；LLM 评价失败是非致命附加证据，不能改写基础沙箱结论。
+ * 每次调用只拥有自己的 containerId，不共享审计状态；证据事件按阶段顺序 await，时间戳、reasonCode、decisionType 和清理语义是报告消费者依赖的兼容不变量。
+ */
 import { DEFAULT_CPU, DEFAULT_MEMORY_MB, DEFAULT_TIMEOUT_MS } from "../config/constants";
 import type { StartedContainer } from "../docker/dockerRunner";
 import type { HealthcheckOptions } from "../docker/healthcheck";

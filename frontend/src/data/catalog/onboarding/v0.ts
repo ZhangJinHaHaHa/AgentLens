@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * v0 指南面向 Next.js/Tailwind 原型的设计到工程交接，来源是 v0 与 shadcn 官方资料，输出按
+ * 项目模式、浏览器迭代、下载/部署、代码审查的次序展示，终点是可复核源码而非生成即上线。
+ * v0 是短但稳定的公开 id，不能因 Vercel 项目名、模型版本或输出框架调整而改写；指南 Map、
+ * 产品分类和已有详情 URL 都依赖它。步骤数组与官方链接保持编辑顺序，UI 不应自行按标题排序。
+ * 本数据不生成组件、不访问品牌资源、不下载工程、不执行部署或依赖升级，也不判断 a11y/SEO 是否通过。
+ * 生成 API 过期、server action 不安全、部署失败或审查不合格时必须由真实工具链阻断；
+ * 静态示例只能引导交接，不能充当生产验收结果。
+ */
 export const guide: OnboardingGuide = {
   agentId: "v0",
   prerequisites: [

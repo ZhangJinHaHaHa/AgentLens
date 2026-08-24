@@ -1,3 +1,9 @@
+/**
+ * listener 观测集成拥有进程内指标快照，并按环境选择性启动聚合健康/指标服务器；不修改监听主循环逻辑，也不替它判断审计或链回写成功。
+ * env、RPC URL 与 stateDir 决定外部 readiness 边界，输出提供 get/update、可选 server 和幂等调用方应管理的 stop 生命周期。
+ * 启用时会绑定网络端口、探测 RPC 并在状态目录创建短暂文件；禁用时仍提供纯内存指标收集，但不得伪装存在监听服务。
+ * 指标更新采用“传入当前 collector、替换为新 collector”的单进程所有权模型；调用者应串行更新以避免基于陈旧快照丢增量，关闭时必须等待 server.close 完成。
+ */
 import type { ReadinessCheck } from "./healthCheckTypes";
 import { readHealthCheckConfigFromEnv, buildHealthCheckConfig } from "./healthCheckConfig";
 import { startObservabilityServer, type StartedObservabilityServer } from "./observabilityServer";

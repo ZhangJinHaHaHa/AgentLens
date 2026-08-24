@@ -1,3 +1,10 @@
+/**
+ * 这是持久化证明的只读核验路径：按受校验 eventKey 定位唯一制品，先核对文件名中的内容哈希，再验证 bundle 形态和可选 verifier/SGX 绑定。
+ * 目录内容和 JSON 文件均来自文件系统信任边界；匹配规则必须保持与写入端命名一致，零匹配与多匹配分别代表缺失和冲突，不能任意挑选一个继续。
+ * 哈希覆盖原始文件字节，随后才解释 schema；启用 report_data 检查时，quote 必须把 bundle 内的 eventKey、manifestHash 和 evidenceRoot 绑定在一起。
+ * 可判定的完整性问题用细分状态返回，目录不存在映射为 `not_found`；其他 I/O、JSON 解码或非预期程序错误继续抛出，避免把系统故障伪装成验证结论。
+ * 读取过程不修复、不删除也不重写历史文件，因此没有回滚；调用方可依赖结果联合类型执行审计处置。
+ */
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 

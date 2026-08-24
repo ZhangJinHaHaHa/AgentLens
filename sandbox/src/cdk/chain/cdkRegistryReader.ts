@@ -1,3 +1,9 @@
+/**
+ * CDK 的只读链适配层：编码注册表查询、通过 JSON-RPC 执行 eth_call，并把 ABI 返回值规范化为不会丢失精度的领域对象；不签名、不发送交易。
+ * rpcUrl、合约地址、tokenId 和可注入 fetch 是输入，AgentProfile/AuditReport/费用/信誉是输出；RPC 响应与合约字节均属于不可信网络边界。
+ * HTTP 非成功、JSON-RPC error、缺少 result、ABI 不匹配及整数越界均应抛错，不得伪造默认链状态；仅 bytes32 零值和空 CID按协议转换为“字段缺席”。
+ * 每次读取针对 latest 独立执行，跨调用不承诺同一区块快照或事务一致性；V2/V3 Interface 的选择及字段单位是与已部署合约的兼容不变量。
+ */
 import { decodedIntegerToBigInt, decodedIntegerToNumber } from "../../chain/decodedInteger";
 import { getCdkV2Interface, getCdkV3Interface } from "./cdkArtifact";
 import type { AgentProfile, AuditReport, DimensionalScores, ReputationInfo } from "../cdkTypes";

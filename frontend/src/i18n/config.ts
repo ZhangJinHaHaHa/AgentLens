@@ -1,3 +1,10 @@
+/**
+ * 国际化进程级初始化入口：注册 React 适配器和浏览器语言探测器，把中英文九个命名空间作为打包资源装入单例 i18n 实例。
+ * 初始化具有模块副作用，但不发起翻译网络请求；探测顺序为路径、localStorage、navigator，并把选中语言缓存回浏览器存储。
+ * 路径、存储和浏览器偏好均属客户端不可信输入，最终只允许 `SUPPORTED_LOCALES`，无法识别时稳定回退中文。
+ * `escapeValue: false` 依赖 React 默认文本转义，翻译内容不得绕过 React 注入原始 HTML；资源 JSON 仍应在发布阶段审查。
+ * `isInitialized` 守卫保证热更新/重复导入不重置现有状态；初始化 Promise 不在此重试，命名空间及默认语言是路由与翻译键的兼容契约。
+ */
 import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";

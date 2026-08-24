@@ -15,6 +15,9 @@
  * lighter than wiring tsx/esbuild and matches the "fast pre-build" intent.
  */
 
+// 这是 build 前的快速数据契约门：只读目录中的 TypeScript/locale 文件，聚合全部发现后统一以非零退出。
+// 正则扫描刻意依赖当前目录与格式约定，不替代 TypeScript 类型检查或 JSON schema 验证；格式演进必须同步更新此门禁。
+// 脚本不修复目录、不生成 onboarding，也不改写翻译，避免构建过程把缺失数据静默固化进产物。
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
@@ -164,6 +167,7 @@ function validate() {
   }
   const marketplaceIdList = marketplaceIds.join(",");
   const expectedMarketplaceIdList = EXPECTED_PLATFORM_MARKETPLACE_IDS.join(",");
+  // 托管候选的数量与顺序都是产品种子契约；只做集合比较会掩盖推荐展示顺序的意外漂移。
   if (marketplaceIdList !== expectedMarketplaceIdList) {
     fail(
       `marketplace.ts: expected hosted-candidate ids ${expectedMarketplaceIdList}, found ${marketplaceIdList}.`
@@ -191,6 +195,7 @@ function validate() {
   }
 
   if (existsSync(ONBOARDING_DIR)) {
+    // 一旦 onboarding 目录出现，就要求每个 curated agent 有独立指南；兼容窗口只允许整个目录尚未创建。
     const onboardingFiles = readdirSync(ONBOARDING_DIR).filter((f) => f.endsWith(".ts"));
     const indexFile = onboardingFiles.find((f) => f === "index.ts");
     if (!indexFile) {
@@ -211,6 +216,7 @@ function validate() {
   }
 
   // Cross-check zh/en JSON locale parity for every namespace.
+  // 以中文命名空间为基准枚举文件，并双向比较叶子键；值内容和翻译质量不属于此结构门的职责。
   const localesRoot = join(ROOT, "src", "i18n", "locales");
   if (existsSync(localesRoot)) {
     const zhRoot = join(localesRoot, "zh");

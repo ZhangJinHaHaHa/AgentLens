@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Gemini 文件刻意区分消费者网页助手与开发者 API 两条入口，资料来自 Gemini Web 与官方 API 文档，
+ * 输出给详情页的是先低敏试用、再多模态抽样、最后用结构化 schema 接产品的评估路径。
+ * google-gemini 是目录稳定键，不跟随具体模型代次、AI Studio 品牌或 Cloud 项目名称迁移；
+ * 步骤顺序和中英文本共同构成展示兼容面，消费者不得自行把 API 步骤提升到网页试用之前。
+ * 静态指南不创建 Cloud 项目、不签发 Key、不读取 Workspace 数据，也不验证图片业务判断的正确性。
+ * 权限治理不足、关键字段识别失败或输出不符合 schema 时应由接入层拒绝/降级；官方能力和链接
+ * 随时间变化属于需人工复核的时效风险，不能在这里按模型名猜测可用功能。
+ */
 export const guide: OnboardingGuide = {
   agentId: "google-gemini",
   prerequisites: [

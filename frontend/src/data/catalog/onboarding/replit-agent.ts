@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Replit Agent 指南描述从浏览器生成 MVP 到迁出长期代码的短链路，资料来自官方产品文档，输出顺序
+ * 包含对话迭代、存储接入、演示部署和安全收尾，不把在线 Repl 视为永久生产源。
+ * replit-agent 是精选卡与指南注册的持久 id，套餐、配额或 Agent 版本变化不应影响详情链接。
+ * 步骤原序对应能力逐步扩大并由 UI 编号；diff 审查与最终安全项不能为缩短展示而省略。
+ * 本文件不创建 Repl、不写 Secrets、不迁移数据库、不部署域名，也不撤销 root shell 权限。
+ * 配额不足、存储迁移失败、secret 泄露或部署不可用应由 Replit 和团队工程流程显式处理；
+ * 未完成备份与代码接管时，指南中的“一键部署”不能被解释为可维护的生产交付。
+ */
 export const guide: OnboardingGuide = {
   agentId: "replit-agent",
   prerequisites: [

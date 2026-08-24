@@ -1,4 +1,11 @@
 /**
+ * 该文件是动态问题生成链路的共享类型契约，统一 provider 标识、六类审计问题、manifest 上下文和模型调用配置。
+ * `AuditQuestion.id` 用于跨生成、提问与评价阶段关联，类别字符串及 API 格式值属于序列化兼容面，修改时必须同步所有消费者。
+ * 上下文中的网络许可列表为只读输入，配置中的 API key 只是传输字段；本模块不拥有密钥生命周期，也不决定哪些元数据可以外发给模型。
+ * TypeScript 类型不会校验运行时 JSON，外部 provider 响应仍必须经过模板解析器的显式检查。
+ * 本文件不执行 I/O、不构造提示词且不产生状态，因此没有失败恢复或回滚语义。
+ */
+/**
  * Types for LLM-based dynamic audit question generation.
  */
 

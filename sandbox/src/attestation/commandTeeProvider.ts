@@ -1,3 +1,10 @@
+/**
+ * 该适配器把受配置管理的本地可执行程序包装为 `TeeProvider`，以 JSON stdin/stdout 维持与 HTTP provider 相同的证明结果契约。
+ * 请求来自审计流水线，命令与参数来自部署配置，而 stdout 是不可信的进程外数据；只有四个必填字段归一化并通过 quoteValidator 后才可返回。
+ * 默认 runner 不经 shell 启动子进程，退出码、启动错误、JSON 解码及校验失败均直接向调用者传播，绝不降级为看似成功的 mock 证明。
+ * 进程生命周期可由注入的 runner 接管；默认 runner 当前不消费 timeoutMs，本层也不重试、不保存证明，外部监督者必须限制悬挂进程且无法回滚命令副作用。
+ * validator 可注入是为了组合硬件/策略校验与测试替身，并不改变“未经校验的 stdout 不能越过此边界”的不变量。
+ */
 import { spawn } from "node:child_process";
 
 import type { AttestationRequest, TeeProvider } from "./mockTeeProvider";

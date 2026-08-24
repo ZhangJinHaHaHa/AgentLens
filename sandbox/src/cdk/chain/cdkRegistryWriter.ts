@@ -1,3 +1,9 @@
+/**
+ * 本模块封装代理注册的链上写入：用 V2 ABI 编码 stake、提交带 value 的交易，并从确认回执中提取 AgentRegistered tokenId；不决定质押金额或交互确认策略。
+ * 输入含 CDK 配置、代理名、manifest URL 与 wei 金额，输出是交易哈希、区块号和 tokenId；RPC、签名器和回执日志均跨越外部信任边界。
+ * 默认路径会使用进程提供的私钥创建写客户端并产生不可逆链上副作用，但不会记录私钥；测试可注入 writer 以隔离签名与网络。
+ * 缺少私钥、提交失败、ABI 缺事件或回执缺少注册日志必须整体失败；调用方不得把“交易已回执”之外的重试当作幂等操作，以免重复质押。
+ */
 import { getCdkV2Interface } from "./cdkArtifact";
 import type { CdkConfig, RegisterResult } from "../cdkTypes";
 import {

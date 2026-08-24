@@ -1,3 +1,10 @@
+/**
+ * 完整信任说明卡展开层级名称、定义、判定原因和原始证据键值；它解释既有计算结果，不重新打分、不查询链上数据，也不隐藏不利原因。
+ * 输入为 `TrustTierResult` 与可选样式，输出为标题、原因列表和在有值时出现的证据定义列表。
+ * 组件是纯展示，无状态、持久化或导航副作用，翻译与样式仅在渲染时解析。
+ * evidence 值可能来自链、目录或远端报告，必须以纯文本显示且不能被当作已验证凭据；层级样式同样不是授权接口。
+ * 层级含义以文字而非色点表达，原因使用列表、证据使用 `dl/dt/dd`，长哈希允许断行；空证据不生成分隔区，旧 reason key 需通过翻译回退可诊断。
+ */
 import { useTranslation } from "react-i18next";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

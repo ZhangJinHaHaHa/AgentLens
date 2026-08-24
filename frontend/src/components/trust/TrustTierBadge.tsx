@@ -1,3 +1,10 @@
+/**
+ * 信任层级徽标提供紧凑/默认标签和补充原因 Tooltip；它只呈现上游 `TrustTierResult`，不计算层级、不授权操作，也不声称安全保证。
+ * 输入包含结果、尺寸语义、图标开关与样式，输出始终有可见层级文字，并在提示内容中展开描述和原因。
+ * 组件无自有状态与 I/O，Tooltip 的开合、定位和 Portal 生命周期由共享原语管理。
+ * tier、reason key 和证据结论来自领域/外部数据边界，本层仅消费类型化结果；样式颜色不能被其他代码当作可信状态或权限信号解析。
+ * 即使 Tooltip 因触摸、键盘或浏览器能力不可用，徽标文字仍必须独立表达层级；原因使用列表、装饰点隐藏，compact 只缩短文案而不能改变含义。
+ */
 import { useTranslation } from "react-i18next";
 import { ShieldCheck } from "lucide-react";
 

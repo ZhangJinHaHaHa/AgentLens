@@ -1,3 +1,9 @@
+/**
+ * 该进程入口组装申诉接收服务：解析监听地址、打开持久状态库，并在配置完整时接入链上补偿执行器；不实现 HTTP 路由、审核判定或补偿算法本身。
+ * 环境变量是配置与秘密边界，网络请求进入后由 intake server 校验；启动成功只向 stdout 暴露非敏感监听元数据，不回显管理员令牌。
+ * 服务会绑定 TCP 端口并读写 stateDir，获批流程还可能触发不可逆链交易；端口非法、文件初始化失败或 listen error 均必须使进程非零结束。
+ * 单进程内的并发请求由服务器与持久 store 协调，本入口不提供多实例锁或优雅关停；部署方必须保证共享目录和补偿账户的并发约束。
+ */
 import {
   createAppealCompensationExecutor,
   readAppealCompensationConfigFromEnv

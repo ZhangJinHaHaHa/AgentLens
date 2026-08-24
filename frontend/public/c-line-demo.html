@@ -1,4 +1,9 @@
 <!doctype html>
+<!--
+  这是独立于 React 与 Vite 环境变量的 C 线联调页，用真实 Platform API 串联账户、推荐、订单、评分、钱包与退款状态机。
+  它不是终端用户界面或生产运维控制台：不会提供登录授权、审批隔离、持久化恢复或跨步骤事务回滚。
+  API Base URL 来自操作者输入或当前 origin，运行会创建有副作用的演示数据，只能指向明确授权的开发/沙箱服务。
+-->
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
@@ -348,6 +353,7 @@
     </main>
 
     <script>
+      // 页面状态仅存于当前标签页，用于关联后续演示步骤；刷新即丢失客户端引用，但不会撤销服务端已创建的资源。
       const state = {
         user: null,
         creditAccount: null,
@@ -433,6 +439,8 @@
       }
 
       async function fetchJson(path, options = {}) {
+        // 统一边界只发送/接收 JSON，并为等待设置上限；AbortError 仅表示客户端停止等待，
+        // 不能证明服务端未提交订单或退款，因此此页不会在超时后自动重放有副作用的请求。
         const timeoutMs = options.timeoutMs ?? 45000;
         const controller = new AbortController();
         const timeout = window.setTimeout(() => controller.abort(), timeoutMs);
@@ -547,6 +555,7 @@
       }
 
       async function ensureDeveloper(agentId = "dify") {
+        // 开发者及 agent 关联按当前页面会话惰性创建；后续步骤复用同一主体，避免一次完整流程内归属漂移。
         if (state.developer) {
           return state.developer;
         }
@@ -572,6 +581,7 @@
       }
 
       async function createPaidOrder(agentId = "dify", amount = "20.00") {
+        // 每次演示创建独立订单，并用本次唯一幂等键约束支付回调重放；函数不尝试补偿已成功的前置写入。
         await ensureUser();
         const runId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
         const orderResponse = await fetchJson("/api/orders", {
@@ -834,6 +844,7 @@
       }
 
       async function runFullFlow() {
+        // 完整流程按业务依赖串行执行以保留可诊断状态；任一步失败即停止后续编排，但已完成步骤仍留在服务端供排查。
         setBusy(true);
         setStatus("正在跑完整 C 线流程：health -> user -> LLM -> access -> review -> wallet -> refund...");
         try {
@@ -864,6 +875,7 @@
       }
 
       function renderRecommendation(response, elapsedMs) {
+        // 服务端文本进入 innerHTML 前必须逐字段转义；后续新增展示字段也必须经过 escapeHtml，不能直接拼接响应对象。
         const kind = response.fallbackUsed ? "warn" : "ok";
         const chargedText = response.charged ? `已扣 ${response.costCredits} 积分` : "未扣积分";
         const fallbackText = response.fallbackUsed ? ` fallback: ${response.fallbackReason || "yes"}` : "";
@@ -1002,6 +1014,7 @@
         return `0x${random.padEnd(40, "2").slice(0, 40)}`;
       }
 
+      // 这些事件绑定是页面向操作者暴露的操作入口；统一 busy 状态用于防止并发点击，但不替代服务端幂等与并发控制。
       els.healthBtn.addEventListener("click", checkHealth);
       els.connectBtn.addEventListener("click", connectUser);
       els.recommendBtn.addEventListener("click", runRecommendation);

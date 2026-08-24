@@ -1,3 +1,10 @@
+/**
+ * 演示区将目录中的视频元数据呈现为媒体与文字步骤；没有已发布视频时生成明确标记为 planned 的说明稿，而不是伪造可播放资产。
+ * 输入是单个代理条目，输出为一个或多个演示面板，标题、摘要、时长和 transcript 均按当前语言选择。
+ * 本组件不保存播放进度或上传状态；浏览器 `<video>` 的媒体加载是唯一 I/O，采用 metadata 预加载并由用户显式控制播放。
+ * `videoUrl`、海报和文字均来自目录信任边界：浏览器负责媒体获取，React 负责文本转义，本层不宣称远端内容安全、可达或经过审计。
+ * 无媒体、无时长和无 transcript 都必须可阅读地退化；视频具备内容化 `aria-label`，纯装饰图标隐藏，并保持原生 controls 的键盘与辅助技术兼容性。
+ */
 import { Clock3, FileText, PlayCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

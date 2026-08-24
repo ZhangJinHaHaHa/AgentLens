@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * 这份指南对应 AgentLens 托管的 DocsGPT 兼容“临时资料问答”入口：官方仓库与文档提供产品参考，
+ * 平台实际输出则是基于用户主动上传文本的答案、来源、文件引用和积分记录。
+ * docsgpt 是精选目录、工作区路由和指南注册的稳定连接键；它不能因底层 runner 更换而改名。
+ * 操作顺序先收文件、再提出具体问题、最后核对证据，详情页按此编号展示，不能把核验步骤前置成
+ * 已经存在的事实。此文件不解析 PDF、不做 OCR、不保留长期向量库，也不接入网盘/邮箱权限。
+ * 无法提取文字、来源对不上或托管适配器不可用时必须返回明确失败/证据不足；指南存在并不代表
+ * 完整 DocsGPT 管理后台或企业知识库已经接通。
+ */
 export const guide: OnboardingGuide = {
   agentId: "docsgpt",
   prerequisites: [

@@ -1,3 +1,10 @@
+/**
+ * 本文件生成不依赖外部 LLM 的标准审计请求，并在进入 agent 协议前规范化区块高度、环境值列表和对话历史。
+ * history/envVars 由调用方提供：角色、内容类型和非负区块号在此校验，数组会复制后输出，保证请求不会与调用方共享可变容器。
+ * 固定问题中的 DECISION 标记是后续分类器的兼容协议，文字及允许值不能与解析规则脱节；这里不预先决定审计结果。
+ * envVars 只作为字符串转发，本模块不会读取系统环境或清除敏感值，调用方必须保证传入内容适合暴露给受审 agent。
+ * 构建阶段不联网、不执行动作、不持久化；无效输入在产生外部副作用前抛出，因此无需回滚。
+ */
 import type { AuditHistoryMessage, AuditSolveRequest } from "../types/manifest";
 
 const VALID_HISTORY_ROLES = ["system", "user", "assistant"] as const;

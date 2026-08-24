@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * 本模块是指南的显式注册边界：各文件输出人工维护的双语静态指南，ALL_GUIDES 再向详情页提供
+ * 按 agentId 查找和批量列举两种视图；它不会扫描目录，也不会从官网动态发现教程。
+ * agentId 必须与 curated 条目的稳定 id 完全一致，否则详情页查找不到指南并回退到官方链接；
+ * 重复 agentId 会被 Map 的后项静默覆盖，所以新增指南必须同时检查唯一性和 hasOnboardingGuide。
+ * ALL_GUIDES 的声明顺序是 listOnboardingGuides 的兼容输出顺序，slice 只隔离数组成员增删，
+ * 并不深拷贝指南对象。这里不得校验账号、安装环境或官方链接，也不得执行任何上手步骤；
+ * 缺失项以 undefined 表示可预期的“无平台指南”，而模块导入失败才是阻断全部指南展示的故障。
+ */
 import { guide as aider } from "./aider";
 import { guide as autogenStudio } from "./autogen-studio";
 import { guide as boltNew } from "./bolt-new";

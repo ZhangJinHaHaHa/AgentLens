@@ -1,3 +1,10 @@
+/**
+ * 本模块是 manifest 内容进入沙箱前的来源边界：读取本地文件或受约束的公网 URL，完成 JSON/schema 校验，并对原始字节计算 SHA-256 身份。
+ * location 和远端响应均不可信；链上审计入口强制 HTTPS、禁止本地路径，远端下载复用逐跳公网 URL 校验以避免协议绕过和明显 SSRF。
+ * `manifestHash` 绑定下载/读取到的精确文本而非重序列化对象，因此空白变化也会产生新身份，这是证据与证明关联必须保持的兼容不变量。
+ * 读取、下载、JSON 和 schema 故障统一携带 `MANIFEST_INVALID` 语义，同时保留 cause；失败不会返回未经验证的部分 manifest。
+ * 此层不验证镜像摘要或发布者签名、不缓存/写回内容，也不负责响应体配额与生命周期治理，故没有持久化回滚。
+ */
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 

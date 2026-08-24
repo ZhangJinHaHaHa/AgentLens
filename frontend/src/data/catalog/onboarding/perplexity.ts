@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Perplexity 指南面向带引用的初步研究，依据官方帮助中心与 API 文档，输出覆盖持续话题空间、
+ * 搜索模式选择和 API 嵌入，同时明确最终决策仍需回到一手来源。
+ * perplexity 是目录、产品分类与指南 Map 的稳定键，不应随搜索模式、模型或订阅名称变化。
+ * steps 依次从人工研究界面走向程序化接入，详情页编号必须保留该复杂度升级顺序；引用链接是展示证据，
+ * 不是本文件验证过的事实。这里不发起联网检索、不归档来源、不签发 API Key，也不判断引用时效。
+ * 来源打不开、发布日期过旧、答案与原文冲突或 API 失败时，消费者应明确标记证据不足；
+ * 不得把 Perplexity 的综合回答或指南示例直接提升为一手证据。
+ */
 export const guide: OnboardingGuide = {
   agentId: "perplexity",
   prerequisites: [

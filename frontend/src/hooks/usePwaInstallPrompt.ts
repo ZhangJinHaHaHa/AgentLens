@@ -1,3 +1,10 @@
+/**
+ * 封装浏览器 PWA 安装生命周期：捕获一次性的 `beforeinstallprompt` 事件，监听安装完成，并为 iOS Safari 提供手动安装状态提示。
+ * hook 输出可用性和显式 `install` 操作；调用操作会触发浏览器原生提示、等待用户选择并消费缓存事件，接受后更新本地 installed 状态。
+ * 仅维护组件内存状态，不联网、不写存储；effect 会成对移除全局监听器，SSR 辅助检测返回 false，真实事件只在浏览器挂载后处理。
+ * UA、display-mode 和浏览器事件只是客户端环境信号，不能证明安装包完整性或设备身份；安装与权限仍由浏览器平台控制。
+ * 无提示事件时返回 unavailable，拒绝后必须等待浏览器再次派发事件；本层不重试，`prompt/userChoice` 的平台异常会原样拒绝给调用方处理。
+ */
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface BeforeInstallPromptEvent extends Event {

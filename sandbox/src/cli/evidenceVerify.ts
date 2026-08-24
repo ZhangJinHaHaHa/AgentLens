@@ -1,3 +1,9 @@
+/**
+ * 证据验证 CLI 负责把 eventKey 映射到 listener evidence 目录并调用持久证据的完整性校验；它不重放审计、不重建 Merkle 证据，也不修复损坏文件。
+ * 命令行标识、可选 stateDir 和磁盘内容跨越用户/文件信任边界，输出始终是一行 JSON，只有 status=verified 才返回零退出码。
+ * 无效事件键在任何文件访问前转换成稳定的 invalid_event_key 结果；不存在、哈希不符或结构不合法必须保持非零，不能按“无证据即通过”处理。
+ * 验证是单文件只读操作且没有锁；若 listener 正并发落盘，调用方应在完成事件之后重试，而本模块不得缓存半成品结果。
+ */
 import {
   resolveListenerEvidenceDir,
   resolveListenerStateDirFromEnv

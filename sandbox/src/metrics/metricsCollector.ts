@@ -1,3 +1,9 @@
+/**
+ * 指标收集器维护一组封闭名称的进程内 counter/gauge，并能生成带采集时间的不可变快照或响应 /metrics；不落盘、不聚合多进程，也不计算告警。
+ * 更新方法输入受类型约束的名称与数值，输出新的 MetricsCollector 而非原地修改；调用方必须保存返回实例，否则该次更新会被有意丢弃。
+ * HTTP 请求属于网络边界，只有精确 GET /metrics 才暴露 JSON 快照，其余返回 404；快照数据是观测信息而非业务事实来源。
+ * 持久 Map 的复制模型避免读者看到半次更新，但并发基于同一旧实例派生仍会发生最后写入覆盖；所有者需在单一事件序列中协调替换。
+ */
 import type { Counter, Gauge, MetricsSnapshot } from "./metricsTypes";
 
 const KNOWN_COUNTERS = [

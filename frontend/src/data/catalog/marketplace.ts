@@ -23,6 +23,16 @@ import { scenario } from "./scenarios";
  *   - Regulated domains (legal/tax/insurance) state "assist, not replace a
  *     licensed professional" in intro + riskNotes.
  */
+/*
+ * 当前三项是“平台准备托管的开源能力候选”，不是已经可购买执行的卖家运行实例；资料来源是对应
+ * 开源仓库与平台接入规划，输出供货架、买家卡、工作区地图和运行边界说明使用。
+ * platform- 前缀是有意保留的稳定命名空间，用来与 curated 中同名的官方 OpenHands/browser-use 卡并存；
+ * 改成产品短名会让合并索引和详情链接发生碰撞。数组顺序同时是 marketplace 首屏的编辑优先级，
+ * 且整个分桶会先于 curated 展示，因此不能把排序职责下沉到卡片组件。
+ * 这里的 managed-runtime-candidate、运行安全文案和能力合同均不得被解释为已部署、已审计或已授权，
+ * 更不能承担沙箱、许可、付款确认或人工复核逻辑。运行器未接通、仓库授权不足或网页动作越权时，
+ * 正确边界是保持候选/拒绝执行；若文案与真实接入状态漂移，应更新事实而不是在 UI 中猜测可用性。
+ */
 export const marketplaceAgents: AgentCatalogEntry[] = [
   {
     id: "platform-deepaudit",

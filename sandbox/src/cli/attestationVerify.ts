@@ -1,3 +1,9 @@
+/**
+ * 证明验证 CLI 将 eventKey 定位到 listener 的 attestation 目录，并按环境给出的 provider/measurement/quote 预期验证落盘证明；不向 TEE 请求新证明，也不修改状态文件。
+ * argv、stateDir 与磁盘 JSON 都属于不可信输入，stdout 的单行结构化结果和“verified 为 0、其余为 1”的退出码是自动化合同。
+ * eventKey 必须先通过当前 transactionHash:logIndex 格式校验，路径解析不得绕过 listener 目录规则；验证策略还可要求 report-data 绑定。
+ * 文件缺失、内容损坏、身份不匹配或加密验证失败均应保持失败关闭；一次调用只读一个事件，无共享可变状态，也不承诺与正在写入的 listener 做快照协调。
+ */
 import {
   resolveListenerAttestationsDir,
   resolveListenerStateDirFromEnv

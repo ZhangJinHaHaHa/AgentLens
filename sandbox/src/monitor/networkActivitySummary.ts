@@ -1,3 +1,9 @@
+/**
+ * 该纯聚合器把增强网络快照压缩为连接数、目的地/端口基数、协议和字节统计，并给出未声明目的 IP；不采集流量、不解析域名或执行出口策略。
+ * 输入事件与 manifest 均可能来自外部边界，输出保留原连接副本及排序后的异常目的地；缺失字节计数按未观测处理而非估算。
+ * manifest 声明通常是主机名，而事件只有 IP，因此直接比对只能形成保守线索，不能单独作为 DNS 解析后的安全裁决；调用方应先建立主机到 IP 的可信映射。
+ * 计算无 I/O 和共享状态，对同一快照确定且可并发调用；总连接数表示采样事件条数，不等同于唯一会话或完整审计期间流量。
+ */
 import type { SandboxManifest } from "../types/manifest";
 import type { EnhancedNetworkEvent, EnhancedNetworkSnapshot } from "./enhancedNetworkMonitor";
 

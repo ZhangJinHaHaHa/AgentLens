@@ -1,3 +1,10 @@
+/**
+ * 搜索筛选栏呈现目录 facets、当前筛选芯片和排序控件，并把每次编辑提升为完整 `CatalogFilters`；筛选算法、URL 同步、语义解析和结果取数由页面/领域层负责。
+ * 输入是受控 filters、可用维度、结果数与 `onChange`，输出为搜索框、快捷场景、可移除芯片和可折叠的精细筛选面板。
+ * 仅筛选面板展开状态留在本地；输入、复选、排序、清空或移除芯片都会同步调用上游，组件本身不持久化、不防抖也不发起请求。
+ * 用户查询、目录 facet 与翻译文本均可能越过内容信任边界，必须作为文本渲染；本层不得把隐藏的 tag/category UI 误解为禁用相应 URL 过滤能力。
+ * 展开按钮的 `aria-expanded/aria-controls`、搜索标签、复选关联、pressed 状态及芯片移除名称必须持续可用；空 facet、窄屏横向内容和未知组合应退化而不丢失受控值。
+ */
 import { useId, useState } from "react";
 import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
 import { useTranslation } from "react-i18next";

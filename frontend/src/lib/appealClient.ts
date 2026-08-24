@@ -1,3 +1,10 @@
+/**
+ * 申诉 HTTP 边界：把 bigint 标识序列化为十进制字符串后提交 JSON，并按 token/audit 查询最新申诉，输出不抛业务错误的可判别结果。
+ * POST 会携带用户理由和可选报告/manifest 证据，GET 使用 URL 查询参数；两者均产生网络副作用，但不缓存、不中止，也不自动重试。
+ * endpoint 和响应 JSON 均不可信，客户端只提取非空字符串；后端必须独立完成身份、所有权、长度、证据绑定和状态转换校验。
+ * 传输异常与非成功状态返回稳定错误，查询 404 单独标为 NOT_FOUND；非 JSON 或畸形成功体采用 `reviewing` 兼容默认值，而不伪造 appealId。
+ * `fetchImpl` 注入用于测试/宿主适配，重试必须由上层按幂等语义决定，尤其不能在首次 POST 结果未知时盲目重复创建申诉。
+ */
 export interface AppealSubmissionInput {
   tokenId: bigint;
   auditId: bigint;

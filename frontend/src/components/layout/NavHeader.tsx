@@ -1,3 +1,10 @@
+/**
+ * 全站页眉协调桌面/移动导航、对比数量、语言/主题控制与钱包连接入口；它只呈现并委托这些能力，不签名交易、不鉴权，也不拥有钱包实现。
+ * 输入由路由、翻译、对比和钱包上下文提供，输出为粘性 header；钱包按钮依据 connected/connecting/unavailable 状态选择断开、连接、禁用或错误提示。
+ * 移动菜单开合由 Dialog 管理；显式点击会触发钱包 connect/disconnect，导航和外观操作分别交给其所有者，本组件不持久化副作用。
+ * 浏览器钱包扩展、账户地址、链状态和错误消息均为外部信任边界，截断地址只用于展示且绝不能充当身份校验，连接成功也不等于授权任何交易。
+ * 桌面与移动端必须提供同一导航顺序和等价操作；菜单有标题/描述、图标隐藏、连接中防重复点击，比较数量及活动路由不能破坏清晰的键盘焦点。
+ */
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Menu, Wallet } from "lucide-react";

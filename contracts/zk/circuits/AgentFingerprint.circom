@@ -4,6 +4,15 @@ include "circomlib/circuits/poseidon.circom";
 include "circomlib/circuits/comparators.circom";
 
 /*
+ * 中文证明契约：证明者输入 manifest/code 的两个域元素分片、四项行为特征和 developerSecret；验证者公开看到 fingerprintHash、tokenId、developerHash。
+ * 约束保证两项二值特征属于 {0,1}、两项三值特征属于 {0,1,2}，并保证公开哈希分别等于固定顺序 Poseidon(9) 与 Poseidon(2) 的输出。
+ * 隐私边界仅隐藏 witness 值，不证明链下材料真实：电路没有执行 SHA-256、解析 manifest、检查镜像或把 developerHash 对应到 EVM msg.sender，规范化与取样可信度由生成 witness 的系统负责。
+ * tokenId 同时进入指纹哈希和开发者秘密哈希，防止同一 witness 在不同 token 间直接复用；但 token 是否存在、归谁所有仍须由链上身份合约或调用方另行验证。
+ * witness 不满足取值集合或任一公开哈希等式时无法生成有效证明；所有信号按 BN254 标量域解释，链下拆分规则必须避免把不同字节串映射成意外等价的域元素。
+ * `main` 的公开输入顺序必须保持 `[fingerprintHash, tokenId, developerHash]`，与 snarkjs 生成的三输入 verifier 及 `ZkAuditVerifier.verifyFingerprint` 完全一致。
+ * Poseidon 参数和约束语义来自安装的 circomlib；升级 circom/circomlib 或重新 setup 会改变 R1CS/密钥/verifier 配套关系，旧证明不能假定继续兼容。
+ */
+/*
  * AgentFingerprint — ZK proof binding an agent's identity to its NFT
  * without revealing the actual code or manifest content.
  *
@@ -114,4 +123,5 @@ template AgentFingerprint() {
     devHash.out === developerHash;
 }
 
+// 这是生成 verifier ABI 的顺序源；调整 public 列表必须同步更新 Solidity 包装层的 `uint256[3]` 编码。
 component main {public [fingerprintHash, tokenId, developerHash]} = AgentFingerprint();

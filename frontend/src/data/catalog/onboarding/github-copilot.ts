@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * GitHub Copilot 指南聚焦“已有 IDE 和仓库内提速”，依据 GitHub 官方产品与文档整理，输出是
+ * 安装登录、约束 Chat 范围、补测试并本地验证的渐进式详情内容，而非完整外包开发流程。
+ * github-copilot 是跨目录持久 id，不能因订阅层级、IDE 扩展拆分或功能名称变化单独调整。
+ * 数组次序刻意让小范围解释先于生成和采纳代码，详情页编号与风险列表都应保留编辑顺序。
+ * 本文件不检查席位、不安装扩展、不读取组织策略，也不接受或执行任何生成补丁；代码引用策略、
+ * 公共代码建议和数据权限由 GitHub/企业管理员控制。认证失败、IDE 不受支持或测试不通过时，
+ * 正确边界是停止在实际工具链，不得因静态指南可见而标记任务完成。
+ */
 export const guide: OnboardingGuide = {
   agentId: "github-copilot",
   prerequisites: [

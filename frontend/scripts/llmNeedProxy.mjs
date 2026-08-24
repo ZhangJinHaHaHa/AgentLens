@@ -1,5 +1,9 @@
 import { readFile } from "node:fs/promises";
 
+// 该模块为 Vite 本地开发服务器提供需求解析代理：浏览器提交自然语言和候选分类，
+// Node 进程持有 MiniMax 凭据、调用上游，再把结果收敛到客户端提供的 taxonomy 中。
+// 它不是生产 API 网关，不提供租户鉴权、持久化、限流或重试；线上部署不得直接暴露此中间件。
+// 请求体和模型响应均跨越非可信边界，成功结果中只有经过类型收窄、枚举白名单和数值限幅的字段才能返回前端。
 const DEFAULT_BASE_URL = "https://api.minimax.io/v1";
 const DEFAULT_MODEL = "MiniMax-M2.7";
 
@@ -11,6 +15,7 @@ export function resolveMiniMaxConfig(env = process.env) {
 }
 
 export async function readMiniMaxApiKey(env = process.env) {
+  // 显式环境变量优先于文件，便于短期覆盖；文件内容只解析目标键，凭据从不进入代理响应载荷。
   if (typeof env.MINIMAX_API_KEY === "string" && env.MINIMAX_API_KEY.trim()) {
     return env.MINIMAX_API_KEY.trim();
   }
@@ -24,6 +29,7 @@ export async function readMiniMaxApiKey(env = process.env) {
 }
 
 export function buildMiniMaxChatPayload({ query, locale, taxonomy, model }) {
+  // taxonomy 是模型唯一可选词表；提示词限制不是安全校验，返回后仍必须执行 sanitizeLlmResult。
   return {
     model,
     messages: [
@@ -70,6 +76,7 @@ export function extractMiniMaxContent(data) {
 }
 
 export function parseMiniMaxJsonContent(content) {
+  // 优先接受严格 JSON；兼容部分模型在对象前后附带可见推理文本，但只截取首个平衡对象。
   try {
     return JSON.parse(content);
   } catch {
@@ -85,6 +92,7 @@ export function createLlmNeedProxyPlugin() {
   return {
     name: "agentlens-llm-need-proxy",
     configureServer(server) {
+      // 非 POST 请求交还 Vite 后续中间件；POST 失败使用明确 HTTP 状态且不会缓存半成品结果。
       server.middlewares.use("/api/llm/parse-need", async (req, res, next) => {
         if (req.method !== "POST") {
           next();
@@ -218,6 +226,8 @@ function normalizeTaxonomy(value) {
 }
 
 function sanitizeLlmResult(value, taxonomy) {
+  // 该函数是模型输出进入应用域前的最终边界：未知枚举被丢弃，布尔值不做真值推断，
+  // confidence 被夹在协议区间内，未匹配词数量受限，避免模型扩张筛选能力或响应体积。
   const record = isRecord(value) ? value : {};
   return {
     scenarioIds: allowlistedStrings(record.scenarioIds, taxonomy.scenarioIds),

@@ -1,3 +1,10 @@
+/**
+ * Docker 执行边界负责镜像拉取、受限容器启动、DNS 解析后的出口防火墙安装，以及 stop/kill/remove 生命周期操作；不判断审计结论或信任镜像内部行为。
+ * manifest、镜像名、网络名和容器 ID 都可能来自外部，命令通过参数数组交给 docker；防火墙命令则在容器内 shell 执行，必须只消费已规范化的解析结果。
+ * 启动会占用端口/网络、创建容器并修改其 OUTPUT 规则；防火墙规划或应用失败时必须强制删除刚建容器，清理缺失容器按幂等成功处理。
+ * 默认容器以只读根文件系统、资源/PID 上限、降权能力和 no-new-privileges 运行，但本层不验证 daemon、镜像供应链或宿主隔离强度。
+ * 自定义网络使用随机名称避免多数并发冲突，固定 hostPort 仍可能竞争；生命周期调用不带事务，调用方必须在 finally 中协调 stop/remove 且避免重复启动同一工作负载。
+ */
 import { execFile } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { lookup } from "node:dns/promises";

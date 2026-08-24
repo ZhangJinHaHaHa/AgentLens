@@ -1,3 +1,9 @@
+/**
+ * Docker 烟测按 manifest 校验、daemon 探测、拉镜像、启动、探活、防火墙核对及可选阻断探针组织一次预检，并返回逐阶段事实；不执行正式审计或据此授予生产信任。
+ * manifest 来源、镜像、Docker daemon、容器 HTTP 与探针 URL 均是外部边界，结果字段只陈述已执行阶段；未提供探针时不得推断出口阻断经过验证。
+ * schema、daemon、拉取和启动失败映射为稳定 reasonCode，容器一旦创建，正常或异常路径都必须在 finally 中 stop 后 remove，避免烟测资源泄漏。
+ * 阶段按顺序执行且单次只拥有一个容器；firewallConfigured、healthcheckPassed 与 nextStep 各有独立语义，调用方不得把 READY_FOR_LOCAL_AUDIT 等同于完整安全认证。
+ */
 import {
   pullImage as defaultPullImage,
   removeContainer as defaultRemoveContainer,

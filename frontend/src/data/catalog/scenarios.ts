@@ -1,6 +1,15 @@
 import type { ScenarioRef } from "@/domain/catalog";
 import type { I18nText } from "@/domain/i18nText";
 
+/*
+ * map 是目录场景的规范词表：键来自编辑定义，双语标签输出给筛选器、列表详情和每个 Agent 的
+ * scenarios/unsuitableScenarios 引用。键还进入 URL 筛选参数与任务分类规则，因而是持久标识，
+ * 不能随展示措辞改名；改标签只影响呈现，改键则需要迁移书签、查询参数和所有目录引用。
+ * Object.keys 保留此处声明顺序，所以新增位置会改变筛选项的展示顺序；不要在消费者里另建排序表。
+ * 本注册表不判断适配度、权限或运行能力，也不负责把相近场景自动归并。scenario 对未知键立即抛错，
+ * 让拼写和漏注册在加载/构建阶段暴露；直接以不受控字符串读取 SCENARIO_MAP 时，调用方仍须接受
+ * undefined，不能把缺失标签误当成已支持场景。
+ */
 const map: Record<string, I18nText> = {
   "defi-trading": { zh: "DeFi 交易", en: "DeFi trading" },
   "customer-support": { zh: "客服自动化", en: "Customer support automation" },

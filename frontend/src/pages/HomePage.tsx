@@ -1,3 +1,10 @@
+/**
+ * 首页负责产品导览、场景快捷入口、精选代理和自然语言需求起点；它不在首页完成筛选结果、代理执行、钱包连接或交易。
+ * 输入为应用配置，输出基于当前目录/语言的 hero 表单、有效场景格、精选卡片与信任说明，提交后导航到规范化的目录筛选 URL。
+ * 本地状态拥有 query、解析忙碌和错误；提交会调用 LLM 需求解析，成功将类型化结果编码成查询参数，失败保留页面并显示统一降级提示。
+ * 用户需求、目录 taxonomy 和远端解析结果都是不可信边界，只有领域转换后的允许筛选值可进入 URL；LLM 输出仅用于发现路径，不能触发代理或任何高权限操作。
+ * 空查询直接进入目录，提交期间禁用按钮以防明显重复，错误以 role=alert 呈现且编辑后清除；表单有搜索名称，场景/精选顺序和缺失 facet 的过滤行为须保持深链兼容。
+ */
 import { ArrowRight, Compass, Eye, Lightbulb, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";

@@ -1,3 +1,9 @@
+/**
+ * 这是公开沙箱测试代理的 LLM 响应适配器，用统一 chat-completions 形状调用若干演示 provider 并构造 AuditSolveResponse；不代表生产模型代理、凭据经纪或安全策略。
+ * 审计请求、provider 环境配置和远端 JSON 均是不可信输入，API key 只进入 Authorization 请求头且不应写入返回；baseUrl 决定真实网络出口边界。
+ * 单次调用有三十秒 socket 超时，网络、解析或 provider 错误被转换为测试代理的失败文本；缺少密钥时不发网络请求，声明的 actions 仅为审计演示数据。
+ * 每个请求独立创建 HTTP(S) 请求，无共享会话、重试或限流；provider 默认值与响应 choices 路径是样例兼容约定，不能据此承诺第三方 API 长期稳定。
+ */
 import * as https from "node:https";
 import * as http from "node:http";
 import type { AuditSolveRequest, AuditSolveResponse } from "../types/manifest";

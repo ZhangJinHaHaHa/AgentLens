@@ -12,6 +12,9 @@
 #   1. Log out and back in (for sgx group membership)
 #   2. Verify: is-sgx-available
 #   3. Build the quote generator: cd ~/agent-shenji-sgx && make SGX=1
+# 该脚本会以 root 修改 APT 信任源、系统包、用户组和 systemd 服务，只适用于受控的 Ubuntu 22.04 amd64 SGX 主机。
+# 它不是无状态安装器，也不提供自动回滚；正式执行前应具备主机快照/重建路径，并审阅 Intel、Gramine 与 NodeSource 供应源。
+# 重跑用于收敛相同环境，但外部仓库内容可能随时间变化，生产基线仍应由镜像或包版本锁定另行保证。
 set -euo pipefail
 
 log() { printf '\n=== %s ===\n' "$1"; }
@@ -22,6 +25,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Detect target user (the user who invoked sudo, or ubuntu as fallback)
+# 用户组变更影响后续设备访问；无 sudo 上下文时的 fallback 仅适配目标云镜像，调用者应先确认该账户存在。
 TARGET_USER="${SUDO_USER:-ubuntu}"
 
 # ---------- Step 1.1: Intel SGX APT source ----------
@@ -65,6 +69,7 @@ apt-get install -y \
 # ---------- Step 1.3: Intel PCS direct access ----------
 log "Configuring Intel PCS direct access (bypasses Tencent PCCS)"
 
+# 这里全量覆盖 QCNL 配置并启用 TLS 证书校验；quote collateral 将直接依赖 Intel PCS 的网络可用性与信任链。
 cat > /etc/sgx_default_qcnl.conf << 'QCNL_EOF'
 {
   "pccs_url": "https://api.trustedservices.intel.com/sgx/certification/v4/",
@@ -85,6 +90,7 @@ usermod -aG sgx "$TARGET_USER" 2>/dev/null || true
 systemctl start aesmd
 systemctl enable aesmd
 
+# 以下状态与设备检查是诊断信息，故允许失败继续；安装命令和关键配置写入仍受 set -euo pipefail 严格约束。
 echo "AESM service status:"
 systemctl status aesmd --no-pager || true
 
@@ -114,6 +120,7 @@ is-sgx-available 2>&1 || true
 log "Installing Node.js 20"
 
 if command -v node &> /dev/null; then
+  # 已存在 Node 时保留宿主版本，避免脚本擅自替换运行时；调用者仍需在后续验证其是否满足项目要求。
   echo "Node.js already installed: $(node -v)"
 else
   curl -fsSL https://deb.nodesource.com/setup_20.x | bash -

@@ -1,4 +1,11 @@
 /*
+ * 字体入口只声明 AgentLens 所需的拉丁、等宽与中文字体资源；排版家族选择由 Tailwind/全局主题负责，本文件不改变内容语义或组件布局规则。
+ * 输入是浏览器的 CSS 加载环境，输出为可供 font-family fallback 链选用的多个字重，不向 JavaScript 暴露状态。
+ * 解析该 `@import` 会产生到 Google Fonts 的网络请求与缓存副作用；CSP、离线、DNS 或跨域失败时必须允许浏览器继续使用本地后备字体。
+ * 远端字体服务属于第三方信任和隐私边界，不得在查询参数中携带用户数据，也不能把字体加载成功当作应用启动条件。
+ * 字体切换可能改变字宽但不得隐藏文字、破坏焦点或成为图标编码；中英文后备顺序、已声明字重与等宽用途是跨系统渲染的兼容不变量。
+ */
+/*
  * AgentLens font stack.
  *
  * Geist Sans / Mono and Hanken Grotesk ship through Google Fonts.

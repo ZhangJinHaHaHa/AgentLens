@@ -1,3 +1,10 @@
+/**
+ * 这是命令式证明后端的协议适配层：解析标准 v1 stdin 请求，并把受部署配置控制的可执行程序 stdout 归一化为四个证明字段。
+ * 命令路径和参数属于运维信任域，stdin 请求及子进程 stdout 属于跨进程边界；使用 `spawn` 参数数组而非 shell 字符串，避免在本层引入命令拼接语义。
+ * 非零退出码、无效 JSON 或任一空字段都会使调用失败，stderr 仅用于保留诊断上下文；本层不重试，也无法撤销外部程序已经执行的副作用。
+ * demo 生成器只提供确定性的协议占位值，不能代表硬件证明或安全通过，真实模式必须依赖外部后端的证明实现。
+ * 此文件不校验 quote 的密码学有效性、不持久化制品，调用方仍须在接受输出前应用对应 validator。
+ */
 import type { AttestationRequest } from "./mockTeeProvider";
 import { spawn } from "node:child_process";
 

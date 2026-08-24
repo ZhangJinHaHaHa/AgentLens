@@ -1,3 +1,10 @@
+/**
+ * 这是审计评分到 ZK 生成器之间的可选编排层：将评价按六个电路槽分组、限制每槽十题并构造证明 bundle。
+ * 分数和资源数据来自已完成的审计阶段；取整、2500/2000/1500/1500/1500/1000 权重及向下取整总分必须与电路保持一致，属于跨组件兼容约束。
+ * `ZK_PROOF_ENABLED` 只有精确为 true 才启用，关闭时返回 null；启用后的任何异常会变成 `proofGenerated: false` 的显式失败 bundle，使主审计按既有可用性策略继续。
+ * 非致命降级绝不等于已有证明，空 proof 与 `verified: false` 必须被报告、持久化和链上消费者拒绝当作密码学成功。
+ * 本层不验证 trusted setup、不发布或保存证明，也不把 bundle 自动加入 attestation；调用方拥有后续处置，捕获失败后无外部状态需要回滚。
+ */
 import { generateAuditScoreProof, type AuditScoreProofInput, type ZkProofResult } from "./generateAuditScoreProof";
 
 /**

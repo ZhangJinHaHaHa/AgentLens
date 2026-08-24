@@ -1,3 +1,10 @@
+/**
+ * 目录页拥有代理集合的筛选、排序、需求排序、空结果放宽建议与 URL 同步，并在普通过滤无结果时有限度调用语义需求解析；卡片展示和领域匹配规则由各自模块实现。
+ * 输入为应用配置及地址栏查询/导航状态，输出加载骨架、提示、受控筛选栏和结果/空态列表，同时排除大型模型助手类条目。
+ * 状态包含规范化 filters、语义错误和最近解析 query；一个 effect 用 replace 写回 URL，另一个以 350ms 定时、取消标记及去重 ref 管理异步 LLM 请求。
+ * 地址参数、用户查询、导航 state、目录和 LLM 返回均是不可信边界，必须经 filters/needParser 领域转换后才能影响列表；解析失败只展示降级信息，不能清除可用的本地筛选能力。
+ * 卸载或条件变化必须取消定时器并忽略过期结果，空目录与加载中不可混淆；搜索/筛选保持键盘标签，清空与建议按钮显式可操作，URL 往返不得丢失未知的兼容参数。
+ */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useSearchParams } from "react-router-dom";

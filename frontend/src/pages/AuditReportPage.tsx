@@ -1,3 +1,10 @@
+/**
+ * 审计报告页协调链上审计记录、报告网关哈希校验结果、TEE 元数据和申诉 API，形成可审计的状态机视图；它不生成报告、不验证合约共识，也不直接执行链上补偿。
+ * 输入为配置、路由 token/audit id/index 及可注入读/报告/申诉客户端，输出 loading、路由/链读取错误、报告错误或含证据与申诉表单的 ready 页面。
+ * 稳定客户端和页面/申诉状态由本页拥有；effect 解析 latest、串行读取记录与报告并以取消标记阻止过期写回，表单提交则显式管理 submitting/error/submitted 状态。
+ * URL 数值、RPC、CID 内容、报告 JSON、哈希、证明、API 状态和申诉理由跨越多重信任边界：标识先规范化，哈希不匹配绝不展示为已验证报告，前端申诉状态也不能替代链上最终性。
+ * “报告暂不可用”应保留已取得的链上证据，而无效路由/哈希失败需失败关闭；异步卸载不更新状态，表单防空理由与重复提交，并用标题、列表、表格/文本及 alert 错误维持非颜色依赖的可访问解释。
+ */
 import { type FormEvent, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ExternalLink, FileCheck2, ShieldCheck } from "lucide-react";

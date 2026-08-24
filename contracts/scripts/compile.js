@@ -1,3 +1,11 @@
+/**
+ * V1 单合约编译入口：同步读取 `AgentAuditRegistry.sol`，以标准 JSON 接口调用本地 solc，并覆盖写出供部署脚本消费的 Hardhat 风格产物。
+ * 固定输入是源码路径、当前安装的 solc 及 Paris/viaIR/优化参数；输出仅含 ABI、创建/运行字节码、编译器版本和解析后的 metadata，不执行部署。
+ * 产物定位依赖 sourceName 与 contractName 精确匹配 solc 输出，字节码统一补 `0x`；这些字段是下游 `deployLocal`/`deployEdge` 的兼容契约。
+ * 信任边界包括 npm 中的编译器实现与本地源码内容；脚本打印全部编译诊断，并在任一 error 级诊断出现时终止，warning 不阻断写入。
+ * 缺少依赖、读取失败、solc 返回非 JSON、目标合约缺失或文件系统写入失败都会中止；写文件不是原子操作，失败后不得把旧产物误认成此次编译结果。
+ * 本入口只维护 V1；若需六个手写合约的一致产物应使用 `compileV2.js`，并保持两处编译选项显式对齐。
+ */
 const fs = require("fs");
 const path = require("path");
 

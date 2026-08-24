@@ -1,3 +1,9 @@
+/**
+ * 本文件把 RPC、证明 API 和状态目录可写性包装为统一 readiness check，供健康端点组合；不负责进程存活判断、告警或依赖恢复。
+ * URL、fetch 响应与文件系统都是外部信任边界，输出始终是带名称、布尔状态、说明和耗时的结构化结果，预期故障被吸收而非击穿健康服务器。
+ * RPC 检查用 eth_blockNumber 验证协议响应，证明服务要求 /health 返回成功，磁盘检查通过真实创建/删除探针证明当前可写。
+ * 各 check 实例无共享状态，可并发调用；磁盘清理失败按既定策略不改变本次 ready 结论，因此运维仍需独立监控残留与磁盘容量。
+ */
 import type { ReadinessCheck, ReadinessCheckResult } from "./healthCheckTypes";
 
 interface FsOperations {

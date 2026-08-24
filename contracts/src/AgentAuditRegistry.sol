@@ -1,6 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+/// @title Agent 审计身份与保证金登记表（V1）
+/// @notice 接收开发者的服务费和保证金，为“开发者地址 + Agent 名称”铸造不可转移的身份编号，并保存操作员提交的链下审计摘要。
+/// @dev `stake` 的输入是名称、manifest URL 与原生币；输出是稳定 tokenId、新增 Pending 审计及事件。查询接口返回档案或按 1 起始编号关联的审计记录。
+/// @dev owner 控制定价、操作员与服务费提取，operator/owner 被信任为链下审计、申诉、罚没和释放保证金的权威写入方；合约不抓取 URL/CID，也不验证哈希对应的原文或证明。
+/// @dev 身份键在同一开发者下按名称字节精确区分；审计数组只追加，结果只能写入最新 Pending 项，`auditId == index + 1` 是所有索引读取的核心不变量。
+/// @dev `totalBond` 是逐档案账面值：罚没只减少账面但不转出资金，补偿只增加账面且不注入资金；后续释放仍受合约实际余额和外部转账成功约束。
+/// @dev 所有 require 或 ETH call 失败都会回滚本次状态；转账前先扣账，但接收方仍属于外部调用边界。链下编排不应把交易发送失败与可安全重试等同起来。
+/// @dev `Transfer`/`ownerOf`/`balanceOf` 仅提供身份型子集，没有 approve、transfer、ERC165 或 tokenURI，集成方不得把它当成完整 ERC-721 实现。
 contract AgentAuditRegistry {
     string public constant name = "Agent Audit Identity";
     string public constant symbol = "AAI";
@@ -156,6 +164,11 @@ contract AgentAuditRegistry {
         return tokenOwner;
     }
 
+    /// @notice 为调用者的 Agent 增加保证金并创建一次待审计请求，首次出现的名称同时生成身份 tokenId。
+    /// @param agentName 参与身份键计算的原始名称；大小写、空格和编码差异都会形成不同身份。
+    /// @param manifestUrl 链下 manifest 定位符；这里只检查非空并原样记录，不保证可访问性或内容真实性。
+    /// @return tokenId 新建或复用的身份编号。
+    /// @dev `msg.value - serviceFee` 全部计入该档案保证金；同一身份可并存多条历史记录，但一次只能结算最新 Pending 记录。
     function stake(
         string calldata agentName,
         string calldata manifestUrl
@@ -209,6 +222,8 @@ contract AgentAuditRegistry {
         );
     }
 
+    /// @notice 由受信操作员把最新待审计项结算为非 Pending 状态，并锚定指标、哈希与链下内容地址。
+    /// @dev 参数值没有链上范围、签名或内容校验；事件与存储仅证明授权账户提交了这些声明，不能替代对报告、证据或 attestation 的独立验证。
     function recordAuditResult(
         uint256 tokenId,
         uint32 auditScore,
@@ -249,6 +264,8 @@ contract AgentAuditRegistry {
         emit AuditRecorded(tokenId, record.auditId, status, auditScore, reportHash, reportCID);
     }
 
+    /// @notice 从档案账面保证金中罚没指定金额并把关联审计标为 Slashed。
+    /// @dev 本操作同时永久设置 `blacklisted = true`，但不会把罚没金额发送给 owner/operator 或转入 `accruedServiceFees`。
     function slashBond(
         uint256 tokenId,
         uint64 auditId,
@@ -274,6 +291,8 @@ contract AgentAuditRegistry {
         emit AppealRequested(tokenId, auditId);
     }
 
+    /// @notice 将 Slashed 审计改为 Compensated，并把金额加回档案账面保证金。
+    /// @dev 该函数不接收 ETH；操作员必须保证补偿后的账面总额有实际合约余额支撑，否则未来 `releaseBond` 可能因转账失败整体回滚。
     function compensateBond(
         uint256 tokenId,
         uint64 auditId,

@@ -1,3 +1,10 @@
+/**
+ * Button 统一原生按钮的尺寸、视觉变体、焦点样式，并通过 `asChild` 支持将样式/属性合并到链接等单一子元素；它不拥有业务动作或权限策略。
+ * 输入为原生 button 属性、variant/size、可选 Slot 模式与 ref，输出为 button 或调用方提供的语义元素，并暴露稳定的 data-variant/data-size 供主题使用。
+ * 原语无自有状态，点击、提交、禁用和异步忙碌均由调用方控制；在表单内调用方必须明确需要的 `type`，避免浏览器默认提交带来隐式副作用。
+ * 透传 props、事件处理器和 Slot 子节点属于调用边界，样式组件不验证 URL、操作授权或 disabled 的业务正确性，`asChild` 也不会自动修复错误语义。
+ * 焦点环、禁用外观和触控尺寸必须保持一致；图标按钮需由调用方提供可访问名称，新增变体不得改变既有默认尺寸和主题选择器契约。
+ */
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";

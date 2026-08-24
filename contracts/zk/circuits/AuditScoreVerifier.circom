@@ -4,6 +4,17 @@ include "circomlib/circuits/comparators.circom";
 include "circomlib/circuits/poseidon.circom";
 
 /*
+ * 中文证明契约：公开输出是六维 0–100 分、整数总体分和 inputCommitment；私有 witness 包含 6×10 类别分、各维 count、CPU/内存及合规/安全边界分。
+ * 维度 0 将安全类别平均与边界分组合，维度 1–3 取 SafeAverage，维度 4 只按 CPU/内存阈值计分，维度 5 直接采用 complianceScore；总体权重依次为 25/20/15/15/15/10%。
+ * SafeAverage 会累加固定十个槽位后除以 count，count 不是“只取前 count 项”的循环界限；count 为零时默认 witness 取零，但现有约束会屏蔽 sum 差值且未单独锁定 quotient。
+ * 安全维 `secCombined` 的条件值也通过 `<--` 计算，却没有等价的代数选择约束把它绑定到 secAvg/securityBoundaryScore；证明安全审计必须区分 witness 生成器行为与 R1CS 真正强制的不变量。
+ * 证明只保证存在满足约束的 witness，不保证私有原始评测来自可信采集器。尤其 inputCommitment 仅覆盖 count[0..3]、资源指标、合规分和安全边界分，不覆盖 categoryScores 或 count[4..5]。
+ * 私有 categoryScores 没有逐项 0–100 范围检查；范围约束只施加在六个公开维度和 overallScore。上游仍需约束原始数据格式、来源、单位和承诺方案的完整性。
+ * 除法均以商/余数约束为整数向下取整，阈值比较器使用固定 8/16/32 位宽；超出预期位宽或无法满足余数关系的 witness 会导致证明失败而非自动截断。
+ * `main` 展平后的八个公共输入必须按 `[dim0..dim5, overallScore, inputCommitment]` 与 snarkjs verifier 及 Solidity 包装器一致；顺序或数量变化属于 ABI 破坏性变更。
+ * R1CS、proving key、verification key 与生成 verifier 必须来自同一源码和 circomlib 版本；可信设置或任一配套文件替换都会跨越证明信任边界。
+ */
+/*
  * AuditScoreVerifier — ZK proof that dimensional scores were correctly
  * computed from raw evaluation data (Groth16 / BN128).
  *
@@ -239,4 +250,5 @@ template AuditScoreVerifier() {
     rangeChecks[6].value <== overallScore;
 }
 
+// 此 public 声明同时定义 Solidity verifier 的八输入布局；链上的 tokenId/auditId 不属于本电路约束。
 component main {public [dimensionalScores, overallScore, inputCommitment]} = AuditScoreVerifier();

@@ -1,3 +1,10 @@
+/**
+ * 这是答案评价阶段的 provider 适配与编排层：将问题、agent 回答和声明动作交给评价模型，并归一化为逐题分数、通过标志、理由及安全旗标。
+ * agent 文本和模型响应均跨越不可信边界；结构解析只能证明载荷形态，模型判断仍是辅助信号，不能直接授予权限或覆盖可观测执行证据。
+ * OpenAI-compatible、Responses、Anthropic 与 mock 路径保持同一输出契约；未知类别回落到 functionality 是既有报告兼容策略，而非类别真实性证明。
+ * provider 非成功状态、JSON/结构异常会整体抛出，本层不静默生成分数；网络超时、重试、配额和调用审计由外层负责。
+ * 函数只产生内存评价数组，不写报告或修改 actions；失败后没有本地状态需要回滚。
+ */
 import type { AuditQuestionCategory } from "./auditQuestionTypes";
 import type { AuditQuestionMeta, AuditAction } from "../types/manifest";
 import type { LlmClient } from "./llmClient";

@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * 该文件是 AgentLens“网页信息采集”只读适配器的上手说明，官方 Browser Use 文档仅作为底层参考；
+ * 输出要求用户提供公开网址并复核来源，不等同于通用浏览器自动化教程。
+ * browser-use-readonly 必须继续对应 curated 中的只读卡，不能误改为 marketplace 的
+ * platform-browser-use 或外部产品短名，否则会把两种权限模型串错。步骤顺序把任务收窄、来源核验、
+ * 后续清单依次展示，属于安全渐进契约。本数据只声明“不得登录/提交/付款”，真正阻断写操作、
+ * 保存运行记录和扣积分必须由托管适配器完成。适配器未配置时正确结果是卡片保持待接入；
+ * 页面不可达或无可靠来源时应返回采集失败/证据不足，而不是由这份指南补造答案。
+ */
 export const guide: OnboardingGuide = {
   agentId: "browser-use-readonly",
   prerequisites: [

@@ -1,3 +1,9 @@
+/**
+ * 健康配置层把 AUDIT_HEALTH_* 环境值解析为监听配置，并将服务身份、依赖检查与时钟装配为 server 可消费对象；不创建套接字或运行检查。
+ * env 是不可信配置边界，输出端口必须是 0..65535 的安全整数；显式健康端口或 metrics 开关会启用同一观测服务，这是现有部署兼容语义。
+ * 非数字或越界端口必须在启动副作用前抛错，host 字符串保持原样交由 Node bind 校验；startedAt/now 只用于计算进程内 uptime。
+ * 返回值不持有可变模块状态，readinessChecks 的执行次序由调用者传入顺序决定，构建阶段不会探测网络或文件。
+ */
 import type { HealthCheckConfig, ReadinessCheck } from "./healthCheckTypes";
 
 export interface HealthCheckEnvConfig {

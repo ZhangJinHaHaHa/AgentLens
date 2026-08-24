@@ -1,3 +1,11 @@
+/**
+ * 前端运行配置的唯一归一化边界：把 Vite 注入的字符串/布尔值整理为可判别的 `AppConfigResult`，供 RPC、合约和网关客户端消费。
+ * 读取过程不发起网络请求，也不持久化或缓存；仅在浏览器存在 `window` 时把相对 RPC 路径补成当前 origin，服务端渲染仍保留原值。
+ * 必填项只保证非空，链 ID 额外限定为安全的非负十进制整数；地址、URL 的可达性及所属网络仍须由后续客户端或服务端验证。
+ * 所有 `VITE_*` 值都会进入浏览器包，不能承载密钥；证明配置也只是向界面说明监听器策略，真正的证明校验发生在服务端监听器。
+ * 缺失或非法必填项以 `ok: false` 返回且不做隐式回退或重试，调用方必须阻止依赖这些配置的读写操作。
+ * 可选字段采用“空值即缺省”的兼容约定，证明绑定开关仅接受字面值 `true`，避免宽松真值改变既有部署语义。
+ */
 // Mirrors the listener's AUDIT_ATTESTATION_EXPECTED_* pinning so the UI can
 // tell users exactly which enclave and quote format the verifier is enforcing.
 // These values are informational for the UI; the actual enforcement happens

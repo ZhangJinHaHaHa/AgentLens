@@ -1,3 +1,9 @@
+/**
+ * 本模块拥有交互式 readline 会话的创建与释放，并提供一次性提问/确认便利函数；不校验回答的领域含义，也不设置进程退出状态。
+ * 输入输出流可注入以支持测试或非标准终端，回答会去除首尾空白，确认仅接受 y/yes；stdin 内容属于不可信用户输入。
+ * 创建会话会注册流监听并占用进程资源，调用方必须最终 close；一次性 API 在正常完成后关闭，但底层流错误仍按 Promise 失败语义传播。
+ * 同一 PromptSession 预期串行提问，未定义并发 question 的次序；默认否定及大小写处理是 CLI 自动化可依赖的兼容不变量。
+ */
 import readline from "node:readline";
 
 export interface PromptUserOptions {

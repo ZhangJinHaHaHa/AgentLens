@@ -1,3 +1,10 @@
+/**
+ * Registry V3 发布边界：并发读取服务费与最低保证金，或用用户 signer 执行 stake，确认后再按开发者地址和 agentName 回读 tokenId。
+ * 方法会访问 JSON-RPC，stake 还会触发钱包签名、广播及确认等待；输出分别是 bigint 定价合计或交易哈希/tokenId，不保存客户端状态或缓存报价。
+ * 配置、名称、manifest URL、付款额与目标网络未在此校验，浏览器输入不可信，合约和服务端发布策略必须重新验证；读取报价也可能在签名前变化。
+ * 任一 RPC、签名、revert、确认或回读错误都会原样抛出，不自动重试；若广播结果不确定，应先查询交易/事件，不能直接重复 stake。
+ * tokenId 由 signer 地址与原名称从权威合约派生，调用方不得从交易哈希或本地计数自行推断；所有金额计算保持 bigint 精度。
+ */
 import { Contract, JsonRpcProvider, type InterfaceAbi, type JsonRpcSigner } from "ethers";
 
 import registryArtifact from "../../../contracts/artifacts/AgentAuditRegistryV3.json";

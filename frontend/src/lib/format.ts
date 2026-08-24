@@ -1,3 +1,10 @@
+/**
+ * 链上时间、地址、分数、保证金和租赁价格的展示格式集合；输入为 bigint/number/string，输出面向当前 UI 的普通字符串。
+ * 除 `toLocaleString` 读取宿主语言/时区外均为局部计算，不写状态、不缓存、不联网，也没有失败重试；浏览器与服务端可能呈现不同时间格式。
+ * 时间的非有限/非正值回退 Unknown，日期构造异常回退原秒值；地址只截断长度，不验证 EVM 格式或所有权。
+ * wei 转 ETH 经 `Number` 是有损展示，且 bond 必须能安全转换为 bigint；精度和阈值不能用于签名金额、账务或结算，交易边界应保留原值。
+ * 文案、截断位数和小数位是页面快照兼容规则，若需确定性 SSR 或本地化货币应由调用方提供更严格 formatter。
+ */
 export function formatTimestamp(unixSeconds: bigint | number): string {
   const ms = Number(unixSeconds) * 1000;
   if (!Number.isFinite(ms) || ms <= 0) {

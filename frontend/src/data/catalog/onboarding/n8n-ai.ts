@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * n8n AI 指南针对可回放的业务工作流，来源是 n8n 官方与 Advanced AI 文档，输出把最小只读流程、
+ * 最小权限凭证和错误/人工分支依次呈现，而不是直接给生产系统开放写权限。
+ * n8n-ai 是精选卡、产品分类和指南 Map 共享的稳定键，云端与自托管只是部署选择，不产生新的目录身份。
+ * 步骤次序对应 trigger→AI→output 的渐进验证思路并由详情页编号，必须保留；官方链接顺序也用于展示。
+ * 数据文件不创建 workflow、不读取 credential、不触发 webhook、不重试任务，也不执行任何外部写入。
+ * 重复触发、字段缺失、超时、低置信度或数据库/备份故障应进入 n8n 的错误分支和审计记录；
+ * 没有人工确认的生产动作不能因指南已经描述了它就被视为安全。
+ */
 export const guide: OnboardingGuide = {
   agentId: "n8n-ai",
   prerequisites: [

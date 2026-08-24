@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Lovable 指南服务于非技术创始人的 MVP 验证场景，依据官方产品文档与其 Supabase 集成路径，
+ * 输出从界面迭代、数据连接、自定义代码到发布逐步扩大责任范围。
+ * lovable 是目录详情和指南 Map 的稳定连接键，不随 hosting、数据库或生成模型品牌调整；
+ * steps 的编辑顺序会成为用户看到的编号，不能为了视觉排序把部署放到代码接管之前。
+ * 此文件不创建项目、不写 schema、不保存 anon key、不执行发布，也不判断原型是否达到生产质量。
+ * 生成逻辑失控、数据库权限/备份不足或部署失败都属于外部产品与工程接管边界；MVP 验证通过后
+ * 应进入自有仓库和 CI/CD，而不能因指南覆盖了“部署”就继续由目录数据承担长期运维。
+ */
 export const guide: OnboardingGuide = {
   agentId: "lovable",
   prerequisites: [

@@ -1,3 +1,11 @@
+/**
+ * 为组件树集中管理 EIP-1193 注入钱包状态，提供连接、清除本地会话、获取 signer 和请求切链，并订阅账户/网络变更事件。
+ * 首次读取并发获取已授权账户与网络；所有操作更新内存中的 status/address/chainId/error，卸载时解除钱包监听，不建立持久缓存或后台轮询。
+ * 注入 provider 来自浏览器扩展这一高风险边界，账户和 chainId 只是客户端提示；服务端必须用签名验证身份，写交易前仍要核对目标合约、网络和金额。
+ * 账户数组与十六进制/十进制 chainId 会做形状归一化，但不校验地址 checksum，`switchChain` 的目标值也依赖受信调用方提供。
+ * 用户拒绝、扩展错误和网络失败会进入 error 或让命令 Promise 拒绝；没有自动重试，避免在交易状态未知时重复请求。
+ * `disconnect` 只清除应用内状态，不能撤销扩展授权；无钱包时 signer/切链抛错，Provider 外调用 `useWallet` 也立即失败，这是调用契约。
+ */
 import * as React from "react";
 import { BrowserProvider, type JsonRpcSigner } from "ethers";
 

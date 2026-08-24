@@ -9,6 +9,16 @@ import { scenario } from "./scenarios";
  * `validateCatalog` script enforces this at build time. When you add a new
  * curated agent, also drop a matching file under `data/catalog/onboarding/`.
  */
+/*
+ * 这份数组是“编辑精选层”的静态事实基线：资料来自产品官网、官方文档与人工观察，
+ * 输出会先与链上条目合并，再被列表、详情、比较、筛选和工作区路由共同消费。
+ * id 是跨目录的长期连接键，同时关联 onboarding 文件、产品类型映射、URL 查询和原生条目；
+ * 已发布 id 不应因品牌文案变化而改名，确需迁移时必须同步所有引用并处理旧链接兼容。
+ * 数组顺序就是 curated 分桶内的编辑排序，mergeCatalog 会原样保留；不要在这里按名称、风险或日期重排。
+ * capabilityContract、workspaceAdmission 等字段只陈述展示与准入证据，不负责执行工具、授权账号、
+ * 扣费或推导“可运行”状态。外部价格、能力和链接过期属于编辑数据失效；未知场景会在构造时抛错，
+ * 重复 id 则可能在最终 byId 索引中遮蔽前项，因此新增条目必须通过目录校验并人工复核合并结果。
+ */
 export const curatedAgents: AgentCatalogEntry[] = [
   {
     id: "claude-code",

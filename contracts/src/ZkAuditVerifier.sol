@@ -2,6 +2,12 @@
 pragma solidity ^0.8.24;
 
 /**
+ * @dev 中文维护契约：本合约不实现 Groth16 配对运算，而是把证明点与公共输入按固定 ABI `staticcall` 给 owner 指定的两个 verifier，并保存成功结果。
+ * @dev 任意账户都可提交证明；owner 可随时替换 verifier 且地址不做代码/接口校验，所以“verified”只表示当时目标地址对该 payload 返回可解码的 true。
+ * @dev 审计分证明的电路公共输入只有六维分、overallScore、inputCommitment，函数参数 tokenId/auditId 没有进入 verifier；调用者必须在链外另行保证记录归属。
+ * @dev 指纹证明把 tokenId 纳入公共输入，但 developerHash 只是域元素，合约不把它映射到 msg.sender 或 EVM 地址；所有权含义依赖链外哈希规范和秘密管理。
+ * @dev 全局 proofHash 只覆盖 a/b/c 并防止同一证明点再次登记；同一 token/audit 仍可用不同有效证明覆盖，auditProofCount 会继续增加，指纹映射只保留最新项。
+ * @dev verifier 未配置、证明重放、验证返回 false/回退/短返回值都会回滚且不写状态；8/3 个公共输入的顺序与 snarkjs 生成 ABI 是不可漂移的兼容约束。
  * @title ZkAuditVerifier
  * @notice Stores and verifies ZK proofs for audit score correctness and agent fingerprints.
  *
@@ -105,6 +111,7 @@ contract ZkAuditVerifier {
 
     /**
      * @notice Verify a ZK proof that audit scores were correctly computed.
+     * @dev tokenId 与 auditId 仅作为本登记表的映射键和事件字段，当前 AuditScoreVerifier 电路未约束二者；同一键的后续有效证明会覆盖旧结构体。
      * @param tokenId The agent's NFT token ID
      * @param auditId The audit ID being proven
      * @param dimensionalScores The 6 claimed dimensional scores [0-100]
@@ -170,6 +177,7 @@ contract ZkAuditVerifier {
 
     /**
      * @notice Verify a ZK proof binding an agent identity to its NFT.
+     * @dev 该入口验证“存在满足电路约束的 secret/manifest/code/traits”，不会验证 tokenId 在身份合约中存在，也不会检查提交者就是 developerHash 对应主体。
      * @param tokenId The agent's NFT token ID
      * @param fingerprintHash The public fingerprint hash
      * @param developerHash The developer ownership hash
@@ -252,6 +260,7 @@ contract ZkAuditVerifier {
 
     // --- Internal: Generic Groth16 Verifier Call ---
 
+    /// @dev proofHash 不含公共输入、verifier 地址、tokenId 或 auditId；其职责仅是对完全相同的 Groth16 证明点做全局一次性消费。
     function _proofHash(
         uint256[2] calldata a,
         uint256[2][2] calldata b,
@@ -260,6 +269,7 @@ contract ZkAuditVerifier {
         return keccak256(abi.encode(a, b, c));
     }
 
+    /// @dev 低级调用严格匹配 snarkjs 生成 verifier 的定长数组签名；目标回退或返回少于 32 字节统一视为无效，其他输入数量直接拒绝。
     function _callGroth16Verifier(
         address verifier,
         uint256[2] calldata a,

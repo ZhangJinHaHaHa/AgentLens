@@ -45,6 +45,11 @@ type DecodedAgentProfile = {
   auditCount: unknown;
 };
 
+/**
+ * JSON-RPC 节点是外部信任边界：HTTP 非成功、协议级 error 与缺失 result 分别失败，
+ * 并保留 method/状态码供上层观测。这里不拥有重试、超时或节点切换策略；监听循环决定失败是否重试，
+ * 注入 fetchImpl 仅用于传输替换和确定性测试。
+ */
 async function jsonRpcRequest<T>(
   rpcUrl: string,
   method: string,
@@ -67,6 +72,7 @@ async function jsonRpcRequest<T>(
   }
 
   const payload = (await response.json()) as JsonRpcSuccessResult<T> | JsonRpcErrorResult;
+  // TypeScript 泛型不验证远端 JSON；显式判别 error/result 是进入 ABI 解码前的最小协议门禁。
   if ("error" in payload) {
     throw new Error(`${method} returned JSON-RPC error ${payload.error.code}: ${payload.error.message}`);
   }
@@ -82,6 +88,7 @@ export async function readAgentProfile(
   options: ReadAgentProfileOptions
 ): Promise<AgentProfileOnChain> {
   const fetchImpl = options.fetchImpl ?? fetch;
+  // calldata 始终由随发布物固定的 Registry ABI 编码，避免手写选择器或字段顺序与合约版本漂移。
   const callData = getAuditRegistryInterface().encodeFunctionData("getAgentProfile", [
     options.tokenId
   ]) as `0x${string}`;
@@ -93,6 +100,7 @@ export async function readAgentProfile(
         to: options.contractAddress,
         data: callData
       },
+      // latest 返回的是节点当前视图而非最终确认快照；涉及罚没的调用方必须承担区块推进与竞态语义。
       "latest"
     ],
     fetchImpl
@@ -102,6 +110,7 @@ export async function readAgentProfile(
     result
   )[0] as DecodedAgentProfile;
 
+  // ABI 解码结果仍跨越库版本边界：金额保留 bigint，时间与计数仅在安全整数范围内转换，越界直接失败。
   return {
     developer: decoded.developer,
     agentName: decoded.agentName,

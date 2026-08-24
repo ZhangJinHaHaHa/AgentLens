@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Midjourney 指南依据官方快速入门与提示词参考，输出覆盖入口选择、提示词参数、变体迭代和商用授权
+ * 核对，服务于创意素材试用而非图片生成运行器。midjourney 是卡片与指南注册的稳定 id，
+ * Discord/Web 入口、模型代次或套餐名称变化都不应造成链接键迁移。
+ * 步骤数组保持创作到合规收尾的展示顺序；其中版本号、参数和价格相关措辞属于高时效编辑事实，
+ * 必须以官方资料复核，不能由前端自动猜测“当前最新”。本文件不提交 prompt、不生成/放大图片、
+ * 不开启隐私模式，也不判断版权或商用资格。订阅不足、参数废弃、公共画廊泄露或 IP 风险均由
+ * 真实产品和人工审核处理，失败时不能把示例输出当作已授权资产。
+ */
 export const guide: OnboardingGuide = {
   agentId: "midjourney",
   prerequisites: [

@@ -1,3 +1,9 @@
+/**
+ * 该模块在容器启动后轮询约定的健康端点，并仅在 HTTP 成功且 JSON status 为 ok 时放行；不检测业务正确性、资源配额或出口策略。
+ * host/port、重试次数、间隔和可注入 fetch 构成输入，成功以 Promise 完成表示，耗尽尝试则抛出带稳定 reasonCode 的 AgentUnavailableError。
+ * HTTP 响应和 JSON 体来自不可信容器网络；连接异常、非 JSON、非 2xx 与错误状态都会被保留为最后原因，但对外统一失败关闭。
+ * 每个调用维护独立重试状态并串行发请求，尝试之间仅固定等待；这里不提供单请求超时或取消，调用方需用更外层生命周期限制总体等待。
+ */
 import { HEALTHCHECK_PATH } from "../config/constants";
 
 export class AgentUnavailableError extends Error {

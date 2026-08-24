@@ -1,3 +1,9 @@
+/**
+ * 增强网络监视器从宿主 conntrack 或容器 procfs 获取 TCP/UDP 的瞬时连接证据，并统一为带时间戳的事件；不阻断流量、不解析 DNS，也不判定是否违规。
+ * containerId 和命令输出跨越 Docker/宿主进程信任边界；解析器只接受可识别的 IPv4 形状，忽略监听口、审计服务口与无法解释的行，而不会凭空补全流量。
+ * 首选 conntrack 以获得双向字节计数和命名空间 PID，工具/权限/采集失败时兼容降级到 /proc/net/tcp 与 udp；source 字段必须如实标明证据能力。
+ * 单次调用顺序采样若干命令，不提供原子网络快照，短连接可能遗漏且 procfs 无历史字节；并发采集互不共享状态，但会增加对同一 daemon/namespace 的读取负载。
+ */
 import { PORT } from "../config/constants";
 import type { CommandRunner, CommandResult } from "./networkMonitor";
 

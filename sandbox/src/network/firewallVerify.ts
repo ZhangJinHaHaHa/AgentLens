@@ -1,3 +1,9 @@
+/**
+ * 防火墙验证器重新解析期望计划、读取容器实际 `iptables -S OUTPUT`，经有限规范化后报告缺失规则；不写规则、不做数据包级穿透测试，也不证明宿主防火墙安全。
+ * containerId、manifest、DNS、resolv.conf 与 docker 输出均跨越外部信任边界；命令失败或 DNS 无法解析必须抛错，不能以空规则集宣告已配置。
+ * 规范化只消除 conntrack 状态顺序、/32 与协议模块等已知表示差异，仍要求每条安全相关期望规则存在；额外规则不会在此判为失败。
+ * DNS 和实际规则分步读取，不构成原子快照，验证期间的并发规则变更可能影响结果；configured 仅代表采样时缺失集合为空。
+ */
 import { execFile } from "node:child_process";
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";

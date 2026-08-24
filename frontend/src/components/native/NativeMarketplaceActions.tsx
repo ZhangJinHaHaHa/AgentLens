@@ -1,3 +1,10 @@
+/**
+ * 市场操作卡编排租用和六维评价的浏览器交互，包括访问资格读取、钱包连接/切链、交易提交及交易哈希反馈；它不托管私钥、不代替钱包确认，也不授予链上权限。
+ * 输入为已校验应用配置、bigint tokenId、可选市场客户端和链上定价，输出为受当前钱包/链/访问/评价状态约束的表单与结果摘要。
+ * 本地状态拥有租期、评分、评论、读状态、忙碌标记和最近结果；effect 会并行读取访问/评价数据并用取消标记抑制过期写回，成功交易通过 nonce 触发刷新。
+ * 钱包扩展、RPC、合约地址/ABI、链上价格与用户评论都是不可信边界；前端的 canRent/canReview 仅改善体验，真正的金额、重复评价和访问控制必须由钱包预览与合约再次验证。
+ * 租期限制、目标 chainId、配置存在性和访问资格须在签名前检查，失败必须清除忙碌态且保留可见错误；标签关联、禁用状态、重复提交防护及部分评价读取失败的降级是可访问性/可靠性不变量。
+ */
 import { useEffect, useMemo, useState, type TextareaHTMLAttributes } from "react";
 import { useTranslation } from "react-i18next";
 import { CheckCircle2, RefreshCw, ShieldCheck, Star, Wallet } from "lucide-react";

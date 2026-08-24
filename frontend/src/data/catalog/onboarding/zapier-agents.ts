@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * Zapier Agents 指南针对跨 SaaS 的业务自动化，依据官方 Agents 与帮助中心资料，输出遵循
+ * 最小动作集合、低敏 dry run、生产前审批的权限升级路径，而不是直接连接客户系统。
+ * zapier-agents 是目录、指南注册与产品类型映射共享的稳定键，不随某个 Zap、连接器或套餐变更。
+ * steps 的声明顺序会直接成为详情页编号，保证草稿/测试先于发送、CRM 修改和扣款；双语风险项同样
+ * 需要保持语义一致。这里不发起 OAuth、不保存 SaaS 凭证、不触发 Zap，也不执行任何外部写入。
+ * 重复触发、字段缺失、连接器失败、配额不足或审批拒绝时应进入真实工作流的兜底/失败分支；
+ * 指南可见绝不代表生产账号已授权，更不能作为不可逆动作的默认同意。
+ */
 export const guide: OnboardingGuide = {
   agentId: "zapier-agents",
   prerequisites: [

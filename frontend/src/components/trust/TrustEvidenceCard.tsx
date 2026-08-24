@@ -1,3 +1,10 @@
+/**
+ * 信任证据卡编排信任层级解释、平台沙箱审计入口和已有链上证据；它不运行沙箱、不下载报告、不验证哈希，也不把“字段存在”当作证明有效。
+ * 输入为目录条目，输出依据来源、chainEvidence 与平台审计就绪度选择的证据区块、锁定说明或预填发布链接。
+ * 组件没有持久状态；派生器、`URLSearchParams` 和路由构建均为同步计算，只有用户点击站内审计/发布链接才产生导航副作用。
+ * 目录字段、tokenId、CID/哈希、文档 URL 和预填文本跨越发布者信任边界，必须编码为查询参数或纯文本；是否可信仍由报告读取、哈希校验和证明策略的拥有者判定。
+ * 缺少链证据时必须明确展示 pending/locked 而非零分结论，遮罩下的雷达只是占位；帮助按钮有名称、图标隐藏，旧条目缺少镜像或审计计数时仍可安全退化。
+ */
 import { ExternalLink, HelpCircle, Lock, PlayCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";

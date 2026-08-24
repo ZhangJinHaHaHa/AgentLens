@@ -1,3 +1,9 @@
+/**
+ * 出口策略领域层从 manifest 构造允许主机/RPC 与固定私网拒绝段，并对观测流量及自报 actions 给出原因码；不解析 DNS、不下发防火墙，也不发起网络请求。
+ * manifest、action 与活动记录均是不可信审计输入，输出是确定性策略或单个失败原因；URL 解析失败应暴露配置错误而非静默放宽允许集合。
+ * 私网检测和主机比对是明确的 IPv4/精确字符串规则，真正强制由 firewallPlan/dockerRunner 完成；策略评估结果不能替代宿主级隔离证明。
+ * 纯函数无共享状态并可并发使用；拒绝 CIDR 集、去重排序、失败优先级和 ACTION_MISMATCH 语义属于审计报告的兼容不变量。
+ */
 import type { AuditAction, SandboxManifest } from "../types/manifest";
 import { reconcileAuditResponse } from "../audit/reconcileAuditResponse";
 

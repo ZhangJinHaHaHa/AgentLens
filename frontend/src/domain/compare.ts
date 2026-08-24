@@ -1,3 +1,10 @@
+/**
+ * 对至少两个目录条目执行可复现的比较决策，并另行计算各展示维度是否存在差异；返回的是推荐结论和可选赢家 ID，而非交易指令。
+ * 评分组合信任层级、风险、复杂度、上手资料、审计证据和可租赁性；分差不足、样本不足或高风险缺证据时主动转为人工判断/暂缓。
+ * 计算过程不修改输入、不读写缓存也不触发网络，排序与集合比较均基于当前快照；链上刷新和失败重试属于调用方职责。
+ * 条目中的链证据及卖家字段可能陈旧或未经验证，比较结果只能辅助界面选择，服务端仍须独立执行准入、余额、权限和审计校验。
+ * 少于两个输入固定返回 `manual-judgment`，同分排序保持原输入次序；分差小于两分时不宣布赢家，防止微小元数据变化制造确定性承诺。
+ */
 import type { AgentCatalogEntry, Complexity, RiskLevel } from "./catalog";
 import { getRuntimeSecurity, hasAuditEvidence, isRentable } from "./catalog";
 import { computeTrustTier } from "./trustTier";

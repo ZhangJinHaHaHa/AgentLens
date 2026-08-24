@@ -1,3 +1,10 @@
+/**
+ * 该模块为声明外部 host/RPC 的 tool 型 agent 计算 API 可靠性、数据准确性、延迟和错误恢复四个补充展示维度。
+ * tool 身份仅由 manifest 的外部端点信号判断；分数组合健康检查、声明/观测对账、功能/鲁棒性评价及 CPU 阈值，缺失证据使用显式中性基线。
+ * 阈值、默认值与四维名称属于报告趋势的兼容规则；计算结果是启发式画像，不是 API 可用性测量、数据真实性证明或安全授权决定。
+ * 非 tool agent 返回全零并标明 `isToolAgent: false`，避免把“不适用”误写成已有工具能力评分。
+ * 所有运算只读取结果和 allowlist，不修改输入、不联网，也没有失败回滚或持久化副作用。
+ */
 import type { LocalAuditResult } from "../types/manifest";
 import type { AnswerEvaluation } from "./evaluateAuditAnswer";
 

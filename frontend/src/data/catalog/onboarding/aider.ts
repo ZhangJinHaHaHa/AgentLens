@@ -1,5 +1,14 @@
 import type { OnboardingGuide } from "@/domain/onboarding";
 
+/*
+ * 这是一份面向“本地仓库 + Git 提交”工作方式的 Aider 编辑指南，依据 Aider 官方安装与模型文档
+ * 整理，最终在详情页按前置条件、首步、编号步骤、风险和官方链接分栏展示。
+ * agentId=aider 是与精选卡及详情路由对接的稳定键，不随 CLI 包名或默认模型变化；步骤顺序刻意从
+ * 安装、选模推进到 Git 约束和 architect 模式，调整顺序会改变用户看到的操作流程。
+ * codeBlock 会作为原始命令文本呈现，本文件不负责执行 pipx、检查 API Key、创建分支或阻止自动提交。
+ * 安装器缺失、模型不可用、工作区不干净均属于外部执行失败；官方命令变化则是需要人工更新的
+ * 内容时效问题，不能通过在数据层猜测平台或版本来静默改写指令。
+ */
 export const guide: OnboardingGuide = {
   agentId: "aider",
   prerequisites: [

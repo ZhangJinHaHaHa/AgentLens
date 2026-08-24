@@ -1,3 +1,10 @@
+/**
+ * 自然语言需求解析客户端：可向配置的 `/api/llm/parse-need` 发送 query、locale 与有限 taxonomy，并将响应交给领域白名单解析器。
+ * 未配置服务、HTTP/JSON/协议异常、解析失败、网络错误或超时都会确定性降级到本地关键词规则；当前公开契约因此始终返回 `ok: true` 的结果。
+ * 远端路径会产生一次 POST 和可选 AbortController 定时器，finally 清理计时器；不缓存、不额外重试，非正 timeout 表示不启用客户端超时。
+ * 用户原文会越过浏览器/服务端隐私边界，调用方不得附带未获授权的敏感材料；模型响应不可信，场景、标签和枚举必须被 taxonomy 收敛。
+ * 本地结果只给出有限同义词匹配和保守置信度，不应伪装为模型成功，也不能用作工作区授权或审计判断；离线回退是可用性兼容不变量。
+ */
 import {
   parseNeedParserResponse,
   type NeedParseResult,
